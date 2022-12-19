@@ -1,0 +1,28 @@
+#map_canvas {
+  height: 100%;
+  margin-top: 60px;
+}
+a {
+  cursor: pointer;
+}
+#teste {
+  margin-top: 100px;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.parent {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+  top: 10px;
+  left: 230px;
+  z-index: 1;
+}
