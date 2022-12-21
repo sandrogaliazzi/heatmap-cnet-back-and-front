@@ -9,7 +9,7 @@ function closeCanvas() {
 }
 
 async function fecthData() {
-  const result = await fetch("http://177.73.24.22:5005/tomodat");
+  const result = await fetch("https://api.heatmap.conectnet.net/tomodat");
 
   const data = await result.json();
 

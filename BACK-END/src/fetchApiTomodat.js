@@ -72,20 +72,16 @@ export async function getAllClientsByCto() {
 
 }
 
-// getAllClientsByCto().then(data => {
-//   try {
-//     fs.writeFileSync(
-//       path.join(__dirname, "./kml/tomodatApiRequest.json"),
-//       JSON.stringify(data)
-//     );
+export async function getAllAcessPointsByCity() {
+  try {
 
-//     console.log("nice");
+    const response = await fetch(`https://sp.tomodat.com.br/tomodat/api/access_points/list_path`, reqConfig)
 
-//   } catch (err) {
-//     console.error("ops " + err.message);
-//   }
-// })
-//   .catch(err => console.error("ops " + err.message));
-
+    const data = await response.json()
+    return data    
+  } catch (err) {
+    console.error("erro " + err)
+  }
+}
 
   

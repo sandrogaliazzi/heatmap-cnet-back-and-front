@@ -10,7 +10,7 @@ var certificate = fs.readFileSync('src/cert.pem', 'utf8');
 
 var credentials = {key: privateKey, cert: certificate,}; //usar no https
 
-const server = http.createServer( app);
+const server = http.createServer(credentials, app);
 
 server.listen(port, () => {
   console.log("server starting on port : " + port)
