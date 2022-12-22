@@ -16,8 +16,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_NR_1sb5quUtRBp3nQF1fRhqbGcw-5VY&libraries=visualization,places,geometry&v=weekly"></script>
   </head>
 
-  <script src="/static/script.js" defer></script>
-  <script src="/static/findClients.js" defer></script>
+  <script src="/static/findClients.js" type="module" defer></script>
+  <script src="/static/fetchOnProgress.js" type="moudule" defer></script>
+  <script src="/static/script.js" type="module" defer></script>
 
   <body onload="initialize()">
     <div class="parent">
@@ -33,6 +34,19 @@
             onchange="filterCto(this.value)"
           />
         </div>
+      </div>
+      <div
+        class="progress position-absolute top-0"
+        style="height: 4px; z-index: 1"
+      >
+        <div
+          class="progress-bar"
+          role="progressbar"
+          style="width: 25%"
+          aria-valuenow="0"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
       </div>
     </div>
     <div id="map_canvas"></div>
