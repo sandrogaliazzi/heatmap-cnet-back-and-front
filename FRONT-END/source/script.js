@@ -24,9 +24,7 @@ function checkLogin() {
 
 async function loadMap() {
   try {
-    const result = await fetch("https://api.heatmap.conectnet.net/tomodat");
-
-    const data = await result.json();
+    const data = await fetchWithDownloadTrack("https://api.heatmap.conectnet.net/tomodat");
 
     tomodatData.push(...data);
 

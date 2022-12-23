@@ -1,5 +1,6 @@
 const fs = import("fs");
 
+import needle from 'needle';
 import fetch from 'node-fetch';
 
 const path = import("path");
@@ -84,4 +85,14 @@ export async function getAllAcessPointsByCity() {
   }
 }
 
-  
+export function addClient(req, res) {
+  let client = (req.body);
+  needle.post(`https://sp.tomodat.com.br/tomodat/api/clients/auto_connect/`, client, reqConfig, 
+  ((err) =>{
+    if(err) {
+        res.status(500).send({message: `${err.message} - falha ao cadastrar user.`})
+    } else{
+        res.status(201).send();
+    }
+}))
+};

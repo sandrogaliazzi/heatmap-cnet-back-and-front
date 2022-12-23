@@ -1,5 +1,6 @@
 import {getAllClientsByCto} from "../fetchApiTomodat.js";
 import {getAllAcessPointsByCity} from "../fetchApiTomodat.js";
+import {addClient} from "../fetchApiTomodat.js"
 
 class TomodatController {
 
@@ -14,8 +15,12 @@ class TomodatController {
         getAllAcessPointsByCity().then(data =>{
             res.json(data);
         })
-    }
+    };
     
+    static CadastrarClient = (req, res) => {
+        addClient(req, res);
+    };
+
     }
 
  

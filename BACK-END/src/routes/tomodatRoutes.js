@@ -6,5 +6,6 @@ const router = express.Router();
 router
  .get("/tomodat", TomodatController.ListarClients)
  .get("/ctos", TomodatController.ListarCtos)
+ .post("/client", TomodatController.CadastrarClient)
 
 export default router;
