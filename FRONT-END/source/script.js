@@ -2,6 +2,7 @@ import fetchWithDownloadTrack from "./fecthOnProgress.js";
 
 const searchCtoField = document.querySelector("#input-cto");
 
+
 var map, pointArray, heatmap;
 var TILE_SIZE = 256;
 
@@ -23,8 +24,9 @@ function checkLogin() {
 
 async function loadMap() {
   try {
+    const result = await fetch("https://api.heatmap.conectnet.net/tomodat");
 
-    const data = await fetchWithDownloadTrack("https://api.heatmap.conectnet.net/tomodat");
+    const data = await result.json();
 
     tomodatData.push(...data);
 
