@@ -381,7 +381,7 @@ function getInfoWindow(pos, cto, clients) {
   });
 }
 
-function filterCto(query) {
+function filterCto(event, query) {
   let filterdMarkers = [];
   if (query != "") {
     filterdMarkers = markers.filter(
@@ -395,6 +395,9 @@ function filterCto(query) {
   } else {
     hideMarkers(markers);
   }
+  setTimeout(() => {
+    event.target.blur();
+  }, 5000);
 }
 
 function setCenter(lat, lng) {
