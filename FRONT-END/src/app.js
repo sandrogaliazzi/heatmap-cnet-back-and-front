@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express()
 
-app.use('/static', express.static('public'));
+app.use('/static', express.static('source'));
 app.use(cors({
   credentials: true,
   }));
