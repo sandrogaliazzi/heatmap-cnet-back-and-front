@@ -3,7 +3,7 @@ import fs from'fs';
 import https from 'https'
 import http from 'http';
 
-const port = process.env.PORT || 5003; //always 5000
+const port = process.env.PORT || 5000; //always 5000
 
 var privateKey  = fs.readFileSync('src/key.pem', 'utf8');
 var certificate = fs.readFileSync('src/cert.pem', 'utf8');
