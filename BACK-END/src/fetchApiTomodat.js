@@ -92,7 +92,7 @@ export function addClient(req, res) {
     if(err) {
         res.status(500).send({message: `${err.message} - falha ao cadastrar user.`})
     } else{
-        res.status(201).send();
+        res.status(201).send({message: `${client.name} - cadastrado com sucesso.`});
     }
 }))
 };
