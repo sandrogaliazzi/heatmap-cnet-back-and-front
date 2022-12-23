@@ -1,9 +1,13 @@
+import fetchWithDownloadTrack from "./fecthOnProgress.js";
+
+const searchCtoField = document.querySelector("#input-cto");
+
+
 var map, pointArray, heatmap;
 var TILE_SIZE = 256;
 
 const tomodatData = [];
 let mapCoordinates = [];
-let toggleMarker = false;
 
 window.addEventListener("load", async () => {
   if (checkLogin()) {
@@ -380,7 +384,7 @@ function getInfoWindow(pos, cto, clients) {
   });
 }
 
-function filterCto(query) {
+export function filterCto(query) {
   let filterdMarkers = [];
   if (query != "") {
     filterdMarkers = markers.filter(
@@ -396,7 +400,15 @@ function filterCto(query) {
   }
 }
 
-function setCenter(lat, lng) {
+searchCtoField.addEventListener("keyup", function () {
+  filterCto(this.value);
+});
+
+searchCtoField.addEventListener("change", function () {
+  filterCto(this.value);
+});
+
+export function setCenter(lat, lng) {
   map.setCenter({ lat, lng });
   map.setZoom(18);
 }
