@@ -1,8 +1,11 @@
+import { setCenter, filterCto } from "./script.js";
+
 const clientsFilter = [];
 
 const list = document.getElementById("clientsList");
-
 const canvasBtn = document.getElementById("closeOffCanvasBtn");
+const clientSearchInput = document.getElementById("clientSearchInput");
+
 
 function closeCanvas() {
   canvasBtn.click();
@@ -29,13 +32,6 @@ async function fecthData() {
   })
 }
 
-function setCto(cto) {
-  const input = document.getElementById("input-cto")
-
-  input.value = cto
-
-  input.onchange()
-}
 
 function findClient(query) {
   if (query !== "") {
@@ -63,16 +59,17 @@ function renderClientList(clients) {
 
   clients.forEach(client => {
     const { name, cto, coord } = client;
-
-    const lat = parseFloat(coord.lat);
-    const lng = parseFloat(coord.lng);
+    const { lat, lng } = coord;
 
     let item = `
     <li class="list-group-item d-flex justify-content-between align-items-center">
       <p class="mb-0">${name}</p>
     <button 
       class="btn btn-sm btn-success" 
-      onclick="setCenter(${lat}, ${lng}); setCto('${cto}'); closeCanvas()">
+      data-cto="${cto}"
+      data-lat="${lat}"
+      data-lng="${lng}"
+      >
       cto
     </button>
   </li>
@@ -83,6 +80,19 @@ function renderClientList(clients) {
 
   list.innerHTML = listItems;
 }
+
+clientSearchInput.addEventListener("keyup", function () {
+  findClient(this.value);
+})
+
+list.addEventListener("click", function (event) {
+  if (event.target.dataset.cto) {
+    const { cto, lat, lng } = event.target.dataset;
+    filterCto(cto);
+    setCenter(parseFloat(lat), parseFloat(lng));
+    closeCanvas();
+  }
+})
 
 fecthData()
 
