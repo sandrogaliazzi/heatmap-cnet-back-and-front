@@ -92,7 +92,19 @@ export function addClient(req, res) {
     if(err) {
         res.status(500).send({message: `${err.message} - falha ao cadastrar user.`})
     } else{
-        res.status(201).send();
+        res.status(201).send({message: `${client.date_time}: Cliente ${client.name} cadastrado com sucesso na cto ${client.cto_name} pelo usuario: ${client.user}.`});
     }
 }))
 };
+
+
+//padrão resposta json cadastro cliente
+// {
+//   "name":"TESTE 10",
+//    "lat":"-29.585405",
+//    "lng":"-50.896528", 
+//    "cto_id":"3591",
+//    "user": "vendas",
+//    "cto_name":"R200",
+//    "date_time": "24-12-22-10:56"
+//        }
