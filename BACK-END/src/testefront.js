@@ -2,7 +2,7 @@ import express from "express";
 import needle from "needle";
 
 function sendLogClient(){
-    needle.post("http://localhost:5009/logctoclient", 
+    needle.post("https://api.heatmap.conectnet.net/logctoclient", 
     {
      name:"TESTE final2",
      lat:"-29.585405",
@@ -24,7 +24,7 @@ function sendLogClient(){
 };
 
 function sendClient(){
-    needle.post("http://localhost:5009/client",
+    needle.post("https://api.heatmap.conectnet.net/client",
     {      
      name:"TESTE final2",
      lat:"-29.585405",
