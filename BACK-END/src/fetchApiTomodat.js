@@ -92,7 +92,7 @@ export function addClient(req, res) {
     if(err) {
         res.status(500).send({message: `${err.message} - falha ao cadastrar user.`})
     } else{
-        res.status(201).send({message: `${client.date_time}: Cliente ${client.name} cadastrado com sucesso na cto ${client.cto_name} pelo usuario: ${client.user}.`});
+        res.status(201).send({ApiTomodatCadastroOk: `${client.date_time}: Cliente ${client.name} cadastrado com sucesso na cto ${client.cto_name} pelo usuario: ${client.user}.`});
     }
 }))
 };
