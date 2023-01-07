@@ -1,7 +1,8 @@
 import fetchWithDownloadTrack from "./fecthOnProgress.js";
+import setModalInfo from "./ctoModal.js";
+import setFormData from "./addClient.js";
 
 const searchCtoField = document.querySelector("#input-cto");
-
 
 var map, pointArray, heatmap;
 var TILE_SIZE = 256;
@@ -61,7 +62,7 @@ const infoWindows = [];
 function setMarkers() {
   tomodatData.forEach((data) => {
     let { lat, lng } = data.coord;
-    const image = "./images/cto conect.png";
+    const image = "../images/cto conect.png";
     markers.push(
       new google.maps.Marker({
         position: new google.maps.LatLng(lat, lng),
@@ -77,18 +78,26 @@ function setMarkers() {
   markers.forEach((marker) => {
     marker.addListener("click", () => {
       const pos = marker.position.toJSON();
-      const clients = tomodatData.filter(data => {
+
+      const ctoData = tomodatData.filter(data => {
         return data.name == marker.title && data.coord.lat == pos.lat && data.coord.lng == pos.lng
-      }).map(result => result.clients);
-      const infoWindow = getInfoWindow(pos, marker.title, clients);
-      infoWindows.push(infoWindow);
-      infoWindow.open({
-        anchor: marker,
-        map,
       });
-      infoWindows.forEach((info) => {
-        if (info.content != infoWindow.content) info.close();
-      });
+
+      const { clients, id, name } = ctoData[0];
+
+      // const infoWindow = getInfoWindow(pos, marker.title, clients, pos);
+      // infoWindows.push(infoWindow);
+      // infoWindow.open({
+      //   anchor: marker,
+      //   map,
+      // });
+      // infoWindows.forEach((info) => {
+      //   if (info.content != infoWindow.content) info.close();
+      // });
+
+      setModalInfo(clients, name, pos);
+      setFormData(pos.lat, pos.lng, id, name);
+
     });
   });
 }
@@ -358,7 +367,7 @@ function logout() {
 function renderClientsList(clients) {
   let list = "";
 
-  clients[0].forEach(client => {
+  clients.forEach(client => {
     let item = `<li>${client}</li>`;
 
     list += item;
