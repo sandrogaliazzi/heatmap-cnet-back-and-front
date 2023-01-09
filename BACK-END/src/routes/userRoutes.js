@@ -7,5 +7,6 @@ const router = express.Router();
 router
  .get("/users", UserController.ListarUsers)
  .post("/users", UserController.CadastrarUser)
+ .post("/registrar", UserController.RegisterUser)
 
 export default router;
