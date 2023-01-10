@@ -25,52 +25,6 @@ static CadastrarUser = (req, res) => {
     })
 }
 
-// static RegisterUser = async (req, res) => {
-//     try {
-//       // Get user input
-//       let { name, password } = req.body;
-  
-//       // Validate user input
-//       if (!(name && password )) {
-//         res.status(400).send("All input is required");
-//       }
-  
-//       // check if user already exist
-//       // Validate if user exist in our database
-//       const oldUser = await user.find();
-  
-//       if (oldUser) {
-//         return res.status(409).send("User Already Exist. Please Login");
-//       }
-  
-//       //Encrypt user password
-//       encryptedPassword = await bcrypt.hash(password, 10);
-  
-//       // Create user in our database
-//       const user = await user.create({
-//         name,
-//         category,
-//         password: encryptedPassword,
-//       });
-  
-//       // Create token
-//       const token = jwt.sign(
-//         { user_id: user._id, name },
-//         process.env.TOKEN_KEY,
-//         {
-//           expiresIn: "2h",
-//         }
-//       );
-//       // save user token
-//       user.token = token;
-  
-//       // return new user
-//       res.status(201).json(user);
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   };
-
   static RegisterUser = async (req, res) => {
     try {
       // Get user input
@@ -83,7 +37,7 @@ static CadastrarUser = (req, res) => {
   
       // check if user already exist
       // Validate if user exist in our database
-      const oldUser = await user.find({name});
+      let oldUser = await user.find({name});
   
       if (!oldUser) {
         return res.status(409).send("User Already Exist. Please Login");
@@ -93,31 +47,64 @@ static CadastrarUser = (req, res) => {
      let encryptedPassword = await bcrypt.hash(password, 10);
   
       // Create user in our database
-      const usuario = await user.create({
+      let usuario = await user.create({
         name,
         category,
         password: encryptedPassword,
       });
       
       // Create token
-      const token = jwt.sign(
+      let token = jwt.sign(
         { user_id: usuario._id, name },
         process.env.TOKEN_KEY,
         {
-          expiresIn: "24h",
+          expiresIn: "180h",
         }
       );
       // save user token
-      user.token = token;
+      
+        usuario.save( usuario.token = token);
   
       // return new user
-      res.status(201).send({message: `${req.body.name} - cadastrado.`});
+      res.status(201).send({message: `${usuario.name} - cadastrado.`});
     }} catch (err) {
       console.log(err);
     }
   };
 
+  static userLogin = async (req, res) => {
+    try {
+      // Get user input
+      let { name, password } = req.body;
   
+      // Validate user input
+      if (!(name && password)) {
+        res.status(400).send("All input is required");
+      } 
+      // Validate if user exist in our database
+      let usuario = await user.findOne({ name });
+  
+      if (usuario && (await bcrypt.compare(password, usuario.password))) {
+        // Create token
+        let token = jwt.sign(
+          { user_id: usuario._id, name },
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: "1h",
+          }
+        );
+  
+        // save user token
+        usuario.save( usuario.token = token);
+  
+        // user
+        res.status(201).send({message: `${usuario.name} autenticado com sucesso. token de acesso: ${usuario.token}`});
+      } else {
+        res.status(404).send({message: `Usuario ou senha invalidos.`})};
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
 }
 
