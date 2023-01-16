@@ -1,11 +1,11 @@
-import {getAllClientsByCto} from "../fetchApiTomodat.js";
+import {fetchTomodat, getAllClientsByCto} from "../fetchApiTomodat.js";
 import {getAllAcessPointsByCity} from "../fetchApiTomodat.js";
 import {addClient} from "../fetchApiTomodat.js"
 
 class TomodatController {
 
     static ListarClients = (req, res) => {
-        getAllClientsByCto().then(data =>{
+        fetchTomodat().then(data =>{
             res.json(data);
         });
     
