@@ -289,7 +289,7 @@ function getLocation() {
 function showPosition(position) {
   var lat = position.coords.latitude;
   var lng = position.coords.longitude;
-  const image = "./images/street-view-icon.png";
+  const image = "/static/images/street-view-icon.png";
   map.setCenter(new google.maps.LatLng(lat, lng));
 
   let marker = new google.maps.Marker({
