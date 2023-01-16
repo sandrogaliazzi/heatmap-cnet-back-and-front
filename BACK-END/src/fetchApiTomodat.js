@@ -78,7 +78,9 @@ export async function getAllClientsByCto() {
       id: cto.id,
       name: cto.name,
       coord: cto.dot,
-      clients: getClientsByCto(users, cto.id)
+      clients: getClientsByCto(users, cto.id),
+      percentage_free: cto.percentage_free
+      
     }
   });
 
@@ -103,7 +105,7 @@ export function addClient(req, res) {
   needle.post(`https://sp.tomodat.com.br/tomodat/api/clients/auto_connect/`, client, reqConfig, 
   ((err) =>{
     if(err) {
-        res.status(500).send({message: `${err.message} - falha ao cadastrar user.`})
+        res.status(500).send({message: `${err.message} - falha ao cadastrar Cliente.`})
     } else{
         res.status(201).send({ApiTomodatCadastroOk: `${client.date_time}: Cliente ${client.name} cadastrado com sucesso na cto ${client.cto_name} pelo usuario: ${client.user}.`});
     }
