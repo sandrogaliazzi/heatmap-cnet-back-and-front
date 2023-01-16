@@ -1,8 +1,10 @@
 import fetchWithDownloadTrack from "./fecthOnProgress.js";
 import setModalInfo from "./ctoModal.js";
 import setFormData from "./addClient.js";
+import { $ } from "./handleForm.js";
+import { logout } from "./logout.js";
 
-const searchCtoField = document.querySelector("#input-cto");
+const searchCtoField = $("#input-cto");
 
 var map, pointArray, heatmap;
 var TILE_SIZE = 256;
@@ -14,12 +16,12 @@ window.addEventListener("load", async () => {
   if (checkLogin()) {
     loadMap();
   } else {
-    window.location.href = "./index.html";
+    window.location.href = "/";
   }
 });
 
 function checkLogin() {
-  const token = window.localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   return token ? true : false;
 }
 
@@ -85,18 +87,8 @@ function setMarkers() {
 
       const { clients, id, name } = ctoData[0];
 
-      // const infoWindow = getInfoWindow(pos, marker.title, clients, pos);
-      // infoWindows.push(infoWindow);
-      // infoWindow.open({
-      //   anchor: marker,
-      //   map,
-      // });
-      // infoWindows.forEach((info) => {
-      //   if (info.content != infoWindow.content) info.close();
-      // });
-
       setModalInfo(clients, name, pos);
-      setFormData(pos.lat, pos.lng, id, name);
+      setFormData(id, name);
 
     });
   });
@@ -359,11 +351,6 @@ function hideMarkers(array) {
   array.forEach((marker) => marker.setMap(null));
 }
 
-function logout() {
-  window.localStorage.clear();
-  window.location.href = "./index.html";
-}
-
 function renderClientsList(clients) {
   let list = "";
 
@@ -419,6 +406,9 @@ export function setCenter(lat, lng) {
   map.setCenter({ lat, lng });
   map.setZoom(18);
 }
+
+$("#btnLogout").addEventListener("click", logout);
+
 
 window.initialize = initialize;
 

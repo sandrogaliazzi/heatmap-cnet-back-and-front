@@ -1,128 +1,87 @@
-function $(query) {
-  return document.querySelector(query);
-}
+import { sendApiReq } from "./handleApiRequests.js";
+import { $, get, set } from "./handleForm.js";
+import { triggerToast } from "./toast.js";
 
-const latInput = $("#lat");
-const LngInput = $("#lng");
-const clientNameInput = $("#clientName");
-const ctoIdInput = $("#ctoId");
-const ctoNameInput = $("#ctoName");
 const form = $("#addClientForm");
-const toast = $("#liveToast");
-const closeToastBtn = $("#closeToastBtn");
-const closeAddClientModalBtn = $("#closeAddClientModalBtn");
+const Modal = new bootstrap.Modal($("#addClientModal"));
+const coords = {};
 
+$("#addClientModal").addEventListener("show.bs.modal", function () {
+  getClinetPos();
+});
 
-function getClientName() {
-  return clientNameInput.value.toUpperCase();
-}
-
-function getLat() {
-  return latInput.value;
-}
-
-function setLat(lat) {
-  latInput.value = lat;
-}
-
-function getLng() {
-  return LngInput.value;
-}
-
-function setLng(lng) {
-  LngInput.value = lng;
-}
-
-function getCtoId() {
-  return ctoIdInput.value;
-}
-
-function setCtoId(id) {
-  ctoIdInput.value = id;
-}
-
-function getCtoName() {
-  return ctoNameInput.value;
-}
-
-function setCtoName(cto) {
-  ctoNameInput.value = cto;
-}
+$("#addClientModal").addEventListener("hide.bs.modal", function () {
+  form.reset();
+})
 
 function getUser() {
-  return window.localStorage.getItem("user");
+  return JSON.parse(sessionStorage.getItem("user")).name;
 }
 
 function getDateAndTime() {
   return new Date().toLocaleString("pt-BR");
 }
 
-function setFormData(lat, lng, ctoId, ctoName) {
-  setLat(lat);
-  setLng(lng);
-  setCtoId(ctoId);
-  setCtoName(ctoName);
+function getClinetPos() {
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0
+  };
+
+  return navigator.geolocation.getCurrentPosition(position => {
+    const { latitude, longitude } = position.coords;
+
+    set("#lat", latitude);
+    set("#lng", longitude);
+
+    coords.lat = latitude;
+    coords.lng = longitude;
+
+  }, error => {
+    alert("Naõ foi possivel obter localização " + error.message);
+  }, options);
 }
 
-function closeToast() {
-  setTimeout(() => { closeToastBtn.click(); }, 3000);
-}
-
-function triggerToast() {
-  const myToast = new bootstrap.Toast(toast);
-  myToast.show();
-  closeToast();
-}
-
-function closeModal() {
-  closeAddClientModalBtn.click();
-}
-
-async function sendpostRequest(url, bodyRequest) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(bodyRequest)
-  });
-
-  const status = response.status;
-
-  const content = await response.json();
-
-  return { content, status };
+function setFormData(ctoId, ctoName) {
+  set("#ctoId", ctoId);
+  set("#ctoName", ctoName);
+  set("#lat", "");
+  set("#lng", "");
 }
 
 async function sendClient(bodyRequest) {
-  const response = await sendpostRequest("https://api.heatmap.conectnet.net/client", bodyRequest);
-  return response;
-}
+  const response = await sendApiReq({
+    endpoint: "client",
+    httpMethod: "POST",
+    body: bodyRequest
+  })
 
-async function sendClientLog(bodyRequest) {
-  const response = await sendpostRequest("https://api.heatmap.conectnet.net/logctoclient", bodyRequest);
   return response;
 }
 
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
+  const { lat, lng } = coords;
+
   const bodyRequest = {
-    name: getClientName(),
-    lat: getLat(),
-    lng: getLng(),
-    cto_id: getCtoId(),
+    name: get("#clientName").toUpperCase(),
+    lat,
+    lng,
+    cto_id: get("#ctoId"),
     user: getUser(),
-    cto_name: getCtoName(),
+    cto_name: get("#ctoName"),
     date_time: getDateAndTime()
   }
 
-  //const apiResponse = await sendClientLog(bodyRequest);
+  const apiResponse = await sendClient(bodyRequest);
 
-  triggerToast();
-  closeModal();
-  this.reset();
+  if (apiResponse.status === 201) {
+    triggerToast("Cliente adicionado com sucesso", true);
+  }
+
+  Modal.hide();
 })
 
 
