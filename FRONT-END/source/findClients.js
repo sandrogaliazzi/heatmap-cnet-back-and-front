@@ -1,20 +1,30 @@
 import { setCenter, filterCto } from "./script.js";
+import { sendApiReq } from "./handleApiRequests.js";
+import { $ } from "./handleForm.js";
 
 const clientsFilter = [];
 
-const list = document.getElementById("clientsList");
-const canvasBtn = document.getElementById("closeOffCanvasBtn");
-const clientSearchInput = document.getElementById("clientSearchInput");
+const list = $("#clientsList");
+const clientSearchInput = $("#clientSearchInput");
 
+const offCanvas = new bootstrap.Offcanvas("#offcanvasScrolling")
 
-function closeCanvas() {
-  canvasBtn.click();
-}
+$("#offcanvasScrolling").addEventListener("show.bs.offcanvas", () => {
+  if (!clientsFilter.length) fecthData();
+});
+
+$("#offcanvasScrolling").addEventListener("hide.bs.offcanvas", () => {
+  clearClientList();
+});
+
 
 async function fecthData() {
-  const result = await fetch("https://api.heatmap.conectnet.net/tomodat");
+  const result = await sendApiReq({
+    endpoint: "tomodat",
+    httpMethod: "GET"
+  });
 
-  const data = await result.json();
+  const data = result.data;
 
   data.forEach(data => {
     const clients = data.clients;
@@ -31,7 +41,6 @@ async function fecthData() {
     )
   })
 }
-
 
 function findClient(query) {
   if (query !== "") {
@@ -65,11 +74,12 @@ function renderClientList(clients) {
     <li class="list-group-item d-flex justify-content-between align-items-center">
       <p class="mb-0">${name}</p>
     <button 
-      class="btn btn-sm btn-success" 
+      class="btn btn-sm btn-success d-flex gap-2" 
       data-cto="${cto}"
       data-lat="${lat}"
       data-lng="${lng}"
       >
+      <i class="bi bi-box-fill"></i>
       cto
     </button>
   </li>
@@ -83,16 +93,14 @@ function renderClientList(clients) {
 
 clientSearchInput.addEventListener("keyup", function () {
   findClient(this.value);
-})
+});
 
 list.addEventListener("click", function (event) {
   if (event.target.dataset.cto) {
     const { cto, lat, lng } = event.target.dataset;
     filterCto(cto);
     setCenter(parseFloat(lat), parseFloat(lng));
-    closeCanvas();
+    offCanvas.hide();
   }
-})
-
-fecthData()
+});
 

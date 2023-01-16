@@ -1,3 +1,5 @@
+import { headersConfig } from "./handleApiRequests.js";
+
 const progressBar = document.querySelector(".progress-bar");
 const progress = document.querySelector(".progress");
 
@@ -17,7 +19,9 @@ function hideProgress() {
 }
 
 async function fetchWithDownloadTrack(url) {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: headersConfig
+  });
 
   const reader = response.body.getReader();
 

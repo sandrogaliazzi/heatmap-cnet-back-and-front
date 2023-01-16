@@ -1,6 +1,8 @@
-const openModal = document.querySelector("#openModalBtn");
-const clientsList = document.querySelector("#modalClientsList");
-const modalTitle = document.querySelector("#ctoModalTitle");
+import { $ } from "./handleForm.js";
+
+const openModal = $("#openModalBtn");
+const clientsList = $("#modalClientsList");
+const modalTitle = $("#ctoModalTitle");
 
 function createCtoLink(pos) {
   return `https://www.google.com/maps/search/?api=1&query=${pos.lat},${pos.lng}`;
@@ -29,6 +31,7 @@ function setModalTitle(title, pos) {
 function setModalInfo(clients, title, pos) {
   setClientsList(clients);
   setModalTitle(title, pos);
+  $("#clientsNumber").innerHTML = `<strong>${clients.length}</strong> clientes`;
   openModal.click();
 }
 
