@@ -1,22 +1,45 @@
 import fetTomodat from "../models/fetchModel.js"
-
+import { fetchTomodat } from "../fetchApiTomodat.js";
 
 
 
 class fetTomodatController {
 
     static CadastrarFetch = (req, res) => {
-        let fetTomodats = new fetTomodat(req.body);
-        fetTomodats.save((err) =>{
-            if(err) {
-                res.status(500).send({message: `${err.message} - falha ao cadastrar user.`})
-            } else{
-                res.status(201).send({message: "ok"})
-            }
-        })
+        fetchTomodat().then(data => {
+            data.forEach(element => {
+              JSON.stringify(element)
+              let fet = new fetTomodat(element);
+              fet.save((err) =>{
+                if(err) {
+                    console.log({message: `${err.message} - falha ao cadastrar.`})
+                } else{
+                  console.log({message: `elemento do fetch cadastrado com sucesso`})
+                }
+            });
+            });
+            res.send({message: "fetch cadastrado com sucesso"});
+          });
+          
     };
 
-
+    static UpdateFetch = (req, res)=> {
+        fetchTomodat().then(data => {
+            data.forEach(element => {
+              JSON.stringify(element)
+              let dados = element
+              let id = dados.id
+              fetTomodat.findOneAndUpdate({"id": id}, {$set: dados}, (err) => {
+                        if(!err) {
+                            console.log({message: `Alteração realizada com sucesso,`})
+                        } else {
+                            console.log({message: err.message})
+                  }})
+            });
+            res.send({message: "fetch atualizado com sucesso"});
+          });
+    }
+            
 
     static ListarFetch = (req, res) => {
       fetTomodat.find((err, fetTomodats)=>{

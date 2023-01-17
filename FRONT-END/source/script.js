@@ -9,7 +9,7 @@ const searchCtoField = $("#input-cto");
 var map, pointArray, heatmap;
 var TILE_SIZE = 256;
 
-const tomodatData = [];
+export const tomodatData = [];
 let mapCoordinates = [];
 
 window.addEventListener("load", async () => {
@@ -27,7 +27,9 @@ function checkLogin() {
 
 async function loadMap() {
   try {
-    const data = await fetchWithDownloadTrack("https://api.heatmap.conectnet.net/tomodat");
+    const data = await fetchWithDownloadTrack("https://api.heatmap.conectnet.net/fetch");
+
+    $("#spinnerContainer").classList.add("d-none");
 
     tomodatData.push(...data);
 
@@ -289,7 +291,7 @@ function getLocation() {
 function showPosition(position) {
   var lat = position.coords.latitude;
   var lng = position.coords.longitude;
-  const image = "/static/images/street-view-icon.png";
+  const image = "./images/street-view-icon.png";
   map.setCenter(new google.maps.LatLng(lat, lng));
 
   let marker = new google.maps.Marker({

@@ -1,36 +1,28 @@
-import { setCenter, filterCto } from "./script.js";
-import { sendApiReq } from "./handleApiRequests.js";
+import { setCenter, filterCto, tomodatData } from "./script.js";
 import { $ } from "./handleForm.js";
 
-const clientsFilter = [];
+const apListFilter = [];
+const clientsList = [];
 
 const list = $("#clientsList");
 const clientSearchInput = $("#clientSearchInput");
+const ctoSearchInput = $("#ctoSearchInput");
 
 const offCanvas = new bootstrap.Offcanvas("#offcanvasScrolling")
 
 $("#offcanvasScrolling").addEventListener("show.bs.offcanvas", () => {
-  if (!clientsFilter.length) fecthData();
+  if (!apListFilter.length) {
+    mapClients(tomodatData);
+    apListFilter.push(...tomodatData);
+  }
 });
 
-$("#offcanvasScrolling").addEventListener("hide.bs.offcanvas", () => {
-  clearClientList();
-});
-
-
-async function fecthData() {
-  const result = await sendApiReq({
-    endpoint: "tomodat",
-    httpMethod: "GET"
-  });
-
-  const data = result.data;
-
-  data.forEach(data => {
+function mapClients(aplist) {
+  aplist.forEach(data => {
     const clients = data.clients;
 
 
-    clientsFilter.push(
+    clientsList.push(
       clients.map(client => {
         return {
           name: client,
@@ -39,17 +31,19 @@ async function fecthData() {
         }
       })
     )
-  })
+  });
 }
 
-function findClient(query) {
+function findResults(query, typeSearch) {
   if (query !== "") {
-    const searchResult = clientsFilter
-      .flat()
-      .filter(client => client.name.indexOf(query.toUpperCase()) > -1 && query)
+    const searchResult = typeSearch === "client"
+      ? clientsList
+        .flat()
+        .filter(client => client.name.indexOf(query.toUpperCase()) > -1 && query)
+      : apListFilter.filter(ap => ap.name.indexOf(query.toUpperCase()) > -1 && query);
 
     if (searchResult.length > 0) {
-      renderClientList(searchResult);
+      renderList(searchResult);
     }
   } else {
     clearClientList();
@@ -60,22 +54,22 @@ function clearClientList() {
   list.innerHTML = "";
 }
 
-function renderClientList(clients) {
+function renderList(results) {
 
   clearClientList();
 
   let listItems = "";
 
-  clients.forEach(client => {
-    const { name, cto, coord } = client;
+  results.forEach(result => {
+    const { name, cto, coord, city } = result;
     const { lat, lng } = coord;
 
     let item = `
     <li class="list-group-item d-flex justify-content-between align-items-center">
-      <p class="mb-0">${name}</p>
+      <p class="mb-0">${name}  <b>${city ? city : ""}</b></p>
     <button 
       class="btn btn-sm btn-success d-flex gap-2" 
-      data-cto="${cto}"
+      data-cto="${(cto || name)}"
       data-lat="${lat}"
       data-lng="${lng}"
       >
@@ -92,7 +86,11 @@ function renderClientList(clients) {
 }
 
 clientSearchInput.addEventListener("keyup", function () {
-  findClient(this.value);
+  findResults(this.value, "client");
+});
+
+ctoSearchInput.addEventListener("keyup", function () {
+  findResults(this.value);
 });
 
 list.addEventListener("click", function (event) {

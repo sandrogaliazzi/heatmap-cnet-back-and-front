@@ -8,8 +8,11 @@ const fetTomodatSchema = new mongoose.Schema(
        cto_id: {type: String, require: true},
        clients: {type: Array, require: true},
        city: {type: String, require: true},
-       percentage_free: {type: String, require: true}
-      }
+       percentage_free: {type: String, require: true}       
+      },
+      {
+        versionKey: false
+        }
 );
 
 const fetTomodat= mongoose.model('fetchTomodat', fetTomodatSchema);

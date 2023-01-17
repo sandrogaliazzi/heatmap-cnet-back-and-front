@@ -113,12 +113,12 @@ function getTableColumn(type, data, index) {
             </td>
     `
   } else if (type === "logs") {
-    const { name, date_time, cto_name } = data;
+    const { name, date_time, cto_name, user } = data;
 
     return `<th scope="row">${index + 1}</th>
     <td>${name}</td>
     <td>${cto_name}</td>
-    <td>tecnico</td>
+    <td>${user}</td>
     <td>${date_time}</td>
 `
   }

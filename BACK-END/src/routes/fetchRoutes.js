@@ -6,6 +6,7 @@ const router = express.Router();
 
 router
  .get("/fetch", fetchController.ListarFetch)
- .post("/fetch", fetchController.CadastrarFetch)
+ .get("/cadastrofetch", fetchController.CadastrarFetch)
+ .get("/updatefetch", fetchController.UpdateFetch)
  
 export default router;

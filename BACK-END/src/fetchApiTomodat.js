@@ -2,6 +2,7 @@ const fs = import("fs");
 
 import needle from 'needle';
 import fetch from 'node-fetch';
+import fetTomodat from './models/fetchModel.js';
 
 const path = import("path");
 
@@ -100,7 +101,7 @@ export function addClient(req, res) {
 };
 
 function getCtoCityById(aplist, id) {
-  return aplist.filter(ap => ap.id === id).map(ap => ap.tree[3]);
+  return aplist.filter(ap => ap.id === id).map(ap => ap.tree[ap.tree.length-1]);
 }
 
 export async function fetchTomodat() {
@@ -127,4 +128,16 @@ export async function fetchTomodat() {
 
 }
 
-// fetchTomodat().then(data => console.log(data[370]));
+// fetchTomodat().then(data => {
+//   data.forEach(element => {
+//     JSON.stringify(element)
+//     let fet = new fetTomodat(element);
+//     fet.save((err) =>{
+//       if(err) {
+//           console.log({message: `${err.message} - falha ao cadastrar user.`})
+//       } else{
+//         console.log({message: `ok.`})
+//       }
+//   })
+//   });
+// });

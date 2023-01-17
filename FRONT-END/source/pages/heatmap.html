@@ -55,11 +55,21 @@
         ></div>
       </div>
     </div>
+    <div
+      class="d-flex flex-column align-items-center position-absolute top-50 start-50 translate-middle z-3"
+      id="spinnerContainer"
+    >
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        style="width: 4rem; height: 4rem"
+      ></div>
+      <span class="badge text-bg-primary fs-5 mt-2">Carregando...</span>
+    </div>
     <div id="map_canvas"></div>
     <div
       class="offcanvas offcanvas-start"
-      data-bs-scroll="true"
-      data-bs-backdrop="false"
+      data-bs-backdrop="static"
       tabindex="-1"
       id="offcanvasScrolling"
       aria-labelledby="offcanvasScrollingLabel"
