@@ -9,7 +9,7 @@ const router = express.Router();
 router
  .get("/tomodat", TomodatController.ListarClients) // fetch direto do tomodat 30segundos
 //  .get("/ctos", TomodatController.ListarCtos)
- .post("/client", LogClientController.CadastrarLog, CtoClientController.CadastrarCtoClientN, TomodatController.CadastrarClient)
+ .post("/client", auth, LogClientController.CadastrarLog, CtoClientController.CadastrarCtoClientN, TomodatController.CadastrarClient)
 //  .post("/logctoclient", auth, LogClientController.CadastrarLog)
  .get("/logctoclient", auth, LogClientController.ListarLogCtoClient)
 //  .post("/teste", LogClientController.CadastrarLog, TomodatController.CadastrarClient)
