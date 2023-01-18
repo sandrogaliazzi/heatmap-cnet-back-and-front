@@ -5,11 +5,10 @@ import auth from "../middleware/auth.js";
 const router = express.Router();
 
 router
- .get("/users", auth, UserController.ListarUsers)
- .post("/users", auth, UserController.RegisterUser)
- .put("/users/:id", auth, UserController.atualizarUser)
- .delete("/users/:id", auth, UserController.excluirUser)
- .get("/users/:id", auth, UserController.ListarUsersPorId)
- .post("/login", UserController.userLogin)
-//   .post("/register", UserController.RegisterUser)
+ .get("/users", auth, UserController.ListarUsers) // lista todos os usurios do db
+ .post("/users", auth, UserController.RegisterUser) // cadastra usuario no db
+ .put("/users/:id", auth, UserController.atualizarUser) // atualiza usuario no db pelo id
+ .delete("/users/:id", auth, UserController.excluirUser) // deleta o usuario no db pelo id
+ .get("/users/:id", auth, UserController.ListarUsersPorId) // lista usuario pelo id
+ .post("/login", UserController.userLogin) // login do usuario 
 export default router;

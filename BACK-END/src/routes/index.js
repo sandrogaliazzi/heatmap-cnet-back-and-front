@@ -3,6 +3,7 @@ import users from "./userRoutes.js";
 import tomodat from "./tomodatRoutes.js";
 import token from "./tokenRoutes.js";
 import fetch from "./fetchRoutes.js";
+import cto from "./ctoClientRoutes.js"
 
 
 const routes = (app) => {
@@ -16,7 +17,8 @@ const routes = (app) => {
      users,
      tomodat,
      token,
-     fetch
+     fetch,
+     cto
      )
 }
 

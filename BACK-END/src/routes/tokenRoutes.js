@@ -10,3 +10,4 @@ router
  
 
 export default router;
+//rota pra teste apenas

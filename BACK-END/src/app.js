@@ -17,7 +17,7 @@ app.use(cors({
     credentials: true,
   }));
 // app.use(cors());
-app.use(express.json());
+app.use(express.json({limit: '50mb'})); //add {limit: '50mb'} referente ao erro PayloadTooLargeError: request entity too large
 
 routes(app);
 

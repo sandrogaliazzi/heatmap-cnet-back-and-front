@@ -5,8 +5,8 @@ import auth from "../middleware/auth.js";
 const router = express.Router();
 
 router
- .get("/fetch", fetchController.ListarFetch)
- .get("/cadastrofetch", fetchController.CadastrarFetch)
- .get("/updatefetch", fetchController.UpdateFetch)
+ .get("/fetch", fetchController.ListarFetch) // lista o fetch do banco
+ .get("/cadastrofetch", fetchController.CadastrarFetch) // executa o fetch no tomodat e cadastra no banco
+ .get("/updatefetch", fetchController.UpdateFetch) // executa o fetch no tomodat e atualiza as info no banco
  
 export default router;

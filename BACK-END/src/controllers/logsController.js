@@ -22,7 +22,7 @@ class LogClientController {
     static ListarLogCtoClient = (req, res) => {
     logCtoClient.find((err, logCtoClient)=>{
     res.status(200).send(logCtoClient)
-}).sort({_id: -1})
+}).sort({_id: -1}) //sort id -1 retorna as adições mais novas no banco
 };
    
     
