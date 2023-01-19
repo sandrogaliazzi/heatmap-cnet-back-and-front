@@ -1,6 +1,6 @@
-import {fetchTomodat, getAllClientsByCto} from "../fetchApiTomodat.js";
-import {getAllAcessPointsByCity} from "../fetchApiTomodat.js";
-import {addClient} from "../fetchApiTomodat.js"
+import {fetchTomodat, getAllClientsByCto} from "../scripts/fetchApiTomodat.js";
+import {getAllAcessPointsByCity} from "../scripts/fetchApiTomodat.js";
+import {addClient} from "../scripts/fetchApiTomodat.js"
 
 class TomodatController {
 

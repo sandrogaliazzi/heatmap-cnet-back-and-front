@@ -1,5 +1,5 @@
 import fetTomodat from "../models/fetchModel.js"
-import { fetchTomodat } from "../fetchApiTomodat.js";
+import { fetchTomodat } from "../scripts/fetchApiTomodat.js"
 
 
 

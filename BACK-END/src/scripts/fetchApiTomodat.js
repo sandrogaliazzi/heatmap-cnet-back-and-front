@@ -2,7 +2,7 @@ const fs = import("fs");
 
 import needle from 'needle';
 import fetch from 'node-fetch';
-import fetTomodat from './models/fetchModel.js';
+import fetTomodat from '../models/fetchModel.js';
 
 const path = import("path");
 
@@ -105,14 +105,14 @@ function getCtoCityById(aplist, id) {
 }
 
 export async function fetchTomodat() {
-
+  try {
   const [aplist, apListWithCity, users] = await Promise.all(
     [getAllAcessPoints(), getAllAcessPointsByCity(), getAllClients()]
   );
 
-  const ctoList = aplist.filter(ap => ap.category === 5);
+   let ctoList = aplist.filter(ap => ap.category === 5);
 
-  const usersByCto = ctoList.map(cto => {
+   let usersByCto = ctoList.map(cto => {
 
     return {
       id: cto.id,
@@ -126,7 +126,9 @@ export async function fetchTomodat() {
 
   return usersByCto;
 
-}
+} catch (err){
+  console.log(err)
+}}
 
 // fetchTomodat().then(data => {
 //   data.forEach(element => {

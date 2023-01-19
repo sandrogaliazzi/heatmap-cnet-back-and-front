@@ -1,10 +1,8 @@
 import express from "express";
 import cors from "cors";
-import {getAllClientsByCto} from "./fetchApiTomodat.js";
-import { getAllAcessPointsByCity } from "./fetchApiTomodat.js";
 import routes from "./routes/index.js";
 import db from "./config/dbConnect.js"
-import user from "./models/users.js"
+
 
 const app = express()
 

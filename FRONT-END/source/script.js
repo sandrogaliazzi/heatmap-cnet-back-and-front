@@ -87,9 +87,9 @@ function setMarkers() {
         return data.name == marker.title && data.coord.lat == pos.lat && data.coord.lng == pos.lng
       });
 
-      const { clients, id, name } = ctoData[0];
+      const { id, name } = ctoData[0];
 
-      setModalInfo(clients, name, pos);
+      setModalInfo(ctoData[0]);
       setFormData(id, name);
 
     });
@@ -291,7 +291,7 @@ function getLocation() {
 function showPosition(position) {
   var lat = position.coords.latitude;
   var lng = position.coords.longitude;
-  const image = "./images/street-view-icon.png";
+  const image = "/static/images/street-view-icon.png";
   map.setCenter(new google.maps.LatLng(lat, lng));
 
   let marker = new google.maps.Marker({

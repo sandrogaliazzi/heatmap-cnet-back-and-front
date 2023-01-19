@@ -1,6 +1,8 @@
 import { sendApiReq } from "./handleApiRequests.js";
 import { $, get, set } from "./handleForm.js";
 import { triggerToast } from "./toast.js";
+import { tomodatData } from "./script.js";
+import setModalInfo from "./ctoModal.js";
 
 const form = $("#addClientForm");
 const Modal = new bootstrap.Modal($("#addClientModal"));
@@ -60,6 +62,16 @@ async function sendClient(bodyRequest) {
   return response;
 }
 
+function updateClientsModal() {
+  const cto = tomodatData.find(cto => cto.id === get("#ctoId"));
+
+
+  cto.clients.push(get("#clientName").toUpperCase());
+
+
+  setModalInfo(cto, true);
+}
+
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
@@ -79,6 +91,13 @@ form.addEventListener("submit", async function (event) {
 
   if (apiResponse.status === 201) {
     triggerToast("Cliente adicionado com sucesso", true);
+    sendApiReq({
+      endpoint: "updatefetch",
+      httpMethod: "GET"
+    });
+
+    updateClientsModal();
+
   }
 
   Modal.hide();

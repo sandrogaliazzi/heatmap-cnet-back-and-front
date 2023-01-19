@@ -12,7 +12,17 @@ function renderClientsList(clients) {
   let list = "";
 
   clients.forEach(client => {
-    let item = `<li class="list-group-item">${client}</li>`;
+    let item = `<li class="list-group-item d-flex justify-content-between align-items-center">
+      <span class="me-3">${client}</span>
+      <div class="btn-group">
+        <button class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-clipboard" data-copy-to="unm"  data-user-name="${client}"></i>
+        </button>
+        <button class="btn btn-outline-secondary btn-sm"> 
+          <i class="bi bi-clipboard-minus" data-copy-to="parks"  data-user-name="${client}"></i>
+        </button>
+      </div>
+    </li>`;
 
     list += item;
   })
@@ -28,11 +38,91 @@ function setModalTitle(title, pos) {
   modalTitle.innerHTML = `<a href="${createCtoLink(pos)}" target="blank">${title}</a>`;
 }
 
-function setModalInfo(clients, title, pos) {
+export function setFreePortsNumber(percetageFree, totalClients) {
+  const occupiedPortsPercentage = 100 - percetageFree;
+
+
+  if (occupiedPortsPercentage === 100) return false;
+
+  let totalPorts = "";
+
+  if (percetageFree === 100) totalPorts = false;
+
+  totalPorts = Math.ceil((100 * totalClients) / occupiedPortsPercentage);
+
+
+  return {
+    freePortsNumber: totalPorts ? totalPorts - totalClients : "Total",
+    totalPorts
+  }
+}
+
+
+
+function setModalInfo(info, newPercentageFree) {
+  const { clients, name, coord, percentage_free } = info;
+
+
   setClientsList(clients);
-  setModalTitle(title, pos);
+  setModalTitle(name, coord);
   $("#clientsNumber").innerHTML = `<strong>${clients.length}</strong> clientes`;
+
+  let { freePortsNumber } =  setFreePortsNumber(parseInt(percentage_free), clients.length);
+
+  console.log(freePortsNumber);
+
+  if(newPercentageFree) {
+    let newTotalFree = setFreePortsNumber(parseInt(percentage_free), clients.length - 1);
+    freePortsNumber = newTotalFree.freePortsNumber - 1
+  }
+
+  console.log(freePortsNumber);
+
+  if (freePortsNumber) {
+    $("#percentageFree").innerHTML = `<strong class="text-success">${freePortsNumber} Vagas</strong>`
+    $("[data-bs-target='#addClientModal']").removeAttribute("disabled");
+  } else {
+    $("#percentageFree").innerHTML = `<strong class="text-danger">Cto lotada</strong>`
+    $("[data-bs-target='#addClientModal']").setAttribute("disabled", "");
+  }
+
   openModal.click();
 }
+
+function hifenName(name) {
+  const nameString = name.split("");
+  nameString.forEach((char, index) => {
+    if (char === "(") {
+      nameString.splice(index);
+    }
+  });
+
+  return nameString.join("").trim().split(" ").join("-");
+}
+
+$("#modalClientsList").addEventListener("click", function (event) {
+  const data = event.target.dataset;
+
+  if (Object.keys(data).length > 0) {
+    const { userName, copyTo } = data;
+    const el = event.target;
+
+
+    navigator.clipboard.writeText(
+      copyTo === "unm" ? userName : hifenName(userName)
+    );
+
+    let icon = el.classList[1];
+
+    [icon, "bi-clipboard-check-fill"].forEach(className => el.classList.toggle(className));
+
+    setTimeout(() => {
+      el.classList.remove("bi-clipboard-check-fill");
+      el.classList.add(icon);
+    }, 1500);
+
+
+  }
+})
 
 export default setModalInfo;
