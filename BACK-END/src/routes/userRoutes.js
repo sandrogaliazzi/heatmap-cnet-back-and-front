@@ -12,5 +12,5 @@ router
  .put("/users/:id", auth, UserController.atualizarUser) // atualiza usuario no db pelo id
  .delete("/users/:id", auth, UserController.excluirUser) // deleta o usuario no db pelo id
  .get("/users/:id", auth, UserController.ListarUsersPorId) // lista usuario pelo id
- .post("/login", TrakingController.CadastrarTracking ,UserController.userLogin) // login do usuario 
+ .post("/login", UserController.userLogin) // login do usuario 
 export default router;

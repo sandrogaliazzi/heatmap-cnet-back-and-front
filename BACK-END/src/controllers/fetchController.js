@@ -24,14 +24,15 @@ class fetTomodatController {
     };
 
     static UpdateFetch = (req, res)=> {
-        fetchTomodat().then(data => {
+      let now = new Date()  
+      fetchTomodat().then(data => {
             data.forEach(element => {
               JSON.stringify(element)
               let dados = element
               let id = dados.id
               fetTomodat.findOneAndUpdate({"id": id}, {$set: dados}, (err) => {
                         if(!err) {
-                            console.log({message: `Alteração realizada com sucesso,`})
+                            console.log({message: `Fetch atualizado com susesso. ${now}`})
                         } else {
                             console.log({message: err.message})
                   }})

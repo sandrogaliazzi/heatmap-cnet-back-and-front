@@ -13,5 +13,6 @@ var credentials = {key: privateKey, cert: certificate,}; //usar no https
 const server = http.createServer(credentials, app);
 
 server.listen(port, () => {
-  console.log("server starting on port : " + port)
+  let now = new Date().toLocaleString("PT-br");
+  console.log(`server starting on port: ${port} in: ${now}`)
 });

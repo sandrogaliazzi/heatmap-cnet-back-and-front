@@ -1,12 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
 const TrackingSchema = new mongoose.Schema(
-     {
-       id: {type: String},
-       name: {type: String, require: true, unique: true}, 
-       lat: {type: String },
-       lng: {type: String }
-      }
+  {
+    id: {type: String},
+    user: {type: String, require: true}, 
+    lat: {type: String, require: true },
+    lng: {type: String, require: true},
+    date_time: {type: String, require: true}
+   }
 );
 
 const tracking = mongoose.model('tracking', TrackingSchema);

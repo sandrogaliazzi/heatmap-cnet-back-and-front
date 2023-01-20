@@ -4,7 +4,7 @@ import tomodat from "./tomodatRoutes.js";
 import token from "./tokenRoutes.js";
 import fetch from "./fetchRoutes.js";
 import cto from "./ctoClientRoutes.js"
-
+import tracking from "./trackingRoutes.js";
 
 const routes = (app) => {
     app.route('/').get((req, res) => {
@@ -18,7 +18,8 @@ const routes = (app) => {
      tomodat,
      token,
      fetch,
-     cto
+     cto,
+     tracking
      )
 }
 

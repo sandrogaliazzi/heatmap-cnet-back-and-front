@@ -8,7 +8,8 @@ const app = express()
 
 db.on("error", console.log.bind(console, 'erro de conexão'))
 db.once('open', () => {
-    console.log('conexão com o banco')
+   let now = new Date().toLocaleString("PT-br");
+    console.log(`conexão com o banco em: ${now}`)
 })
 
 app.use(cors({

@@ -1,4 +1,4 @@
-import {fetchTomodat, getAllClientsByCto} from "../scripts/fetchApiTomodat.js";
+import {fetchTomodat} from "../scripts/fetchApiTomodat.js";
 import {getAllAcessPointsByCity} from "../scripts/fetchApiTomodat.js";
 import {addClient} from "../scripts/fetchApiTomodat.js"
 

@@ -51,10 +51,7 @@ export function setFreePortsNumber(percetageFree, totalClients) {
   totalPorts = Math.ceil((100 * totalClients) / occupiedPortsPercentage);
 
 
-  return {
-    freePortsNumber: totalPorts ? totalPorts - totalClients : "Total",
-    totalPorts
-  }
+  return totalPorts ? totalPorts - totalClients : "cto vazia";
 }
 
 
@@ -67,19 +64,17 @@ function setModalInfo(info, newPercentageFree) {
   setModalTitle(name, coord);
   $("#clientsNumber").innerHTML = `<strong>${clients.length}</strong> clientes`;
 
-  let { freePortsNumber } =  setFreePortsNumber(parseInt(percentage_free), clients.length);
+  let freePortsNumber =  setFreePortsNumber(parseInt(percentage_free), clients.length);
 
-  console.log(freePortsNumber);
 
   if(newPercentageFree) {
     let newTotalFree = setFreePortsNumber(parseInt(percentage_free), clients.length - 1);
-    freePortsNumber = newTotalFree.freePortsNumber - 1
+    freePortsNumber = Number.isInteger(newTotalFree) ? newTotalFree - 1 : newTotalFree;
   }
 
-  console.log(freePortsNumber);
 
   if (freePortsNumber) {
-    $("#percentageFree").innerHTML = `<strong class="text-success">${freePortsNumber} Vagas</strong>`
+    $("#percentageFree").innerHTML = `<strong class="text-success">Vagas: ${freePortsNumber}</strong>`
     $("[data-bs-target='#addClientModal']").removeAttribute("disabled");
   } else {
     $("#percentageFree").innerHTML = `<strong class="text-danger">Cto lotada</strong>`

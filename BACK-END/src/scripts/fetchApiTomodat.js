@@ -26,11 +26,11 @@ const reqConfig = {
 
 async function getAllClients() {
   try {
-    const response = await fetch(`https://sp.tomodat.com.br/tomodat/api/clients/`, reqConfig)
-    const data = await response.json()
+    let response = await fetch(`https://sp.tomodat.com.br/tomodat/api/clients/`, reqConfig)
+    let data = await response.json()
     return data
   } catch (err) {
-    console.error("erro " + err)
+    console.error("erro em getALLclients" + err)
   }
 }
 
@@ -43,48 +43,26 @@ function getClientsByCto(users, id) {
 async function getAllAcessPoints() {
   try {
 
-    const response = await fetch(`https://sp.tomodat.com.br/tomodat/api/access_points/${coord.lat}/${coord.lng}/${coord.range}`, reqConfig)
+    let response = await fetch(`https://sp.tomodat.com.br/tomodat/api/access_points/${coord.lat}/${coord.lng}/${coord.range}`, reqConfig)
 
-    const data = await response.json()
+    let data = await response.json()
 
     return data
   } catch (err) {
-    console.error("erro " + err)
+    console.error("erro em getAllAP" + err.message);
   }
 }
 
 
-export async function getAllClientsByCto() {
-  const apList = await getAllAcessPoints();
-
-  const ctoList = apList.filter(ap => ap.category === 5);
-
-  const users = await getAllClients();
-
-  const usersByCto = ctoList.map(cto => {
-
-    return {
-      id: cto.id,
-      name: cto.name,
-      coord: cto.dot,
-      clients: getClientsByCto(users, cto.id),
-      city: cto.tree[3]
-    }
-  });
-
-  return usersByCto;
-
-}
-
 export async function getAllAcessPointsByCity() {
   try {
 
-    const response = await fetch(`https://sp.tomodat.com.br/tomodat/api/access_points/list_path`, reqConfig)
+    let response = await fetch(`https://sp.tomodat.com.br/tomodat/api/access_points/list_path`, reqConfig)
 
-    const data = await response.json()
+    let data = await response.json()
     return data
   } catch (err) {
-    console.error("erro " + err)
+    console.error("erro em GetApByCity" + err.message);
   }
 }
 
@@ -106,7 +84,7 @@ function getCtoCityById(aplist, id) {
 
 export async function fetchTomodat() {
   try {
-  const [aplist, apListWithCity, users] = await Promise.all(
+    let [aplist, apListWithCity, users] = await Promise.all(
     [getAllAcessPoints(), getAllAcessPointsByCity(), getAllClients()]
   );
 
@@ -129,17 +107,3 @@ export async function fetchTomodat() {
 } catch (err){
   console.log(err)
 }}
-
-// fetchTomodat().then(data => {
-//   data.forEach(element => {
-//     JSON.stringify(element)
-//     let fet = new fetTomodat(element);
-//     fet.save((err) =>{
-//       if(err) {
-//           console.log({message: `${err.message} - falha ao cadastrar user.`})
-//       } else{
-//         console.log({message: `ok.`})
-//       }
-//   })
-//   });
-// });

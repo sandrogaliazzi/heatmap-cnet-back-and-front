@@ -72,6 +72,25 @@ function updateClientsModal() {
   setModalInfo(cto, true);
 }
 
+function toggleBtnLoader(isLoading) {
+  const saveBtn =  $("#saveClientBtn");
+
+
+  if(isLoading) {
+    saveBtn.innerHTML = `
+    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    Salvando
+    `
+
+    saveBtn.setAttribute("disabled", "");
+  } else {
+    saveBtn.innerHTML = "Salvar"
+    saveBtn.removeAttribute("disabled");
+  }
+
+  
+}
+
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
@@ -87,14 +106,18 @@ form.addEventListener("submit", async function (event) {
     date_time: getDateAndTime()
   }
 
+  toggleBtnLoader(true);
+
   const apiResponse = await sendClient(bodyRequest);
+
+  toggleBtnLoader(false);
 
   if (apiResponse.status === 201) {
     triggerToast("Cliente adicionado com sucesso", true);
-    sendApiReq({
-      endpoint: "updatefetch",
-      httpMethod: "GET"
-    });
+    // sendApiReq({
+    //   endpoint: "updatefetch",
+    //   httpMethod: "GET"
+    // });
 
     updateClientsModal();
 
