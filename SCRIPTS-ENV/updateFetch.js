@@ -1,7 +1,7 @@
 import needle from "needle";
-import fetTomodat from "../models/fetchModel.js"
-import { fetchTomodat } from "../scripts/fetchApiTomodat.js"
-import db from "../config/dbConnect.js"
+import fetTomodat from "../BACK-END/src/models/fetchModel.js"
+import { fetchTomodat } from "../BACK-END/src/scripts/fetchApiTomodat.js"
+import db from "../BACK-END/src/config/dbConnect.js"
 
 
 db.on("error", console.log.bind(console, 'erro de conexão'))
