@@ -30,12 +30,16 @@ function updateFetch(){
                     console.log({message: err.message})
           }})
     });
+    
 })
-console.log(`Fetch send to Db: ${now}`)
 } 
 
 
-setInterval(updateFetch, 900000) // setinterval = 15m (900000)
+setInterval(async ()=>{
+    await updateFetch()
+    let now = new Date().toLocaleString("PT-br")
+    console.log(`Fetch send to Dbaaaaaaaaaaaaaa: ${now}`)
+}, 900000) // setinterval = 15m (900000)
 // updateFetch()
 
 // cadastroFetch()

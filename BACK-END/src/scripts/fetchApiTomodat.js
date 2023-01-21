@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import fetTomodat from '../models/fetchModel.js';
 
 const path = import("path");
+const fetchAllAcessPoints = [];
 
 
 const coord = {
@@ -46,8 +47,9 @@ async function getAllAcessPoints() {
     let response = await fetch(`https://sp.tomodat.com.br/tomodat/api/access_points/${coord.lat}/${coord.lng}/${coord.range}`, reqConfig)
 
     let data = await response.json()
-
+    fetchAllAcessPoints.push(...data)
     return data
+
   } catch (err) {
     console.error("erro em getAllAP" + err.message);
   }
@@ -87,10 +89,10 @@ export async function fetchTomodat() {
     let [aplist, apListWithCity, users] = await Promise.all(
     [getAllAcessPoints(), getAllAcessPointsByCity(), getAllClients()]
   );
+    let ctoList = aplist ? aplist : fetchAllAcessPoints
+    let ctoListFilter = ctoList.filter(ap => ap.category === 5);
 
-   let ctoList = aplist.filter(ap => ap.category === 5);
-
-   let usersByCto = ctoList.map(cto => {
+   let usersByCto = ctoListFilter.map(cto => {
 
     return {
       id: cto.id,
