@@ -2,14 +2,20 @@ import { sendApiReq } from "./handleApiRequests.js";
 import { $, get, set } from "./handleForm.js";
 import { triggerToast } from "./toast.js";
 import { tomodatData } from "./script.js";
-import setModalInfo from "./ctoModal.js";
+import setModalInfo, { recalcFreePorts } from "./ctoModal.js";
+import { getCurrentPosition } from "./mapUtils.js";
 
 const form = $("#addClientForm");
 const Modal = new bootstrap.Modal($("#addClientModal"));
-const coords = {};
+
+$("[data-bs-target='#addClientModal']").toggleAttribute("disabled");
 
 $("#addClientModal").addEventListener("show.bs.modal", function () {
-  getClinetPos();
+  getCurrentPosition().then(pos => {
+    set("#lat", pos.latitude);
+    set("#lng", pos.longitude);
+    $("[data-bs-target='#addClientModal']").toggleAttribute("disabled");
+  });
 });
 
 $("#addClientModal").addEventListener("hide.bs.modal", function () {
@@ -24,32 +30,9 @@ function getDateAndTime() {
   return new Date().toLocaleString("pt-BR");
 }
 
-function getClinetPos() {
-  const options = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0
-  };
-
-  return navigator.geolocation.getCurrentPosition(position => {
-    const { latitude, longitude } = position.coords;
-
-    set("#lat", latitude);
-    set("#lng", longitude);
-
-    coords.lat = latitude;
-    coords.lng = longitude;
-
-  }, error => {
-    alert("Naõ foi possivel obter localização " + error.message);
-  }, options);
-}
-
 function setFormData(ctoId, ctoName) {
   set("#ctoId", ctoId);
   set("#ctoName", ctoName);
-  set("#lat", "");
-  set("#lng", "");
 }
 
 async function sendClient(bodyRequest) {
@@ -65,18 +48,22 @@ async function sendClient(bodyRequest) {
 function updateClientsModal() {
   const cto = tomodatData.find(cto => cto.id === get("#ctoId"));
 
+  cto.percentage_free = recalcFreePorts(
+    cto.clients.length,
+    cto.percentage_free
+  )
 
   cto.clients.push(get("#clientName").toUpperCase());
 
-
-  setModalInfo(cto, true);
+  setModalInfo(cto);
+  setFormData(cto.id, cto.name);
 }
 
 function toggleBtnLoader(isLoading) {
-  const saveBtn =  $("#saveClientBtn");
+  const saveBtn = $("#saveClientBtn");
 
 
-  if(isLoading) {
+  if (isLoading) {
     saveBtn.innerHTML = `
     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     Salvando
@@ -88,23 +75,23 @@ function toggleBtnLoader(isLoading) {
     saveBtn.removeAttribute("disabled");
   }
 
-  
+
 }
 
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  const { lat, lng } = coords;
-
   const bodyRequest = {
     name: get("#clientName").toUpperCase(),
-    lat,
-    lng,
+    lat: get("#lat"),
+    lng: get("#lng"),
     cto_id: get("#ctoId"),
     user: getUser(),
     cto_name: get("#ctoName"),
     date_time: getDateAndTime()
   }
+
+  console.log(bodyRequest)
 
   toggleBtnLoader(true);
 
@@ -112,7 +99,7 @@ form.addEventListener("submit", async function (event) {
 
   toggleBtnLoader(false);
 
-  if (apiResponse.status === 201) {
+  if (apiResponse == 201) {
     triggerToast("Cliente adicionado com sucesso", true);
     // sendApiReq({
     //   endpoint: "updatefetch",
@@ -121,7 +108,9 @@ form.addEventListener("submit", async function (event) {
 
     updateClientsModal();
 
-  }
+  } else { alert("erro ao cadastrar cliente, tente novamente") };
+
+
 
   Modal.hide();
 })

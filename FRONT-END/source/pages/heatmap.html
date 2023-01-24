@@ -41,6 +41,8 @@
   <script src="/static/updateTomodat.js" type="module" defer></script>
 
   <body onload="initialize()">
+    <!-- PROGRESS BAR -->
+
     <div class="position-relative">
       <div
         class="progress position-absolute top-0"
@@ -67,7 +69,13 @@
       ></div>
       <span class="badge text-bg-primary fs-5 mt-2">Carregando...</span>
     </div>
+
+    <!-- HEAT MAP -->
+
     <div id="map_canvas"></div>
+
+    <!-- OFFCANVAS -->
+
     <div
       class="offcanvas offcanvas-start"
       data-bs-backdrop="static"
@@ -153,7 +161,7 @@
                   >
                 </li>
                 <li>
-                  <a href="#" class="dropdown-item" id="updateFetchBtn">
+                  <a href="#" class="dropdown-item" onclick="location.reload()">
                     <i class="bi bi-arrow-clockwise"></i>
                     Atualizar ctos
                   </a>
@@ -221,7 +229,7 @@
       </div>
     </nav>
 
-    <!-- modal com info sobre a cto -->
+    <!-- CTO MODAL -->
 
     <button
       type="button"
@@ -260,7 +268,9 @@
             </div>
           </div>
           <div class="modal-footer">
-            <div class="d-flex w-100 flex-column flex-sm-row gap-3 justify-content-between">
+            <div
+              class="d-flex w-100 flex-column flex-sm-row gap-3 justify-content-between"
+            >
               <div>
                 <span class="fs-5" id="clientsNumber"></span>
                 <span class="fs-5 ms-2" id="percentageFree"></span>
@@ -278,6 +288,7 @@
                   class="btn btn-success"
                   data-bs-toggle="modal"
                   data-bs-target="#addClientModal"
+                  disabled
                 >
                   Add cliente
                   <i class="bi bi-person-fill-add"></i>
@@ -289,7 +300,7 @@
       </div>
     </div>
 
-    <!-- modal com form add clientes -->
+    <!-- ADD CLIENTE MODAL -->
 
     <div
       class="modal fade"
@@ -375,7 +386,72 @@
       </div>
     </div>
 
-    <!-- toast de confirmação  -->
+    <!-- LOCALIZAÇÃO CLIENTE MODAL -->
+
+    <div
+      class="modal fade"
+      id="clientLocationModal"
+      tabindex="-1"
+      aria-labelledby="clientLocationModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-fullscreen-sm-down">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addClientModalTitle">
+              Cliente Localização
+              <i class="bi bi-geo-alt-fill"></i>
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              id="closeAddClientModalBtn"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-grid gap-3">
+              <button
+                class="btn btn-primary"
+                type="button"
+                id="sendToGoogleMaps"
+              >
+                Ir para cliente
+                <i class="bi bi-geo-alt-fill"></i>
+              </button>
+              <div class="d-flex gap-2">
+                <button
+                  class="btn btn-success flex-fill"
+                  type="button"
+                  id="addClientLocation"
+                >
+                  Cadastrar Localização
+                  <i class="bi bi-plus-circle-fill"></i>
+                </button>
+                <button
+                  class="btn btn-success flex-fill"
+                  type="button"
+                  id="updateClientLocation"
+                >
+                  Atualizar Localização
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+              </div>
+            </div>
+            <div
+              id="embedMap"
+              class="mt-3 w-100 d-flex justify-content-center align-items-center"
+              style="height: 400px"
+            >
+              <!-- MAPA COM LOCALIZAÇÃO DO CLIENTE -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST  -->
 
     <div class="toast-container position-fixed top-0 end-0 p-3">
       <div
@@ -412,8 +488,6 @@
       if (category !== "adm") {
         document.querySelector("#dashboard").classList.add("d-none");
       }
-
-      
     </script>
   </body>
 </html>

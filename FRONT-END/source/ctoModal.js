@@ -14,12 +14,12 @@ function renderClientsList(clients) {
   clients.forEach(client => {
     let item = `<li class="list-group-item d-flex justify-content-between align-items-center">
       <span class="me-3">${client}</span>
-      <div class="btn-group">
+      <div class="btn-group me-1">
         <button class="btn btn-outline-secondary btn-sm">
-          <i class="bi bi-clipboard" data-copy-to="unm"  data-user-name="${client}"></i>
+          <i class="bi bi-clipboard" data-copy-to="unm" data-action="copyName" data-user-name="${client}"></i>
         </button>
         <button class="btn btn-outline-secondary btn-sm"> 
-          <i class="bi bi-clipboard-minus" data-copy-to="parks"  data-user-name="${client}"></i>
+          <i class="bi bi-clipboard-minus" data-copy-to="parks" data-action="copyName" data-user-name="${client}"></i>
         </button>
       </div>
     </li>`;
@@ -30,8 +30,8 @@ function renderClientsList(clients) {
   return list;
 }
 
-function setClientsList(clients) {
-  clientsList.innerHTML = renderClientsList(clients);
+function setClientsList(clients, id) {
+  clientsList.innerHTML = renderClientsList(clients, id);
 }
 
 function setModalTitle(title, pos) {
@@ -39,46 +39,69 @@ function setModalTitle(title, pos) {
 }
 
 export function setFreePortsNumber(percetageFree, totalClients) {
+  let isEmpty, isFull, freePorts, totalPorts
+
   const occupiedPortsPercentage = 100 - percetageFree;
 
 
-  if (occupiedPortsPercentage === 100) return false;
+  if (occupiedPortsPercentage === 100) isFull = true;
 
-  let totalPorts = "";
+  if (percetageFree === 100) isEmpty = true;
 
-  if (percetageFree === 100) totalPorts = false;
+  if (!isFull && !isEmpty) {
+    totalPorts = Math.ceil((100 * totalClients) / occupiedPortsPercentage);
+    freePorts = totalPorts - totalClients;
+  }
 
-  totalPorts = Math.ceil((100 * totalClients) / occupiedPortsPercentage);
+  return {
+    isEmpty,
+    isFull,
+    freePorts,
+    totalPorts
+  }
+}
 
+function toggleBtn(flag) {
+  $("[data-bs-target='#addClientModal']").toggleAttribute("disabled", flag);
+}
 
-  return totalPorts ? totalPorts - totalClients : "cto vazia";
+export function recalcFreePorts(totalClients, oldPercentage) {
+  const { totalPorts, isEmpty } = setFreePortsNumber(oldPercentage, totalClients);
+
+  let newPercentageFree
+
+  if (!isEmpty) {
+    let newClientCount = totalClients + 1;
+    newPercentageFree = ((totalPorts - newClientCount) * 100) / totalPorts;
+  } else {
+    newPercentageFree = 100;
+  }
+
+  return newPercentageFree;
 }
 
 
 
-function setModalInfo(info, newPercentageFree) {
-  const { clients, name, coord, percentage_free } = info;
+function setModalInfo(info) {
+  const { clients, name, coord, percentage_free, id } = info;
 
-
-  setClientsList(clients);
+  setClientsList(clients, id);
   setModalTitle(name, coord);
   $("#clientsNumber").innerHTML = `<strong>${clients.length}</strong> clientes`;
 
-  let freePortsNumber =  setFreePortsNumber(parseInt(percentage_free), clients.length);
+  const { isEmpty, isFull, freePorts } = setFreePortsNumber(parseInt(percentage_free), clients.length);
 
 
-  if(newPercentageFree) {
-    let newTotalFree = setFreePortsNumber(parseInt(percentage_free), clients.length - 1);
-    freePortsNumber = Number.isInteger(newTotalFree) ? newTotalFree - 1 : newTotalFree;
-  }
+  if (isEmpty || isFull) {
+    $("#percentageFree").innerHTML = `<strong class="${isEmpty ? "text-success" : "text-danger"}">
+      ${isEmpty ? "Cto vazia" : "Cto Lotada"}
+    </strong>`;
 
+    toggleBtn(isEmpty ? false : true);
 
-  if (freePortsNumber) {
-    $("#percentageFree").innerHTML = `<strong class="text-success">Vagas: ${freePortsNumber}</strong>`
-    $("[data-bs-target='#addClientModal']").removeAttribute("disabled");
   } else {
-    $("#percentageFree").innerHTML = `<strong class="text-danger">Cto lotada</strong>`
-    $("[data-bs-target='#addClientModal']").setAttribute("disabled", "");
+    $("#percentageFree").innerHTML = `<strong class="text-success">${freePorts} vagas</strong>`
+    toggleBtn(false);
   }
 
   openModal.click();
@@ -95,28 +118,33 @@ function hifenName(name) {
   return nameString.join("").trim().split(" ").join("-");
 }
 
+function copyClientName(data, event) {
+  const { userName, copyTo } = data;
+  const el = event.target;
+
+
+  navigator.clipboard.writeText(
+    copyTo === "unm" ? userName : hifenName(userName)
+  );
+
+  let icon = el.classList[1];
+
+  [icon, "bi-clipboard-check-fill"].forEach(className => el.classList.toggle(className));
+
+  setTimeout(() => {
+    el.classList.remove("bi-clipboard-check-fill");
+    el.classList.add(icon);
+  }, 1500);
+}
+
 $("#modalClientsList").addEventListener("click", function (event) {
   const data = event.target.dataset;
 
   if (Object.keys(data).length > 0) {
-    const { userName, copyTo } = data;
-    const el = event.target;
-
-
-    navigator.clipboard.writeText(
-      copyTo === "unm" ? userName : hifenName(userName)
-    );
-
-    let icon = el.classList[1];
-
-    [icon, "bi-clipboard-check-fill"].forEach(className => el.classList.toggle(className));
-
-    setTimeout(() => {
-      el.classList.remove("bi-clipboard-check-fill");
-      el.classList.add(icon);
-    }, 1500);
-
-
+    switch (data.action) {
+      case "copyName": copyClientName(data, event);
+        break;
+    }
   }
 })
 

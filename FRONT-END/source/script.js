@@ -66,7 +66,12 @@ const infoWindows = [];
 function setMarkers() {
   tomodatData.forEach((data) => {
     let { lat, lng } = data.coord;
-    const image = "../images/cto conect.png";
+
+    let image = "../images/cto conect.png";
+
+    if (data.percentage_free == 0) {
+      image = "../images/cto lotada.png";
+    }
     markers.push(
       new google.maps.Marker({
         position: new google.maps.LatLng(lat, lng),

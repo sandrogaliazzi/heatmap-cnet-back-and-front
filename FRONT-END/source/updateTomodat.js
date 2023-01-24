@@ -1,21 +1,24 @@
-import {sendApiReq} from "./handleApiRequests.js";
+// import {sendApiReq} from "./handleApiRequests.js";
 
-const updateBtn = document.querySelector("#updateFetchBtn");
+// function converToMiliseconds(time) {
+//     return time * 3600000
+// }
 
 
-
-async function updateDB() {
-    try {
-        await sendApiReq({
-            endpoint: "updatefetch1",
-            httpMethod: "GET"
-        });
+// async function updateDB() {
+//     try {
+//         const update = await sendApiReq({
+//             endpoint: "updatefetch",
+//             httpMethod: "GET"
+//         });
     
-        location.reload();
+//         console.log(update.data.message);
+//         console.log(`Atualizado em ${new Date().toLocaleString("pt-BR", {timeZone: "UTC"})}`);
+//     } catch(err) {
+//         console.error(`erro ao atualizar banco de dados. Erro: ${err.message}`);
+//     }
+// }
 
-    } catch(err) {
-        console.error(`erro ao atualizar banco de dados. Erro: ${err.message}`);
-    }
-}
-
-updateBtn.addEventListener("click", _ => updateDB());
+// setInterval(() => {
+//     updateDB().then(console.log)
+// }, converToMiliseconds(2));

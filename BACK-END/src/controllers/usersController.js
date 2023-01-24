@@ -128,9 +128,11 @@ static RegisterUser = async (req, res) => {
           token: usuario.token
           }
         res.status(201).send(retorno);
-      } else {
+      }
+      else {
         res.status(404).send({message: `Usuario ou senha invalidos.`})};
-    } catch (err) {
+    } 
+    catch (err) {
       console.log(err);
     }
   };

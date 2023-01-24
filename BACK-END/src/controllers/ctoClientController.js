@@ -40,9 +40,9 @@ static ListarCtoClientById = (req, res) => {
     ctoClient.findOne({"cto_id": id, "name": name},
     (err, ctoClient)=>{
     if(ctoClient) {
-     res.status(200).send({link:`https://www.google.com/maps/search/?api=1&query=${ctoClient.lat},${ctoClient.lng}`})} 
+     res.status(200).send({link:`https://www.google.com/maps/search/?api=1&query=${ctoClient.lat},${ctoClient.lng}`, lat: ctoClient.lat, lng: ctoClient.lng})} 
     else {
-     res.status(404).send(false)   
+     res.status(400).send(false)   
     }
 }).sort({_id: -1}) //sort id -1 retorna as adições mais novas no banco
 };
@@ -53,7 +53,7 @@ static UpdateCtoClientById = (req, res) => {
     ctoClient.findOneAndUpdate({"cto_id": id, "name": name }, {$set: dados},
     (err, ctoClient)=>{
     if(ctoClient) {
-     res.status(200).send("Atualizada a localização do usuario com sucesso.")} 
+     res.status(200).send({message: "Atualizada a localização do usuario com sucesso."})} 
     else {
      res.status(404).send(false)   
     }

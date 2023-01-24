@@ -19,7 +19,7 @@ export default async function sendApiRequest(
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
-    body: (JSON.stringify(bodyRequest) || null)
+    body: bodyRequest ? JSON.stringify(bodyRequest) : null
   });
 
   const status = response.status;
@@ -45,14 +45,15 @@ export async function sendApiReq({
   const status = response.status;
 
   if (!response.ok) {
-    triggerToast("ocorreu um erro no servidor, tente novamente", false);
-    console.log(response)
-    if (status === 403 || status === 401) {
+    if (status >= 500) {
+      triggerToast("ocorreu um erro no servidor, tente novamente", false);
+      console.log(response);
+    } else if (status === 403 || status === 401) {
       triggerToast("Sua sessão expirou, faça login novamente", false);
 
       toast.addEventListener("hidden.bs.toast", function () {
         location.href = "/";
-      })
+      });
     }
   }
 
