@@ -25,6 +25,6 @@ export function getCurrentPosition() {
   });
 }
 
-export function createCtoLink(pos) {
-  return `https://www.google.com/maps/search/?api=1&query=${pos.lat},${pos.lng}`;
+export function createCtoLink({ lat, lng }) {
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 }

@@ -3,17 +3,32 @@ import { $ } from "./handleForm.js";
 const openModal = $("#openModalBtn");
 const clientsList = $("#modalClientsList");
 const modalTitle = $("#ctoModalTitle");
+const selectedClients = [];
 
 function createCtoLink(pos) {
   return `https://www.google.com/maps/search/?api=1&query=${pos.lat},${pos.lng}`;
 }
 
+$("#ctoModal").addEventListener("hide.bs.modal", () => selectedClients.length = 0);
+
+
+function showCheckBoxes() {
+  const checkBoxes = document.querySelectorAll(".form-check-input");
+
+  checkBoxes.forEach(check => check.classList.toggle("d-none"));
+}
+
+$("#admModeBtn").addEventListener("click", showCheckBoxes);
+
 function renderClientsList(clients) {
   let list = "";
 
-  clients.forEach(client => {
+  clients.forEach((client) => {
     let item = `<li class="list-group-item d-flex justify-content-between align-items-center">
-      <span class="me-3">${client}</span>
+      <div>
+        <input class="form-check-input me-2 d-none" data-action="selectClient" type="checkbox" value="" id="${client.id}">
+        <span data-client-id="${client.id}" class="me-3">${client.name}</span>
+      </div>
       <div class="btn-group me-1">
         <button class="btn btn-outline-secondary btn-sm">
           <i class="bi bi-clipboard" data-copy-to="unm" data-action="copyName" data-user-name="${client}"></i>
@@ -137,12 +152,28 @@ function copyClientName(data, event) {
   }, 1500);
 }
 
+function markTextAsSelected(el) {
+  el.classList.toggle("text-decoration-line-through");
+
+  const id = el.dataset.clientId;
+
+  if (!selectedClients.find(client => client == id))
+    selectedClients.push(id);
+  else
+    selectedClients.splice(selectedClients.indexOf(id), 1);
+
+  console.log(selectedClients)
+}
+
 $("#modalClientsList").addEventListener("click", function (event) {
   const data = event.target.dataset;
 
   if (Object.keys(data).length > 0) {
     switch (data.action) {
       case "copyName": copyClientName(data, event);
+        break;
+
+      case "selectClient": markTextAsSelected($(`[data-client-id="${event.target.id}"]`));
         break;
     }
   }
