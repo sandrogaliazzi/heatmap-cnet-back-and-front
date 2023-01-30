@@ -1,6 +1,4 @@
-# APLICATIVO TÉCNICO PARA PROVEDOR
-
- APLICATIVO TÉCNICO PARA PROVEDOR.
+APLICATIVO TÉCNICO PARA PROVEDOR.
 
 Aplicativo Técnico para provedores de internet, aplicativo ainda em desenvolvimento, feito com as tecnologias: JS, ReactJs, NodeJS, ExpressJS, MongoDB.
 O aplicativo usa a API do Google Maps para gerar o mapa e uma API no back para comunicar com a API de outro sistema de gerência de rede óptica (TOMODAT).
