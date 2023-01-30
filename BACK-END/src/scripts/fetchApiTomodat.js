@@ -36,7 +36,7 @@ async function getAllClients() {
 }
 
 function getClientsByCto(users, id) {
-  return users.filter(user => user.ap_id_connected == id).map(user => user.name);
+  return users.filter(user => user.ap_id_connected == id).map(user => ({name:user.name, id: user.id}));
 }
 
 
@@ -110,14 +110,30 @@ export async function fetchTomodat() {
   console.log(err)
 }}
 
-export function deleteTomodat(req, res){
-  let id = req.body.id
-  needle.delete(`https://sp.tomodat.com.br/tomodat/api/clients/${id}`, ((err)=>{
-    if (err){
-    res.status(500).send(err)
-    } else {
-    res.status(204).send(true)
-    }
-  }))
+// export function deleteTomodat(req, res){
+//   let id = req.body.id;
+//   console.log(id);
+//   needle.delete(`https://sp.tomodat.com.br/tomodat/api/clients/`,id, reqConfig, ((err)=> {
+//     if (err){
+//     res.status(500).send(err)
+//     } else {
+//     res.status(204).send("true")
+//     }
+//   }))
 
+// };
+
+
+export function deleteTomodat(req, res) {
+  let id = req.body.id;
+  console.log(id);
+  needle.delete(`https://sp.tomodat.com.br/tomodat/api/clients/`, id, reqConfig,
+    ((err) => {
+      if (err) {
+        res.status(500).send({ message: `${err.message} - falha ao deletar cliente.` })
+      } else {
+        res.status(201).send({ ApiTomodatDeleteOk: `deletado com sucesso.` });
+      }
+      console.log(res)
+    }))
 };
