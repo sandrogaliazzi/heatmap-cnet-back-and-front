@@ -113,14 +113,18 @@ Na tela abre o mapa com o heatmap ativo, cada ponto do heatmap é uma CTO (Caixa
 12. Tela de logs de clientes adicionados a CTO, usada para verificação e correção de erros, nesta tela sabemos a CTO, Cliente, Usuário, horário, data e lat/lng das adições no sistema, fazendo assim ficar mais fácil corrigir erros de usuário (imagens acima).
 </div>
 
-(iniciado o desenvolvimento em 19/12/2022)
+(iniciado o desenvolvimento em 11/2022).
+
+
 (30/01/2023) NOTA: O aplicativo ainda se encontra em desenvolvimento, já temos novas features planejadas, no momento estamos trabalhando para permissão de exclusão de clientes da CTO, e no tracking dos usuários do sistema com um painel, permitindo que o Gerente das equipes externas acompanhe as últimas localizações dos técnicos, facilitando a gerência de problemas na rede e otimizando o tempo de resposta da empresa.
+
 
 Features já planejadas:
 * Modulo NFe.
 * Painel de gerência de Carros (serviços efetuados, com identificação pela placa e vinculando ao técnico que usa/usou no período.)
 * Painel de Estoque
 * upload/download de fotos de instalações, referências de residências, etc.
+
 
 Responsáveis pelo desenvolvimento:
 
