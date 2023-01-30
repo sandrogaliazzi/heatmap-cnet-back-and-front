@@ -62,8 +62,8 @@ Na tela abre o mapa com o heatmap ativo, cada ponto do heatmap é uma CTO (Caixa
 7. Modal que aparece ao clicar em uma CTO no mapa, no modal vemos o nome da CTO em azul, pois é um link para a localização da CTO no Google Maps.
 * Ao lado uma engrenagem que ativa a função "bater CTO" que foi desenvolvida pensando nos técnicos de campo que usam o aplicativo para conferir os clientes na CTO, ao ativar essa função, ao lado do nome vemos uma caixa de marcação que quando selecionada risca o nome do cliente, permitindo assim uma forma mais rápida de bater a CTO de fato. 
 * No modal também consta a quantidade de vagas na CTO, a quantidade de clientes na CTO. 
-* ao lado do cliente "TESTE APP" vemos dois botões, são botões para copiar o nome do cliente de forma específica, pois como usamos integradores que precisam de uma nomenclatura diferente servem para facilitar a vida dos técnicos ao procurar o cliente no integrador,
-* vemos também o botão de fechar a CTO e o de Add cliente, que serve para conectar o cliente a CTO (imagens acima).  
+* Ao lado do cliente "TESTE APP" vemos dois botões, são botões para copiar o nome do cliente de forma específica, pois como usamos integradores que precisam de uma nomenclatura diferente servem para facilitar a vida dos técnicos ao procurar o cliente no integrador,
+* Vemos também o botão de fechar a CTO e o de Add cliente, que serve para conectar o cliente a CTO (imagens acima).  
 </div>
 
 <div align="left">
@@ -80,7 +80,7 @@ Na tela abre o mapa com o heatmap ativo, cada ponto do heatmap é uma CTO (Caixa
 
 
 9. Funções da parte do Heatmap, na imagem mostra as funções do Heatmap:
-* on/off HeatMap - ativa e desativa o mapa de calor.
+* On/Off HeatMap - ativa e desativa o mapa de calor.
 * Atualizar ctos - atualiza manualmente os dados, recarregando o mapa.
 * Mudar o gradiente - muda a cor do gradiente do mapa de calor.
 * Mudar o raio - muda o raio do mapa de calor (por padrão é fixo em 200mt).
