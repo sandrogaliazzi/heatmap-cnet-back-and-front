@@ -122,4 +122,6 @@ Responsaveis pelo desenvolvimento:
 
 
 FRONT-END: Sandro Galiazzi - https://github.com/sandrogaliazzi
+
+
 BACK-END: Guilherme Schmidt - https://github.com/schmidt4win

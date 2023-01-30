@@ -31,10 +31,10 @@ function renderClientsList(clients) {
       </div>
       <div class="btn-group me-1">
         <button class="btn btn-outline-secondary btn-sm">
-          <i class="bi bi-clipboard" data-copy-to="unm" data-action="copyName" data-user-name="${client}"></i>
+          <i class="bi bi-clipboard" data-copy-to="unm" data-action="copyName" data-user-name="${client.name}"></i>
         </button>
         <button class="btn btn-outline-secondary btn-sm"> 
-          <i class="bi bi-clipboard-minus" data-copy-to="parks" data-action="copyName" data-user-name="${client}"></i>
+          <i class="bi bi-clipboard-minus" data-copy-to="parks" data-action="copyName" data-user-name="${client.name}"></i>
         </button>
       </div>
     </li>`;
