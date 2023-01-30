@@ -125,15 +125,16 @@ export async function fetchTomodat() {
 
 
 export function deleteTomodat(req, res) {
-  let id = req.body.id;
+  let id = 15611 //req.body.id; 15611
   console.log(id);
   needle.delete(`https://sp.tomodat.com.br/tomodat/api/clients/`, id, reqConfig,
     ((err) => {
       if (err) {
-        res.status(500).send({ message: `${err.message} - falha ao deletar cliente.` })
+        console.log(err)//res.status(500).send({ message: `${err.message} - falha ao deletar cliente.` })
       } else {
-        res.status(201).send({ ApiTomodatDeleteOk: `deletado com sucesso.` });
-      }
-      console.log(res)
+        console.log(res)//res.status(201).send({ ApiTomodatDeleteOk: `deletado com sucesso.` });
+      }      
     }))
-};
+    };
+
+    
