@@ -1,6 +1,7 @@
 import {fetchTomodat} from "../scripts/fetchApiTomodat.js";
 import {getAllAcessPointsByCity} from "../scripts/fetchApiTomodat.js";
 import {addClient} from "../scripts/fetchApiTomodat.js"
+import { deleteTomodat } from "../scripts/fetchApiTomodat.js";
 
 class TomodatController {
 
@@ -21,7 +22,12 @@ class TomodatController {
         addClient(req, res);
     };
 
+    static DeleteClient = (req, res) => {
+        deleteTomodat(req, res);
     }
+
+
+}
 
  
     

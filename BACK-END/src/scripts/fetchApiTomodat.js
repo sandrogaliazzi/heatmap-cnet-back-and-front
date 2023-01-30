@@ -109,3 +109,15 @@ export async function fetchTomodat() {
 } catch (err){
   console.log(err)
 }}
+
+export function deleteTomodat(req, res){
+  let id = req.body.id
+  needle.delete(`https://sp.tomodat.com.br/tomodat/api/clients/${id}`, ((err)=>{
+    if (err){
+    res.status(500).send(err)
+    } else {
+    res.status(204).send(true)
+    }
+  }))
+
+};

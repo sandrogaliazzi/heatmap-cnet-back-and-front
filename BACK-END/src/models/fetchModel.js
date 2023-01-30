@@ -6,7 +6,7 @@ const fetTomodatSchema = new mongoose.Schema(
        name: {type: String, require: true}, 
        coord: {type: Object, require: true},
        cto_id: {type: String, require: true},
-       clients: {type: Array, require: true},
+       clients: {type: Object, require: true},
        city: {type: String, require: true},
        percentage_free: {type: String, require: true}       
       },

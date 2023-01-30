@@ -13,4 +13,5 @@ router
 //  .post("/logctoclient", auth, LogClientController.CadastrarLog)
  .get("/logctoclient", auth, LogClientController.ListarLogCtoClient) // lista os logs
 //  .post("/teste", LogClientController.CadastrarLog, TomodatController.CadastrarClient)
+ .post("/deleteclient", TomodatController.DeleteClient) //deleta client
 export default router;
