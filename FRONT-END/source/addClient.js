@@ -99,7 +99,7 @@ form.addEventListener("submit", async function (event) {
 
   toggleBtnLoader(false);
 
-  if (apiResponse == 201) {
+  if (apiResponse.status == 201) {
     triggerToast("Cliente adicionado com sucesso", true);
     // sendApiReq({
     //   endpoint: "updatefetch",

@@ -29,7 +29,7 @@ function mapClients(aplist) {
     clientsList.push(
       clients.map(client => {
         return {
-          name: client,
+          name: client.name,
           cto: data.name,
           coord: data.coord,
           ctoId: data.id,
@@ -139,7 +139,7 @@ async function setClientLocation(client, id, cto, endpoint = "ctoclient") {
     cto_id: id,
     user: JSON.parse(sessionStorage.getItem("user")).name,
     cto_name: cto,
-    date_time: new Date().toLocaleString("pt-BR")
+    date_time: new Date().toLocaleString("pt-BR", { timeZone: "UTC" })
   }
 
   const apiResponse = await sendApiReq({
@@ -194,15 +194,18 @@ async function handleClientLocation(client, id, cto) {
     $("#updateClientLocation").addEventListener("click", async () => {
       if (confirm(`Atualizar localização de ${client} ?`)) {
         const { position } = await setClientLocation(client, id, cto, "updatectoclient");
- 
+
         if (position) {
-          let {latitude: lat, longitude: lng} = position;
-  
-          const newLink = createCtoLink({lat, lng});
+          let { latitude, longitude } = position;
+
+          const newLink = createCtoLink({
+            lat: latitude,
+            lng: longitude
+          });
 
           link = newLink;
 
-          insertMap(lat, lng);
+          insertMap(latitude, longitude);
 
           alert("Localização atualizada com sucesso");
         }

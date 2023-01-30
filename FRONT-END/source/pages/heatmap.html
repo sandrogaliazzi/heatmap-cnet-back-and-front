@@ -250,15 +250,22 @@
     >
       <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
         <div class="modal-content">
-          <div class="modal-header">
+          <div
+            class="modal-header d-flex justify-content-between align-items-center"
+          >
             <h1 class="modal-title fs-5" id="ctoModalTitle">Modal teste</h1>
-            <button
-              type="button"
-              class="btn-close"
-              id="closeModalBtn"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+            <div class="d-flex align-items-center">
+              <button type="button" class="btn btn-lg btn-dark" id="admModeBtn">
+                <i class="bi bi-gear-wide-connected"></i>
+              </button>
+              <button
+                type="button"
+                class="btn-close"
+                id="closeModalBtn"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
           </div>
           <div class="modal-body">
             <div class="cto-client-list">

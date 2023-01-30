@@ -33,6 +33,8 @@ async function loadMap() {
 
     tomodatData.push(...data);
 
+    console.log(data[0])
+
     mapCoordinates = tomodatData.map(
       (data) =>
         new google.maps.LatLng(data.coord.lat, data.coord.lng)
