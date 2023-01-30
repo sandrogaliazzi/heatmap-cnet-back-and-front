@@ -119,5 +119,7 @@ Features já planejadas:
 * upload/download de fotos de instalações, referencias de residencias e etc...
 
 Responsaveis pelo desenvolvimento:
+
+
 FRONT-END: Sandro Galiazzi - https://github.com/sandrogaliazzi
 BACK-END: Guilherme Schmidt - https://github.com/schmidt4win
