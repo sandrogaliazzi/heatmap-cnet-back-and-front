@@ -1,7 +1,6 @@
 APLICATIVO TÉCNICO PARA PROVEDOR.
 
-Aplicativo Técnico para provedores de internet, aplicativo ainda em desenvolvimento, feito com as tecnologias: JS, ReactJs, NodeJS, ExpressJS, MongoDB.
-O aplicativo usa a API do Google Maps para gerar o mapa e uma API no back para comunicar com a API de outro sistema de gerência de rede óptica (TOMODAT).
+Aplicatico de uso técnico, ainda em desenvolvimento, com intuito de facilitar a pesquisa e manipulação de informações como: Localização de clientes e caixas de atendimento (CTOS) dentro da rede de um provedor de fibra óptica. O aplicativo usa a API do Google Maps para gerar o mapa e fixar os marcadores que indicam a localização dos pontos de acesso dentro da rede. As informações contendo a localização de cada caixa de atendimento e seus respectivos clientes é fornecida pelo consumo da API do TOMODAT, sistema que permite projetar redes FTTH. A aplicação é construida com as tecnologias: JavaScript, HTML, Bootstrap no Frontend e NodeJS com Express e MongoDB no Backend.
 
 <div align="left">
 
