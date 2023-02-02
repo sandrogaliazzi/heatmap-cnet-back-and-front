@@ -15,6 +15,8 @@ $("#addClientModal").addEventListener("show.bs.modal", function () {
     set("#lat", pos.latitude);
     set("#lng", pos.longitude);
     $("[data-bs-target='#addClientModal']").toggleAttribute("disabled");
+  }).catch(_ => {
+    alert("você precisa habilitar a geolocalização para poder adicionar um cliente!");
   });
 });
 
@@ -53,7 +55,7 @@ function updateClientsModal() {
     cto.percentage_free
   )
 
-  cto.clients.push(get("#clientName").toUpperCase());
+  cto.clients.push({ name: get("#clientName").toUpperCase(), id: null });
 
   setModalInfo(cto);
   setFormData(cto.id, cto.name);
@@ -78,6 +80,18 @@ function toggleBtnLoader(isLoading) {
 
 }
 
+function isFormCompleted(fields) {
+  if (!fields) return false;
+
+  let isComplete = true;
+
+  for (const field in fields) {
+    if (!fields[field]) isComplete = false;
+  }
+
+  return isComplete;
+}
+
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
@@ -91,28 +105,28 @@ form.addEventListener("submit", async function (event) {
     date_time: getDateAndTime()
   }
 
-  console.log(bodyRequest)
+  if (isFormCompleted(bodyRequest)) {
+    toggleBtnLoader(true);
 
-  toggleBtnLoader(true);
+    const apiResponse = await sendClient(bodyRequest);
 
-  const apiResponse = await sendClient(bodyRequest);
+    toggleBtnLoader(false);
 
-  toggleBtnLoader(false);
-
-  if (apiResponse.status == 201) {
-    triggerToast("Cliente adicionado com sucesso", true);
-    // sendApiReq({
-    //   endpoint: "updatefetch",
-    //   httpMethod: "GET"
-    // });
-
-    updateClientsModal();
-
-  } else { alert("erro ao cadastrar cliente, tente novamente") };
+    if (apiResponse.status == 201) {
+      triggerToast("Cliente adicionado com sucesso", true);
 
 
+      updateClientsModal();
 
-  Modal.hide();
+      Modal.hide();
+
+    } else { alert("erro ao cadastrar cliente, tente novamente") }
+
+
+  } else {
+    triggerToast("Formulário incompleto, revise se todos os campos estão preenchidos", false);
+  }
+
 })
 
 
