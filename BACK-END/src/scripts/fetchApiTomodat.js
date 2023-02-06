@@ -4,9 +4,10 @@ import needle from 'needle';
 import fetch from 'node-fetch';
 import fetTomodat from '../models/fetchModel.js';
 
+const config = process.env
 const path = import("path");
 const fetchAllAcessPoints = [];
-
+const tomodat = config.TOMODAT_KEY
 
 const coord = {
   lat: "-29.582734100531393",
@@ -16,7 +17,7 @@ const coord = {
 
 const reqConfig = {
   headers: {
-    "Authorization": "ed46f52830170280baa29470f11dd4b4ef545579",
+    "Authorization": `${tomodat}`,
     "Content-Type": "application/json",
     "Accept-encoding": "application/json",
     "Access-Control-Allow-Origin": '*',
