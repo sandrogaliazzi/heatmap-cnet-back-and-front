@@ -1,13 +1,11 @@
 const fs = import("fs");
-
+import dotenv from 'dotenv';
+dotenv.config()
 import needle from 'needle';
 import fetch from 'node-fetch';
-import fetTomodat from '../models/fetchModel.js';
 
-const config = process.env
 const path = import("path");
 const fetchAllAcessPoints = [];
-const tomodat = config.TOMODAT_KEY
 
 const coord = {
   lat: "-29.582734100531393",
@@ -17,7 +15,7 @@ const coord = {
 
 const reqConfig = {
   headers: {
-    "Authorization": `${tomodat}`,
+    "Authorization": `${process.env.TOMODAT_KEY}`,
     "Content-Type": "application/json",
     "Accept-encoding": "application/json",
     "Access-Control-Allow-Origin": '*',
@@ -46,22 +44,19 @@ async function getAllAcessPoints() {
   try {
 
     let response = await fetch(`https://sp.tomodat.com.br/tomodat/api/access_points/${coord.lat}/${coord.lng}/${coord.range}`, reqConfig)
-
     let data = await response.json()
     fetchAllAcessPoints.push(...data)
     return data
+    
 
   } catch (err) {
     console.error("erro em getAllAP" + err.message);
   }
 }
 
-
 export async function getAllAcessPointsByCity() {
   try {
-
     let response = await fetch(`https://sp.tomodat.com.br/tomodat/api/access_points/list_path`, reqConfig)
-
     let data = await response.json()
     return data
   } catch (err) {
@@ -94,7 +89,6 @@ export async function fetchTomodat() {
     let ctoListFilter = ctoList.filter(ap => ap.category === 5);
 
    let usersByCto = ctoListFilter.map(cto => {
-
     return {
       id: cto.id,
       name: cto.name,
@@ -104,9 +98,7 @@ export async function fetchTomodat() {
       percentage_free: cto.percentage_free
     }
   });
-
   return usersByCto;
-
 } catch (err){
   console.log(err)
 }}
@@ -123,8 +115,6 @@ export async function fetchTomodat() {
 //   }))
 
 // };
-
-
 export function deleteTomodat(req, res) {
   let id = 15611 //req.body.id; 15611
   console.log(id);
@@ -138,4 +128,8 @@ export function deleteTomodat(req, res) {
     }))
     };
 
-    
+// for debug purposes     
+// console.log(reqConfig)
+// fetchTomodat().then(data =>{
+//   console.log(data)
+// });

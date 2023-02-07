@@ -38,7 +38,7 @@ function updateFetch(){
 setInterval(async ()=>{
     await updateFetch()
     let now = new Date().toLocaleString("PT-br")
-    console.log(`Fetch send to Dbaaaaaaaaaaaaaa: ${now}`)
+    console.log(`Fetch Update send to Db: ${now}`)
 }, 900000) // setinterval = 15m (900000)
 // updateFetch()
 
