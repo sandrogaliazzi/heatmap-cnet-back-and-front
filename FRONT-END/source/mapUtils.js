@@ -1,27 +1,56 @@
-import { $ } from "./handleForm.js";
+import { $, set } from "./handleForm.js";
 
-export function insertMap(lat, lng, name) {
+export function insertMap(lat, lng, elToInject) {
   const coords = { lat: parseFloat(lat), lng: parseFloat(lng) };
 
-  const embedMap = new google.maps.Map($("#embedMap"), {
+  const markers = [];
+
+  const embedMap = new google.maps.Map($(elToInject), {
     zoom: 15,
-    center: coords
+    center: coords,
   });
 
-  return new google.maps.Marker({
-    position: coords,
-    map: embedMap,
-    title: name
+  embedMap.addListener("click", e => {
+    placeMarkerAndPanTo(e.latLng, embedMap);
+    set("#lat", e.latLng.lat());
+    set("#lng", e.latLng.lng());
   });
+
+  function placeMarkerAndPanTo(latLng, map) {
+    const newMarker = new google.maps.Marker({
+      position: latLng,
+      map: map,
+    });
+
+    const oldMarker = markers.shift();
+
+    markers.push(newMarker);
+
+    oldMarker.setMap(null);
+
+    map.panTo(latLng);
+  }
+
+  markers.push(
+    new google.maps.Marker({
+      position: coords,
+      map: embedMap,
+      title: "novo marcador",
+    })
+  );
 }
 
 export function getCurrentPosition() {
   return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(pos => resolve(pos.coords), err => reject(err), {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
-    })
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve(pos.coords),
+      err => reject(err),
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
   });
 }
 

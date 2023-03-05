@@ -3,26 +3,54 @@ import { $, get, set } from "./handleForm.js";
 import { triggerToast } from "./toast.js";
 import { tomodatData } from "./script.js";
 import setModalInfo, { recalcFreePorts } from "./ctoModal.js";
-import { getCurrentPosition } from "./mapUtils.js";
+import { getCurrentPosition, insertMap } from "./mapUtils.js";
 
 const form = $("#addClientForm");
 const Modal = new bootstrap.Modal($("#addClientModal"));
 
+function toggleFormVisibility() {
+  form.classList.toggle("d-none");
+}
+
 $("[data-bs-target='#addClientModal']").toggleAttribute("disabled");
 
 $("#addClientModal").addEventListener("show.bs.modal", function () {
+  form.classList.add("d-none");
+
+  getCurrentPosition()
+    .then(pos => {
+      const { latitude, longitude } = pos;
+
+      set("#lat", latitude);
+      set("#lng", longitude);
+
+      $("[data-bs-target='#addClientModal']").toggleAttribute("disabled");
+
+      insertMap(latitude, longitude, "#addClientMap");
+    })
+    .catch(_ => {
+      alert(
+        "você precisa habilitar a geolocalização para poder adicionar um cliente!"
+      );
+    });
+});
+
+$("#updateClientLocationBeforeAdd").addEventListener("click", function () {
   getCurrentPosition().then(pos => {
-    set("#lat", pos.latitude);
-    set("#lng", pos.longitude);
-    $("[data-bs-target='#addClientModal']").toggleAttribute("disabled");
-  }).catch(_ => {
-    alert("você precisa habilitar a geolocalização para poder adicionar um cliente!");
+    const { latitude, longitude } = pos;
+
+    set("#lat", latitude);
+    set("#lng", longitude);
+
+    insertMap(latitude, longitude, "#addClientMap");
   });
 });
 
+$("#confirmClientLocation").addEventListener("click", toggleFormVisibility);
+
 $("#addClientModal").addEventListener("hide.bs.modal", function () {
   form.reset();
-})
+});
 
 function getUser() {
   return JSON.parse(sessionStorage.getItem("user")).name;
@@ -41,8 +69,8 @@ async function sendClient(bodyRequest) {
   const response = await sendApiReq({
     endpoint: "client",
     httpMethod: "POST",
-    body: bodyRequest
-  })
+    body: bodyRequest,
+  });
 
   return response;
 }
@@ -53,7 +81,7 @@ function updateClientsModal() {
   cto.percentage_free = recalcFreePorts(
     cto.clients.length,
     cto.percentage_free
-  )
+  );
 
   cto.clients.push({ name: get("#clientName").toUpperCase(), id: null });
 
@@ -64,20 +92,17 @@ function updateClientsModal() {
 function toggleBtnLoader(isLoading) {
   const saveBtn = $("#saveClientBtn");
 
-
   if (isLoading) {
     saveBtn.innerHTML = `
     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     Salvando
-    `
+    `;
 
     saveBtn.setAttribute("disabled", "");
   } else {
-    saveBtn.innerHTML = "Salvar"
+    saveBtn.innerHTML = "Salvar";
     saveBtn.removeAttribute("disabled");
   }
-
-
 }
 
 function isFormCompleted(fields) {
@@ -100,34 +125,35 @@ form.addEventListener("submit", async function (event) {
     lat: get("#lat"),
     lng: get("#lng"),
     cto_id: get("#ctoId"),
-    user: getUser(),
+    user: getUser().toUpperCase(),
     cto_name: get("#ctoName"),
-    date_time: getDateAndTime()
-  }
+    date_time: getDateAndTime(),
+  };
 
   if (isFormCompleted(bodyRequest)) {
-    toggleBtnLoader(true);
+    if (confirm("A localização foi confirmada?")) {
+      toggleBtnLoader(true);
 
-    const apiResponse = await sendClient(bodyRequest);
+      const apiResponse = await sendClient(bodyRequest);
 
-    toggleBtnLoader(false);
+      toggleBtnLoader(false);
 
-    if (apiResponse.status == 201) {
-      triggerToast("Cliente adicionado com sucesso", true);
+      if (apiResponse.status == 201) {
+        triggerToast("Cliente adicionado com sucesso", true);
 
+        updateClientsModal();
 
-      updateClientsModal();
-
-      Modal.hide();
-
-    } else { alert("erro ao cadastrar cliente, tente novamente") }
-
-
+        Modal.hide();
+      } else {
+        alert("erro ao cadastrar cliente, tente novamente");
+      }
+    }
   } else {
-    triggerToast("Formulário incompleto, revise se todos os campos estão preenchidos", false);
+    triggerToast(
+      "Formulário incompleto, revise se todos os campos estão preenchidos",
+      false
+    );
   }
-
-})
-
+});
 
 export default setFormData;
