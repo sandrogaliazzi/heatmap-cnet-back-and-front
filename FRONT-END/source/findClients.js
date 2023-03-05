@@ -1,5 +1,5 @@
 import { setCenter, filterCto, tomodatData } from "./script.js";
-import { $ } from "./handleForm.js";
+import { $, get } from "./handleForm.js";
 import { sendApiReq } from "./handleApiRequests.js";
 import { spinner } from "./components/spinner.js";
 import { getCurrentPosition, insertMap, createCtoLink } from "./mapUtils.js";
@@ -25,7 +25,6 @@ function mapClients(aplist) {
   aplist.forEach(data => {
     const clients = data.clients;
 
-
     clientsList.push(
       clients.map(client => {
         return {
@@ -33,19 +32,24 @@ function mapClients(aplist) {
           cto: data.name,
           coord: data.coord,
           ctoId: data.id,
-        }
+        };
       })
-    )
+    );
   });
 }
 
 function findResults(query, typeSearch) {
   if (query !== "") {
-    const searchResult = typeSearch === "client"
-      ? clientsList
-        .flat()
-        .filter(client => client.name.indexOf(query.toUpperCase()) > -1 && query)
-      : apListFilter.filter(ap => ap.name.indexOf(query.toUpperCase()) > -1 && query);
+    const searchResult =
+      typeSearch === "client"
+        ? clientsList
+            .flat()
+            .filter(
+              client => client.name.indexOf(query.toUpperCase()) > -1 && query
+            )
+        : apListFilter.filter(
+            ap => ap.name.indexOf(query.toUpperCase()) > -1 && query
+          );
 
     if (searchResult.length > 0) {
       renderList(searchResult);
@@ -60,14 +64,15 @@ function clearClientList() {
 }
 
 function renderGeoBtn(flag) {
-  return flag ? `<button class="btn btn-sm btn-outline-primary d-flex gap-2" data-find="client">
+  return flag
+    ? `<button class="btn btn-sm btn-outline-primary d-flex gap-2" data-find="client">
     <i class="bi bi-geo-alt-fill"></i>
     cli
-  </button>` : "";
+  </button>`
+    : "";
 }
 
 function renderList(results) {
-
   clearClientList();
 
   let listItems = "";
@@ -80,7 +85,7 @@ function renderList(results) {
     <li class="list-group-item d-flex justify-content-between align-items-center gap-2">
       <p class="mb-0 small">${name}  <b>${city ? city : ""}</b></p>
     <div class="btn-group d-flex align-items-center" role="group" style="height:25px"
-      data-cto="${(cto || name)}"
+      data-cto="${cto || name}"
       data-lat="${lat}"
       data-lng="${lng}"
       data-cto-id="${ctoId}"
@@ -94,10 +99,10 @@ function renderList(results) {
       ${renderGeoBtn(!city)}    
     </div> 
   </li>
-  `
+  `;
 
     listItems += item;
-  })
+  });
 
   list.innerHTML = listItems;
 }
@@ -111,45 +116,50 @@ ctoSearchInput.addEventListener("keyup", function () {
 });
 
 function openNewTab(url) {
-  const win = window.open(url, '_blank')
-  win.focus()
+  const win = window.open(url, "_blank");
+  win.focus();
 }
 
 function toggleElementsAttr(selector, attr, add) {
-  document.querySelectorAll(selector).forEach(el => el.toggleAttribute(attr, add));
+  document
+    .querySelectorAll(selector)
+    .forEach(el => el.toggleAttribute(attr, add));
 }
 
 function toggleElementClass(selectors, className, add) {
-  [...selectors].forEach(selector => $(selector).classList[add ? "add" : "remove"](className));
+  [...selectors].forEach(selector =>
+    $(selector).classList[add ? "add" : "remove"](className)
+  );
 }
 
 async function setClientLocation(client, id, cto, endpoint = "ctoclient") {
-
-  const position = await getCurrentPosition();
+  const position =
+    get("#lat") && get("#lng") !== ""
+      ? { latitude: get("#lat"), longitude: get("#lng") }
+      : await getCurrentPosition();
 
   if (!position) {
     alert("erro ao pegar localização, tente novamente");
-    return
+    return;
   }
 
   const bodyRequest = {
     name: client,
-    lat: position.latitude,
-    lng: position.longitude,
+    lat: get("#lat") || position.latitude,
+    lng: get("#lng") || position.longitude,
     cto_id: id,
     user: JSON.parse(sessionStorage.getItem("user")).name,
     cto_name: cto,
-    date_time: new Date().toLocaleString("pt-BR", { timeZone: "UTC" })
-  }
+    date_time: new Date().toLocaleString("pt-BR", { timeZone: "UTC" }),
+  };
 
   const apiResponse = await sendApiReq({
     endpoint,
     httpMethod: "POST",
-    body: bodyRequest
+    body: bodyRequest,
   });
 
   return { apiResponse, position };
-
 }
 
 async function handleClientLocationSubmit(client, id, cto) {
@@ -163,7 +173,11 @@ async function handleClientLocationSubmit(client, id, cto) {
     toggleElementsAttr("#addClientLocation", "disabled");
 
     if (apiResponse.status == 201) {
-      toggleElementClass(["#sendToGoogleMaps", "#updateClientLocation"], "d-none", false);
+      toggleElementClass(
+        ["#sendToGoogleMaps", "#updateClientLocation"],
+        "d-none",
+        false
+      );
 
       handleClientLocation(client, id);
     }
@@ -174,16 +188,14 @@ async function handleClientLocationSubmit(client, id, cto) {
   }
 }
 
-
 async function handleClientLocation(client, id, cto) {
-
   const response = await sendApiReq({
     endpoint: "ctoclientid",
     httpMethod: "POST",
     body: {
       cto_id: id,
-      name: client
-    }
+      name: client,
+    },
   });
 
   if (response.status === 200) {
@@ -191,49 +203,67 @@ async function handleClientLocation(client, id, cto) {
 
     $("#sendToGoogleMaps").addEventListener("click", () => openNewTab(link));
 
-    $("#updateClientLocation").addEventListener("click", async () => {
-      if (confirm(`Atualizar localização de ${client} ?`)) {
-        const { position } = await setClientLocation(client, id, cto, "updatectoclient");
+    $("#updateClientLocation").addEventListener(
+      "click",
+      async () => {
+        if (confirm(`Atualizar localização de ${client} ?`)) {
+          const { position } = await setClientLocation(
+            client,
+            id,
+            cto,
+            "updatectoclient"
+          );
 
-        if (position) {
-          let { latitude, longitude } = position;
+          if (position) {
+            let { latitude, longitude } = position;
 
-          const newLink = createCtoLink({
-            lat: latitude,
-            lng: longitude
-          });
+            const newLink = createCtoLink({
+              lat: latitude,
+              lng: longitude,
+            });
 
-          link = newLink;
+            link = newLink;
 
-          insertMap(latitude, longitude);
+            insertMap(latitude, longitude, "#embedMap");
 
-          alert("Localização atualizada com sucesso");
+            alert("Localização atualizada com sucesso");
+          }
         }
-      }
-
-    }, { once: true });
+      },
+      { once: true }
+    );
 
     toggleElementClass(["#addClientLocation"], "d-none", true);
 
-    toggleElementClass(["#sendToGoogleMaps", "#updateClientLocation"], "d-none", false);
+    toggleElementClass(
+      ["#sendToGoogleMaps", "#updateClientLocation"],
+      "d-none",
+      false
+    );
 
-    insertMap(lat, lng);
-
+    insertMap(lat, lng, "#embedMap");
   } else {
-
     toggleElementClass(["#addClientLocation"], "d-none", false);
 
-    toggleElementClass(["#sendToGoogleMaps", "#updateClientLocation"], "d-none", true);
+    toggleElementClass(
+      ["#sendToGoogleMaps", "#updateClientLocation"],
+      "d-none",
+      true
+    );
 
-    $("#embedMap").innerHTML = `<i class="bi bi-globe-americas" style="font-size: 8rem"></i>`;
+    $(
+      "#embedMap"
+    ).innerHTML = `<i class="bi bi-globe-americas" style="font-size: 8rem"></i>`;
 
-    $("#addClientLocation").addEventListener("click", () => handleClientLocationSubmit(client, id, cto), { once: true });
-
+    $("#addClientLocation").addEventListener(
+      "click",
+      () => handleClientLocationSubmit(client, id, cto),
+      { once: true }
+    );
   }
 
   locationModal.show();
 }
-
 
 list.addEventListener("click", function (event) {
   if (event.target.dataset.find) {
@@ -250,7 +280,5 @@ list.addEventListener("click", function (event) {
     } else {
       handleClientLocation(ctoClient, ctoId);
     }
-
   }
 });
-
