@@ -1,6 +1,6 @@
 APLICATIVO TÉCNICO PARA PROVEDOR.
 
-Aplicatico de uso técnico, ainda em desenvolvimento, com intuito de facilitar a pesquisa e manipulação de informações como: Localização de clientes e caixas de atendimento (CTOS) dentro da rede de um provedor de fibra óptica. O aplicativo usa a API do Google Maps para gerar o mapa e fixar os marcadores que indicam a localização dos pontos de acesso dentro da rede. As informações contendo a localização de cada caixa de atendimento e seus respectivos clientes é fornecida pelo consumo da API do TOMODAT, sistema que permite projetar redes FTTH. A aplicação é construida com as tecnologias: JavaScript, HTML, Bootstrap no Frontend e NodeJS com Express e MongoDB no Backend.
+Aplicativo de uso técnico, ainda em desenvolvimento, com intuito de facilitar a pesquisa e manipulação de informações como a localização de clientes e caixas de atendimento (CTOS) dentro da rede de um provedor de fibra óptica. O aplicativo usa a API do Google Maps para gerar o mapa e fixar os marcadores que indicam a localização dos pontos de acesso dentro da rede. As informações contendo a localização de cada caixa de atendimento e seus respectivos clientes, é fornecida pelo consumo da API do TOMODAT, sistema que permite projetar redes FTTH. A aplicação é construída com as tecnologias: JavaScript, HTML, Bootstrap no Front-end e NodeJS com Express e MongoDB no Back-end.
 
 <div align="left">
 
@@ -15,8 +15,7 @@ Aplicatico de uso técnico, ainda em desenvolvimento, com intuito de facilitar a
 
 <img src="./readme.images/tela de entrada.jpg" width="800px" />
 
-2. Tela de recepção do aplicativo, logo após autenticar o login, no topo vemos a barra superior com as funcionalidades, campo de pesquisa e botão de logout.
-Na tela abre o mapa com o heatmap ativo, cada ponto do heatmap é uma CTO (Caixa de Atendimento Optico) em um raio de 200mt, facilitando a questão de vendas para provedores de internet, ao iniciar a tela centraliza na cidade em que o provedor tem matriz (podendo ser alterado no código as cidades que quer centralizar, possível criar um botão para selecionar a cidade que quer centralizar) (imagens acima). 
+2. Tela inicial da aplicação. Realizado o login, o sistema carrega as informações do banco de dados e gera um mapa de calor. As áreas mais quentes correspondem a uma maior concentração de caixas de atendimento. Cada caixa de atendimento abrange um raio de 200m no mapa, facilitando a visualização da viabilidade de atendimento de cada caixa, tornando o processo de vendas mais rápido. (imagens acima). 
 
 </div>
 
@@ -24,7 +23,7 @@ Na tela abre o mapa com o heatmap ativo, cada ponto do heatmap é uma CTO (Caixa
 
 <img src="./readme.images/pesquisa clientes.jpg" width="800px" />
 
-3. Tela da funcionalidade clientes, ao clicar nela abre uma barra lateral com dois campos de pesquisa, no primeiro campo como podemos ver, é o campo de pesquisa de cliente, ao digitar o nome no campo, ira retornar os clientes correspondentes, ao lado do nome tem dois botões, cto e cliente, uma para a localização da caixa de atendimento do cliente e outra para a localização do cliente caso já tenha cadastrada, se não tiver uma localização cadastrada, pode ser cadastrada uma nova, ou também atualizar a localização já existente (imagens acima). 
+3. Barra lateral com formulário para pesquisa de clientes e caixas de atendimento. Neste componente são exibidos dois formulários de pesquisa. Ao pesquisar pelo nome de um cliente ou pelo código de uma CTO, o sistema exibe uma lista com os resultados correspondentes. Ao lado do nome é exibido um botão que direciona o usuário para localização do item pesquisado. Na pesquisa de cliente é possível optar pela localização da caixa de atendimento na qual o cliente está inserido ou, clicando no botão (cli), direcionar o usuário para localização exata da casa do cliente. Caso a localização não tenha sido fornecida, o usuário poderá inserir uma nova localização ou atualizar uma localização já existente. (imagens acima). 
 </div>
 
 
