@@ -3,7 +3,6 @@ import { sendApiReq } from "./handleApiRequests.js";
 import { logout } from "./logout.js";
 import { triggerToast } from "./toast.js";
 
-
 const userTable = $("#usersTableBody");
 const logTable = $("#logsTableBody");
 const form = $("#addUserForm");
@@ -18,10 +17,11 @@ async function saveNewUser(reqBody) {
   const apiResponse = await sendApiReq({
     endpoint: "users",
     httpMethod: "POST",
-    body: reqBody
+    body: reqBody,
   });
 
-  apiResponse.status === 201 && triggerToast("usuário adicionado com sucess", true);
+  apiResponse.status === 201 &&
+    triggerToast("usuário adicionado com sucess", true);
   renderUserTable();
 }
 
@@ -29,10 +29,11 @@ async function editUserAndSave(reqBody, id) {
   const apiResponse = await sendApiReq({
     endpoint: `users/${id}`,
     httpMethod: "PUT",
-    body: reqBody
+    body: reqBody,
   });
 
-  apiResponse.status === 200 && triggerToast("usuário editado com sucesso", true);
+  apiResponse.status === 200 &&
+    triggerToast("usuário editado com sucesso", true);
   renderUserTable();
 }
 
@@ -42,8 +43,8 @@ form.addEventListener("submit", async function (event) {
   const reqBody = {
     name: get("#userName"),
     password: get("#userPassword"),
-    category: get("#userCategory")
-  }
+    category: get("#userCategory"),
+  };
 
   const userId = get("#userId");
 
@@ -51,13 +52,12 @@ form.addEventListener("submit", async function (event) {
 
   userModal.hide();
   renderUserTable();
-
 });
 
 export async function fetchUsers() {
   const users = await sendApiReq({
     endpoint: "users",
-    httpMethod: "GET"
+    httpMethod: "GET",
   });
 
   return users.data;
@@ -66,7 +66,7 @@ export async function fetchUsers() {
 export async function fetchLogs() {
   const logs = await sendApiReq({
     endpoint: "logctoclient",
-    httpMethod: "GET"
+    httpMethod: "GET",
   });
 
   return logs.data;
@@ -111,18 +111,25 @@ function getTableColumn(type, data, index) {
                 </button>
               </div>
             </td>
-    `
+    `;
   } else if (type === "logs") {
-    const { name, date_time, cto_name, user } = data;
+    const { name, date_time, cto_name, user, _id } = data;
 
     return `<th scope="row">${index + 1}</th>
     <td>${name}</td>
     <td>${cto_name}</td>
     <td>${user}</td>
     <td>${date_time}</td>
-`
+    <td>
+      <button 
+        data-log-id="${_id}" 
+        class="btn btn-outline-danger btn-sm"
+      >
+        Del
+      </button>
+    </td>
+`;
   }
-
 }
 
 async function setTableContent(type, filterResults) {
@@ -140,14 +147,16 @@ function mountFilter(query) {
     let [key, value] = q;
 
     if (key === "date") {
-      value = new Date(value).toLocaleString("pt-bt", { timeZone: "UTC" }).split(" ")[0];
+      value = new Date(value)
+        .toLocaleString("pt-bt", { timeZone: "UTC" })
+        .split(" ")[0];
     }
 
     if (query.length > 1) {
       if (!i) {
         filter = `${key} === "${value.toUpperCase()}"`;
       } else {
-        filter += ` && ${key} === "${value.toUpperCase()}"`
+        filter += ` && ${key} === "${value.toUpperCase()}"`;
       }
     } else {
       filter = `${key} === "${value.toUpperCase()}"`;
@@ -156,7 +165,6 @@ function mountFilter(query) {
 
   return filter;
 }
-
 
 $("#filterLogForm").addEventListener("submit", async function (event) {
   event.preventDefault();
@@ -183,7 +191,6 @@ $("#filterLogForm").addEventListener("submit", async function (event) {
   });
 
   renderLogsTable(filterLogs);
-
 });
 
 $("#updateLogBtn").addEventListener("click", function () {
@@ -194,7 +201,6 @@ $("#updateLogBtn").addEventListener("click", function () {
 
 let isSortDesc = false;
 $("#sortLogsByDateBtn").addEventListener("click", async function () {
-
   const logs = await fetchLogs();
 
   const sortedLogs = logs.sort(function (a, b) {
@@ -202,27 +208,35 @@ $("#sortLogsByDateBtn").addEventListener("click", async function () {
     let secondDate = b.date_time.split(" ")[0].split("/");
 
     if (isSortDesc) {
-      return new Date(firstDate[2], firstDate[1] - 1, firstDate[0]) < new Date(secondDate[2], secondDate[1] - 1, secondDate[0]);
+      return (
+        new Date(firstDate[2], firstDate[1] - 1, firstDate[0]) <
+        new Date(secondDate[2], secondDate[1] - 1, secondDate[0])
+      );
     } else {
-      return new Date(firstDate[2], firstDate[1] - 1, firstDate[0]) > new Date(secondDate[2], secondDate[1] - 1, secondDate[0]);
+      return (
+        new Date(firstDate[2], firstDate[1] - 1, firstDate[0]) >
+        new Date(secondDate[2], secondDate[1] - 1, secondDate[0])
+      );
     }
   });
 
   renderLogsTable(sortedLogs);
   isSortDesc = !isSortDesc;
-
 });
 
 function renderUserTable() {
-  setTableContent("user").then(data => userTable.innerHTML = data);
+  setTableContent("user").then(data => (userTable.innerHTML = data));
 }
 
 function renderLogsTable(withFilter = "") {
-  setTableContent("logs", withFilter).then(data => logTable.innerHTML = data);
+  setTableContent("logs", withFilter).then(data => (logTable.innerHTML = data));
 }
 
 function updateLogs() {
-  setInterval(() => { renderLogsTable(); console.log("atualizado " + new Date().toLocaleString()) }, 5 * 100000);
+  setInterval(() => {
+    renderLogsTable();
+    console.log("atualizado " + new Date().toLocaleString());
+  }, 5 * 100000);
 }
 
 function renderTablesAll() {
@@ -245,7 +259,8 @@ async function deleteUser(id) {
       httpMethod: "DELETE",
     });
 
-    if (apiResponse.status == 200) triggerToast("usuário deletado com sucesso", true);
+    if (apiResponse.status == 200)
+      triggerToast("usuário deletado com sucesso", true);
 
     renderUserTable();
   }
@@ -254,7 +269,7 @@ async function deleteUser(id) {
 async function editUser(id) {
   const user = await sendApiReq({
     endpoint: `users/${id}`,
-    httpMethod: "GET"
+    httpMethod: "GET",
   });
 
   setForm(user);
@@ -266,15 +281,37 @@ userTable.addEventListener("click", function (event) {
   const { userId, userAction } = event.target.dataset;
 
   switch (userAction) {
-    case "delete": deleteUser(userId);
+    case "delete":
+      deleteUser(userId);
       break;
 
-    case "edit": editUser(userId);
+    case "edit":
+      editUser(userId);
 
-    default: break;
+    default:
+      break;
   }
+});
 
-})
+logTable.addEventListener("click", async function (event) {
+  const { logId } = event.target.dataset;
+
+  console.log(event.target.dataset);
+
+  if (!logId) return;
+
+  if (confirm("deseja excluir este log?")) {
+    const deleted = await sendApiReq({
+      endpoint: `deletectolog/${logId}`,
+      httpMethod: "DELETE",
+    });
+
+    if (deleted.status === 201) {
+      console.log(deleted);
+      renderLogsTable();
+    }
+  }
+});
 
 $("#btnLogout").addEventListener("click", logout);
 
