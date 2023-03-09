@@ -25,6 +25,16 @@ class LogClientController {
 }).sort({_id: -1}) //sort id -1 retorna as adições mais novas no banco
 };
    
+static deleteCtoClientLog = (req, res) => {
+    let id = req.params.id
+    logCtoClient.findByIdAndDelete(id, (err) => {
+        if(err) {
+            res.status(500).send({message: `${err.message} - falha ao deletar log.`})
+        } else {
+            res.status(201).send({message: `log deletado com sucesso`})
+        }
+    })
+}
     
   
 };

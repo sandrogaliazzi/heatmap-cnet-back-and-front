@@ -2,6 +2,9 @@ import needle from "needle";
 import fetTomodat from "../BACK-END/src/models/fetchModel.js"
 import { fetchTomodat } from "../BACK-END/src/scripts/fetchApiTomodat.js"
 import db from "../BACK-END/src/config/dbConnect.js"
+import dotenv from 'dotenv';
+dotenv.config()
+
 
 
 db.on("error", console.log.bind(console, 'erro de conexão'))
@@ -32,4 +35,6 @@ function cadastroFetch(){
 
 
 setInterval(cadastroFetch, 21600000) // setinterval = 6h (21600000)
+
+// cadastroFetch();
 

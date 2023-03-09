@@ -15,7 +15,7 @@ const coord = {
 
 const reqConfig = {
   headers: {
-    "Authorization": `${process.env.TOMODAT_KEY}`,
+    "Authorization": "6f1abca83548d1d58a92e6562ed7e118358cc7ba",
     "Content-Type": "application/json",
     "Accept-encoding": "application/json",
     "Access-Control-Allow-Origin": '*',
@@ -116,20 +116,21 @@ export async function fetchTomodat() {
 
 // };
 export function deleteTomodat(req, res) {
-  let id = 15611 //req.body.id; 15611
-  console.log(id);
-  needle.delete(`https://sp.tomodat.com.br/tomodat/api/clients/`, id, reqConfig,
+  let id = req.params.id;
+  console.log("id " + id);
+  needle.delete(`https://sp.tomodat.com.br/tomodat/api/clients/${id}`, reqConfig,
     ((err) => {
       if (err) {
         console.log(err)//res.status(500).send({ message: `${err.message} - falha ao deletar cliente.` })
       } else {
-        console.log(res)//res.status(201).send({ ApiTomodatDeleteOk: `deletado com sucesso.` });
+        res.status(201).send({ ApiTomodatDeleteOk: `deletado com sucesso ${id}` });
+        console.log(res.body)
       }      
     }))
     };
 
 // for debug purposes     
-// console.log(reqConfig)
+console.log(reqConfig)
 // fetchTomodat().then(data =>{
 //   console.log(data)
 // });

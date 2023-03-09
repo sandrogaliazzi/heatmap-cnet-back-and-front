@@ -48,8 +48,23 @@ class fetTomodatController {
 })
 };
 
-
-
+ static UpdateFetchCtoCLient = (req, res, next) => {
+  let idCto = req.body.cto_id;
+  let name = req.body.name
+  let lat = req.body.lat
+  let lng = req.body.lng
+  let id = 999999994
+  let dadosCliente = {name, id}
+  let newClient = dadosCliente;
+  console.log(newClient)
+  fetTomodat.findOneAndUpdate({"cto_id": idCto}, { $push: { "clients": newClient } }, (err) =>{
+    if(err){
+      console.log(err)
+    } else {
+      return next();
+    }
+  })   
+}
 }
 
 export default fetTomodatController;

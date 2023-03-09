@@ -389,7 +389,7 @@ export function filterCto(query) {
   let filterdMarkers = [];
   if (query != "") {
     filterdMarkers = markers.filter(
-      (marker) => marker.title.indexOf(query.toUpperCase()) > -1
+      (marker) => marker?.title?.indexOf(query.toUpperCase()) > -1
     );
 
     if (filterdMarkers.length) {

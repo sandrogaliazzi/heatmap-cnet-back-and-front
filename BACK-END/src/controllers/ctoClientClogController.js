@@ -28,11 +28,23 @@ class CtoClientLogController {
 //         })
 //     };
 
-//     static ListarCtoClient = (req, res) => {
-//     ctoClient.find((err, ctoClient)=>{
-//     res.status(200).send(ctoClient)
-// }).sort({_id: -1}) //sort id -1 retorna as adições mais novas no banco
-// };
+    static ListarCtoClient = (req, res) => {
+    ctoClientLog.find((err, ctoClient)=>{
+    res.status(200).send(ctoClient)
+}).sort({_id: -1}) //sort id -1 retorna as adições mais novas no banco
+};
+
+
+static deleteCtoClientLog = (req, res) => {
+    let id = req.params.id
+    ctoClientLog.findByIdAndDelete(id, (err) => {
+        if(err) {
+            res.status(500).send({message: `${err.message} - falha ao deletar log.`})
+        } else {
+            res.status(201).send({message: `log deletado com sucesso`})
+        }
+    })
+}
    
 // static ListarCtoClientById = (req, res) => {
 //     let id = req.body.cto_id

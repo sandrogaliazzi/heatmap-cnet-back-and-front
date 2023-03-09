@@ -1,6 +1,7 @@
 import user from "../models/users.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import login from "../models/loginModel.js";
 // require("dotenv").config();
 // import { config } from "dotenv"
 import * as dotenv from 'dotenv';
@@ -100,6 +101,10 @@ static RegisterUser = async (req, res) => {
     try {
       // Get user input
       let { name, password } = req.body;
+      let date = new Date().toLocaleString("PT-br");
+      let dadosHorario = {name, date};
+      let loginHorario = new login(dadosHorario)
+      loginHorario.save()
   
       // Validate user input
       if (!(name && password)) {
@@ -147,6 +152,19 @@ static RegisterUser = async (req, res) => {
         }
     })
  }
+
+//  static registroLogin = (req, res, next) =>{
+//   let loginHorario = new login(req.body)
+//   loginHorario.save((err) =>{
+//     if(err) {
+//         res.status(500).send({message: `${err.message} - falha ao cadastrar historico de login.`})
+//     } else{
+//         // res.status(201).send({DbLogCtoClient: `${logCtoClients.date_time}: Cliente ${logCtoClients.name} cadastrado com sucesso na cto ${logCtoClients.cto_name} pelo usuario: ${logCtoClients.user}.`})
+//         return next();
+//     }
+// })
+// }
+
 
 }
 
