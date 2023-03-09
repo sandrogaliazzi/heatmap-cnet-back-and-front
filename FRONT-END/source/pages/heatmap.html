@@ -255,6 +255,13 @@
           >
             <h1 class="modal-title fs-5" id="ctoModalTitle">Modal teste</h1>
             <div class="d-flex align-items-center">
+              <button
+                type="button"
+                class="btn btn-lg btn-dark"
+                id="copyAllNames"
+              >
+                <i class="bi bi-ui-checks"></i>
+              </button>
               <button type="button" class="btn btn-lg btn-dark" id="admModeBtn">
                 <i class="bi bi-gear-wide-connected"></i>
               </button>
@@ -285,10 +292,12 @@
               <div class="buttons">
                 <button
                   type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
+                  class="btn btn-danger"
+                  id="deleteClient"
+                  disabled
                 >
-                  Fechar
+                  Deletar
+                  <i class="bi bi-person-x"></i>
                 </button>
                 <button
                   type="button"
@@ -515,6 +524,7 @@
 
       if (category !== "adm") {
         document.querySelector("#dashboard").classList.add("d-none");
+        document.querySelector("#deleteClient").classList.add("d-none");
       }
     </script>
   </body>

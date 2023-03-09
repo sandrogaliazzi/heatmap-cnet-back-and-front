@@ -1,4 +1,5 @@
 import { $ } from "./handleForm.js";
+import { sendApiReq } from "./handleApiRequests.js";
 
 const openModal = $("#openModalBtn");
 const clientsList = $("#modalClientsList");
@@ -9,8 +10,10 @@ function createCtoLink(pos) {
   return `https://www.google.com/maps/search/?api=1&query=${pos.lat},${pos.lng}`;
 }
 
-$("#ctoModal").addEventListener("hide.bs.modal", () => selectedClients.length = 0);
-
+$("#ctoModal").addEventListener(
+  "hide.bs.modal",
+  () => (selectedClients.length = 0)
+);
 
 function showCheckBoxes() {
   const checkBoxes = document.querySelectorAll(".form-check-input");
@@ -23,8 +26,8 @@ $("#admModeBtn").addEventListener("click", showCheckBoxes);
 function renderClientsList(clients) {
   let list = "";
 
-  clients.forEach((client) => {
-    let item = `<li class="list-group-item d-flex justify-content-between align-items-center">
+  clients.forEach(client => {
+    let item = `<li class="list-group-item d-flex justify-content-between align-items-center" data-key="${client.id}">
       <div>
         <input class="form-check-input me-2 d-none" data-action="selectClient" type="checkbox" value="" id="${client.id}">
         <span data-client-id="${client.id}" class="me-3">${client.name}</span>
@@ -40,7 +43,7 @@ function renderClientsList(clients) {
     </li>`;
 
     list += item;
-  })
+  });
 
   return list;
 }
@@ -50,14 +53,15 @@ function setClientsList(clients, id) {
 }
 
 function setModalTitle(title, pos) {
-  modalTitle.innerHTML = `<a href="${createCtoLink(pos)}" target="blank">${title}</a>`;
+  modalTitle.innerHTML = `<a href="${createCtoLink(
+    pos
+  )}" target="blank">${title}</a>`;
 }
 
 export function setFreePortsNumber(percetageFree, totalClients) {
-  let isEmpty, isFull, freePorts, totalPorts
+  let isEmpty, isFull, freePorts, totalPorts;
 
   const occupiedPortsPercentage = 100 - percetageFree;
-
 
   if (occupiedPortsPercentage === 100) isFull = true;
 
@@ -72,8 +76,8 @@ export function setFreePortsNumber(percetageFree, totalClients) {
     isEmpty,
     isFull,
     freePorts,
-    totalPorts
-  }
+    totalPorts,
+  };
 }
 
 function toggleBtn(flag) {
@@ -81,9 +85,12 @@ function toggleBtn(flag) {
 }
 
 export function recalcFreePorts(totalClients, oldPercentage) {
-  const { totalPorts, isEmpty } = setFreePortsNumber(oldPercentage, totalClients);
+  const { totalPorts, isEmpty } = setFreePortsNumber(
+    oldPercentage,
+    totalClients
+  );
 
-  let newPercentageFree
+  let newPercentageFree;
 
   if (!isEmpty) {
     let newClientCount = totalClients + 1;
@@ -95,27 +102,54 @@ export function recalcFreePorts(totalClients, oldPercentage) {
   return newPercentageFree;
 }
 
-
-
 function setModalInfo(info) {
   const { clients, name, coord, percentage_free, id } = info;
+
+  $("#copyAllNames").addEventListener(
+    "click",
+    function () {
+      let listName = "";
+      clients.forEach(client => {
+        listName += client.name + "\n";
+      });
+      navigator.clipboard.writeText(listName);
+    },
+    { once: true }
+  );
+
+  $("#copyAllNames").addEventListener(
+    "contextmenu",
+    function () {
+      let listName = "";
+      clients.forEach(client => {
+        listName += hifenName(client.name) + "\n";
+      });
+      navigator.clipboard.writeText(listName);
+    },
+    { once: true }
+  );
 
   setClientsList(clients, id);
   setModalTitle(name, coord);
   $("#clientsNumber").innerHTML = `<strong>${clients.length}</strong> clientes`;
 
-  const { isEmpty, isFull, freePorts } = setFreePortsNumber(parseInt(percentage_free), clients.length);
-
+  const { isEmpty, isFull, freePorts } = setFreePortsNumber(
+    parseInt(percentage_free),
+    clients.length
+  );
 
   if (isEmpty || isFull) {
-    $("#percentageFree").innerHTML = `<strong class="${isEmpty ? "text-success" : "text-danger"}">
+    $("#percentageFree").innerHTML = `<strong class="${
+      isEmpty ? "text-success" : "text-danger"
+    }">
       ${isEmpty ? "Cto vazia" : "Cto Lotada"}
     </strong>`;
 
     toggleBtn(isEmpty ? false : true);
-
   } else {
-    $("#percentageFree").innerHTML = `<strong class="text-success">${freePorts} vagas</strong>`
+    $(
+      "#percentageFree"
+    ).innerHTML = `<strong class="text-success">${freePorts} vagas</strong>`;
     toggleBtn(false);
   }
 
@@ -137,14 +171,15 @@ function copyClientName(data, event) {
   const { userName, copyTo } = data;
   const el = event.target;
 
-
   navigator.clipboard.writeText(
     copyTo === "unm" ? userName : hifenName(userName)
   );
 
   let icon = el.classList[1];
 
-  [icon, "bi-clipboard-check-fill"].forEach(className => el.classList.toggle(className));
+  [icon, "bi-clipboard-check-fill"].forEach(className =>
+    el.classList.toggle(className)
+  );
 
   setTimeout(() => {
     el.classList.remove("bi-clipboard-check-fill");
@@ -157,12 +192,14 @@ function markTextAsSelected(el) {
 
   const id = el.dataset.clientId;
 
-  if (!selectedClients.find(client => client == id))
-    selectedClients.push(id);
-  else
-    selectedClients.splice(selectedClients.indexOf(id), 1);
+  if (!selectedClients.find(client => client == id)) selectedClients.push(id);
+  else selectedClients.splice(selectedClients.indexOf(id), 1);
 
-  console.log(selectedClients)
+  console.log(selectedClients);
+
+  if (selectedClients.length > 0)
+    $("#deleteClient").removeAttribute("disabled");
+  else $("#deleteClient").setAttribute("disabled", "");
 }
 
 $("#modalClientsList").addEventListener("click", function (event) {
@@ -170,13 +207,34 @@ $("#modalClientsList").addEventListener("click", function (event) {
 
   if (Object.keys(data).length > 0) {
     switch (data.action) {
-      case "copyName": copyClientName(data, event);
+      case "copyName":
+        copyClientName(data, event);
         break;
 
-      case "selectClient": markTextAsSelected($(`[data-client-id="${event.target.id}"]`));
+      case "selectClient":
+        markTextAsSelected($(`[data-client-id="${event.target.id}"]`));
         break;
     }
   }
-})
+});
+
+async function deleteClient() {
+  // const deleted = await Promise.all(
+  //   selectedClients.map(client => {
+  //     return sendApiReq({
+  //       endpoint: `deleteclientfromtomodat/${client}`,
+  //       httpMethod: "DELETE",
+  //     });
+  //   })
+  // );
+
+  // console.log(deleted);
+
+  selectedClients.forEach(client => {
+    $(`[data-key="${client}"]`).classList.add("d-none");
+  });
+}
+
+$("#deleteClient").addEventListener("click", deleteClient);
 
 export default setModalInfo;
