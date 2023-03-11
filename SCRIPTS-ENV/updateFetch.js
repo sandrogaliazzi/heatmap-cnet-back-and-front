@@ -69,7 +69,7 @@ function runScript() {
           let id = dados.id
           fetTomodat.findOneAndUpdate({"id": id}, {$set: dados}, (err) => {
                     if(!err) {
-                         console.log(`Fetch send to Db: ${now}`)
+                        //  console.log(`Fetch send to Db: ${now}`)
                     } else {
                         console.log({message: err.message})
               }})
