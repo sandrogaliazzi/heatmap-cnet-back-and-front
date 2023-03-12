@@ -6,6 +6,7 @@ import fetch from "./fetchRoutes.js";
 import cto from "./ctoClientRoutes.js"
 import tracking from "./trackingRoutes.js";
 import login from "./loginRoutes.js";
+import instalacoes from "./instalacoesRoutes.js"
 
 const routes = (app) => {
     app.route('/').get((req, res) => {
@@ -21,7 +22,8 @@ const routes = (app) => {
      fetch,
      cto,
      tracking,
-     login
+     login,
+     instalacoes
      )
 }
 
