@@ -2,13 +2,13 @@ import mongoose, { Schema } from "mongoose";
 
 const instalacoesFormSchema = new mongoose.Schema(
      {
-       id: {type: String},
        name_client: {type: String, require: true},
-       cto: {type: Object, require: true},
-       sinal: {type: Object, require: true},
+       cto: {type: String, require: true},
+       sinal: {type: String, require: true},
        mac_onu: {type: String, require: true},
        tecnico: {type: String, require: true}, 
-       date_time: {type: String, require: true}
+       user: {type: String, require: true},
+       date_time: {type: String, require: true},
       }
 );
 

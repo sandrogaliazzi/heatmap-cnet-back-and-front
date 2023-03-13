@@ -2,7 +2,6 @@ import mongoose, { Schema } from "mongoose";
 
 const TrackingSchema = new mongoose.Schema(
   {
-    id: {type: String},
     user: {type: String, require: true}, 
     lat: {type: String, require: true },
     lng: {type: String, require: true},
