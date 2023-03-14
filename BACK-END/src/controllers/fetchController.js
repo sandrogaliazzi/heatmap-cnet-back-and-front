@@ -1,6 +1,7 @@
 import fetTomodat from "../models/fetchModel.js"
 import { fetchTomodat } from "../scripts/fetchApiTomodat.js"
-
+import mongoose from "mongoose";
+import ctoClient from "../models/ctoClient.js"
 
 
 class fetTomodatController {
@@ -48,22 +49,42 @@ class fetTomodatController {
 })
 };
 
- static UpdateFetchCtoCLient = (req, res, next) => {
-  let idCto = req.body.cto_id;
-  let name = req.body.name
-  let lat = req.body.lat
-  let lng = req.body.lng
-  let id = 999999994
-  let dadosCliente = {name, id}
-  let newClient = dadosCliente;
-  console.log(newClient)
-  fetTomodat.findOneAndUpdate({"cto_id": idCto}, { $push: { "clients": newClient } }, (err) =>{
-    if(err){
-      console.log(err)
-    } else {
-      return next();
+static FetchWithCtoCLient = (req, res) => {
+  let fetchtomodatsModel = fetTomodat;  
+  let ctoclients = ctoClient;
+  const pipeline = [
+    {
+      $lookup: {
+        from: "ctoclients",
+        let: { cto_id: "$id" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$cto_id", "$$cto_id"] } } },
+          {
+            $project: {
+              id: 1,
+              name: 1,
+              lat: 1,
+              lng: 1,
+              cto_id: 1,
+              user: 1,
+              date_time: 1
+            }
+          }
+        ],
+        as: "cto_clients_loc"
+      }
     }
-  })   
+  ];
+    
+  fetchtomodatsModel.aggregate(pipeline).exec((err, result) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      let retorno = JSON.stringify(result, null, 2)
+      res.status(200).send(result)
+      // do something with the result, such as rendering it in a web page or sending it in a response
+    }
+  });    
 }
 }
 
