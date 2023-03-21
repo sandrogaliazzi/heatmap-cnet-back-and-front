@@ -60,6 +60,16 @@ static UpdateCtoClientById = (req, res) => {
 }).sort({_id: -1}) //sort id -1 retorna as adições mais novas no banco
 };
 
+static deleteCtoClient = (req, res) => {
+    let id = req.params.id
+    ctoClient.findByIdAndDelete(id, (err) => {
+        if(err) {
+            res.status(500).send({message: `${err.message} - falha ao deletar Cliente.`})
+        } else {
+            res.status(201).send({message: `Cliente deletado com sucesso`})
+        }
+    })
+}
   
 };
 
