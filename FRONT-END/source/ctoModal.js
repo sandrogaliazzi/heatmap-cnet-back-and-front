@@ -219,20 +219,31 @@ $("#modalClientsList").addEventListener("click", function (event) {
 });
 
 async function deleteClient() {
-  // const deleted = await Promise.all(
-  //   selectedClients.map(client => {
-  //     return sendApiReq({
-  //       endpoint: `deleteclientfromtomodat/${client}`,
-  //       httpMethod: "DELETE",
-  //     });
-  //   })
-  // );
+  const deleted = await Promise.all(
+    selectedClients.map(client => {
+      console.log(`deleteclientfromtomodat/${client}`);
+      return sendApiReq({
+        endpoint: `deleteclientfromtomodat/${client}`,
+        httpMethod: "DELETE",
+      });
+    })
+  );
 
-  // console.log(deleted);
+  console.log(deleted);
 
-  selectedClients.forEach(client => {
-    $(`[data-key="${client}"]`).classList.add("d-none");
-  });
+  if (deleted.every(del => del.status === 201)) {
+    alert("clientes Deletados com sucesso");
+
+    selectedClients.forEach(client => {
+      $(`[data-key="${client}"]`).classList.add("d-none");
+    });
+
+    $("#deleteClient").setAttribute("disabled", "");
+
+    selectedClients.length = 0;
+  } else {
+    alert("erro ao deletar cliente");
+  }
 }
 
 $("#deleteClient").addEventListener("click", deleteClient);

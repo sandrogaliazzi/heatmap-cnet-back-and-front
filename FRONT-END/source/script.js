@@ -27,15 +27,16 @@ function checkLogin() {
 
 async function loadMap() {
   try {
-    const data = await fetchWithDownloadTrack("https://api.heatmap.conectnet.net/fetch");
+    const data = await fetchWithDownloadTrack(
+      "https://api.heatmap.conectnet.net/fetch"
+    );
 
     $("#spinnerContainer").classList.add("d-none");
 
     tomodatData.push(...data);
 
     mapCoordinates = tomodatData.map(
-      (data) =>
-        new google.maps.LatLng(data.coord.lat, data.coord.lng)
+      data => new google.maps.LatLng(data.coord.lat, data.coord.lng)
     );
 
     pointArray = new google.maps.MVCArray(mapCoordinates);
@@ -64,7 +65,7 @@ const markers = []; //problema
 const infoWindows = [];
 
 function setMarkers() {
-  tomodatData.forEach((data) => {
+  tomodatData.forEach(data => {
     let { lat, lng } = data.coord;
 
     let image = "../images/cto conect.png";
@@ -84,19 +85,22 @@ function setMarkers() {
 
   const infoWindows = [];
 
-  markers.forEach((marker) => {
+  markers.forEach(marker => {
     marker.addListener("click", () => {
       const pos = marker.position.toJSON();
 
       const ctoData = tomodatData.filter(data => {
-        return data.name == marker.title && data.coord.lat == pos.lat && data.coord.lng == pos.lng
+        return (
+          data.name == marker.title &&
+          data.coord.lat == pos.lat &&
+          data.coord.lng == pos.lng
+        );
       });
 
       const { id, name } = ctoData[0];
 
       setModalInfo(ctoData[0]);
       setFormData(id, name);
-
     });
   });
 }
@@ -202,7 +206,7 @@ function initialize() {
     // For each place, get the icon, name and location.
     const bounds = new google.maps.LatLngBounds();
 
-    places.forEach((place) => {
+    places.forEach(place => {
       if (!place.geometry || !place.geometry.location) {
         console.log("Returned place contains no geometry");
         return;
@@ -316,10 +320,10 @@ function showPosition(position) {
       anchor: marker,
       map,
     });
-  })
+  });
 
   // Configure the click listener.
-  map.addListener("click", (mapsMouseEvent) => {
+  map.addListener("click", mapsMouseEvent => {
     // Close the current InfoWindow.
     infoWindow.close();
     marker.setMap(null);
@@ -345,17 +349,15 @@ function showPosition(position) {
     infoWindow.setContent(contentinfosaske);
 
     infoWindow.open(map);
-
   });
-
 }
 
 function showMarkers(array) {
-  array.forEach((marker) => marker.setMap(map));
+  array.forEach(marker => marker.setMap(map));
 }
 
 function hideMarkers(array) {
-  array.forEach((marker) => marker.setMap(null));
+  array.forEach(marker => marker.setMap(null));
 }
 
 function renderClientsList(clients) {
@@ -365,7 +367,7 @@ function renderClientsList(clients) {
     let item = `<li>${client}</li>`;
 
     list += item;
-  })
+  });
 
   return list;
 }
@@ -374,7 +376,9 @@ function getInfoWindow(pos, cto, clients) {
   return new google.maps.InfoWindow({
     content: `
       <div class="text-center pb-3">
-        <a href="https://www.google.com/maps/search/?api=1&query=${pos.lat}, ${pos.lng}" target="_blank">${cto}<a/>
+        <a href="https://www.google.com/maps/search/?api=1&query=${pos.lat}, ${
+      pos.lng
+    }" target="_blank">${cto}<a/>
       </div>
       <div>
         <ul>
@@ -389,12 +393,12 @@ export function filterCto(query) {
   let filterdMarkers = [];
   if (query != "") {
     filterdMarkers = markers.filter(
-      (marker) => marker?.title?.indexOf(query.toUpperCase()) > -1
+      marker => marker?.title?.indexOf(query.toUpperCase()) > -1
     );
 
     if (filterdMarkers.length) {
       showMarkers(filterdMarkers);
-      hideMarkers(markers.filter((marker) => !filterdMarkers.includes(marker)));
+      hideMarkers(markers.filter(marker => !filterdMarkers.includes(marker)));
     }
   } else {
     hideMarkers(markers);
@@ -416,9 +420,7 @@ export function setCenter(lat, lng) {
 
 $("#btnLogout").addEventListener("click", logout);
 
-
 window.initialize = initialize;
-
 
 ///https://www.google.com/maps/search/?api=1&query=36.26577,-92.54324
 ///assim deve ser a url pra compartilhar

@@ -39,6 +39,7 @@
   <script src="/static/ctoModal.js" type="module" defer></script>
   <script src="/static/addClient.js" type="module" defer></script>
   <script src="/static/updateTomodat.js" type="module" defer></script>
+  <script src="/static/clientsMap.js" type="module" defer></script>
 
   <body onload="initialize()">
     <!-- PROGRESS BAR -->
@@ -191,6 +192,17 @@
               <a class="nav-link" href="/static/pages/users.html">
                 <i class="bi bi-gear-fill"></i>
                 Dashboard</a
+              >
+            </li>
+            <li class="nav-item" id="newClientsMap">
+              <a
+                class="nav-link"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#clientLocationsModal"
+              >
+                <i class="bi bi-compass-fill"></i>
+                Clientes localizados</a
               >
             </li>
           </ul>
@@ -483,6 +495,58 @@
             >
               <!-- MAPA COM LOCALIZAÇÃO DO CLIENTE -->
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="clientLocationsModal"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 style="white-space: nowrap" class="mb-0">
+              Clientes localizados
+              <span id="totalClietnsWithLocation"></span>
+            </h3>
+            <div class="d-flex align-items-center">
+              <button
+                type="button"
+                class="btn-close"
+                id="closeModalBtn"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">
+                <i class="bi bi-search"> </i>
+                <span class="ms-2">Pesquisar</span>
+              </span>
+              <input
+                type="search"
+                class="form-control"
+                id="findClientWithLocation"
+                placeholder="encontre um cliente"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+              <div class="position-relative w-100">
+                <div class="position-absolute w-100 z-2 top-0">
+                  <ul
+                    class="list-group list-group-flush"
+                    id="foundResults"
+                  ></ul>
+                </div>
+              </div>
+            </div>
+            <div id="clientsMap" class="w-100 vh-100"></div>
           </div>
         </div>
       </div>
