@@ -7,11 +7,30 @@ const userTable = $("#usersTableBody");
 const logTable = $("#logsTableBody");
 const form = $("#addUserForm");
 const userModal = new bootstrap.Modal($("#addUsersModal"));
+const popovers = [];
 
 $("#addUsersModal").addEventListener("hidden.bs.modal", function () {
   form.reset();
   set("#userId", "");
 });
+
+function showPopover(id, popoverInfo) {
+  if (popovers.length > 0) popovers.forEach(popover => popover.hide());
+
+  const popover = new bootstrap.Popover(document.getElementById(id), {
+    title: `Numero de Loigns: ${popoverInfo.userLogin}`,
+    content: `Data do último Login: ${popoverInfo.userLastLogin}`,
+    trigger: "focus",
+  });
+
+  popovers.push(popover);
+
+  popover.show();
+
+  setTimeout(() => {
+    popover.hide();
+  }, 5000);
+}
 
 async function saveNewUser(reqBody) {
   const apiResponse = await sendApiReq({
@@ -60,7 +79,19 @@ export async function fetchUsers() {
     httpMethod: "GET",
   });
 
-  return users.data;
+  const logins = await fetchLogins();
+
+  return users.data.map(user => {
+    const { loginCounter, lastDate } = logins[user?.name] || "indefinido";
+
+    return {
+      _id: user._id,
+      name: user.name,
+      category: user.category,
+      loginCounter,
+      lastDate,
+    };
+  });
 }
 
 export async function fetchLogs() {
@@ -70,6 +101,25 @@ export async function fetchLogs() {
   });
 
   return logs.data;
+}
+
+async function fetchLogins() {
+  const logins = await sendApiReq({
+    endpoint: "logindataget",
+    httpMethod: "GET",
+  });
+
+  const loginsByUser = {};
+
+  return logins.data.reduce((_, current) => {
+    if (loginsByUser[current.name]) {
+      loginsByUser[current.name].loginCounter++;
+    } else {
+      loginsByUser[current.name] = { loginCounter: 1, lastDate: current.date };
+    }
+
+    return loginsByUser;
+  });
 }
 
 function getTableRows(type, dataRows) {
@@ -86,10 +136,17 @@ function getTableRows(type, dataRows) {
 
 function getTableColumn(type, data, index) {
   if (type === "user") {
-    const { name, category, _id: id } = data;
+    const { name, category, _id: id, loginCounter, lastDate } = data;
 
     return `<th scope="row">${index + 1}</th>
-            <td>${name}</td>
+            <td id="${id}" 
+              data-user-id="${id}"
+              data-user-login="${loginCounter || ""}" 
+              data-user-last-login="${
+                lastDate?.split(" ")[0] || "sem registro"
+              }"
+              data-user-action="showPopover"
+            >${name}</td>
             <td>${category}</td>
             <td>
               <div class="btn-group" role="group">
@@ -184,7 +241,7 @@ $("#filterLogForm").addEventListener("submit", async function (event) {
   const logs = await fetchLogs();
 
   const filterLogs = logs.filter(log => {
-    const { name, cto_name, date_time } = log;
+    const { name, cto_name, date_time, user } = log;
     const date = date_time.split(" ")[0];
 
     return eval(filter);
@@ -288,6 +345,9 @@ userTable.addEventListener("click", function (event) {
     case "edit":
       editUser(userId);
 
+    case "showPopover":
+      const { userLogin, userLastLogin } = event.target.dataset;
+      showPopover(userId, { userLogin, userLastLogin });
     default:
       break;
   }

@@ -1,14 +1,14 @@
 import { $, set } from "./handleForm.js";
 
-export function insertMap(lat, lng, elToInject) {
+export function insertMap(lat, lng, elToInject, markersToInject) {
   const coords = { lat: parseFloat(lat), lng: parseFloat(lng) };
-
-  const markers = [];
 
   const embedMap = new google.maps.Map($(elToInject), {
     zoom: 15,
     center: coords,
   });
+
+  const markers = [];
 
   embedMap.addListener("click", e => {
     placeMarkerAndPanTo(e.latLng, embedMap);
