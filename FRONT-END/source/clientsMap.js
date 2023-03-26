@@ -3,6 +3,8 @@ import { createCtoLink } from "./mapUtils.js";
 import { $ } from "./handleForm.js";
 
 const clientsList = [];
+const markersList = [];
+
 let embedMap;
 
 function insertMapAndPlaceMarkers(markers, elToInject) {
@@ -16,11 +18,31 @@ function insertMapAndPlaceMarkers(markers, elToInject) {
   markers.forEach(marker => {
     const { lat, lng, user, name } = marker;
 
-    new google.maps.Marker({
-      position: new google.maps.LatLng(lat, lng),
-      map: embedMap,
-      title: name,
-      icon: "../images/person-icon.png",
+    markersList.push(
+      new google.maps.Marker({
+        position: new google.maps.LatLng(lat, lng),
+        map: embedMap,
+        title: name,
+        icon: "../images/person-icon.png",
+      })
+    );
+  });
+
+  markersList.forEach(marker => {
+    marker.addListener("click", function () {
+      const { lat, lng } = this.position.toJSON();
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `<a href="${createCtoLink({
+          lat,
+          lng,
+        })}" target="_blank">Abrir Localização no Mapa</a>`,
+      });
+
+      infoWindow.open({
+        anchor: marker,
+        map: embedMap,
+      });
     });
   });
 }
