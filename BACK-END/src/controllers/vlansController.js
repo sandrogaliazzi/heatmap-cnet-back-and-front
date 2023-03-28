@@ -12,6 +12,11 @@ class VlanController  {
                 }
         })
     }
+    static ListVlans = (req, res) => {
+        vlan.find((err, vlan)=>{
+        res.status(200).send(vlan)
+    }).sort({_id: -1}) //sort id -1 retorna as adições mais novas no banco
+    };
 }
 
 export default VlanController;
