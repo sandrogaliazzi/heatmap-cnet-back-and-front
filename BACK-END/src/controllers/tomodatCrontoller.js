@@ -40,7 +40,7 @@ class TomodatController {
      try {
       const response = await fetch(`https://sp.tomodat.com.br/tomodat/api/clients/${id}`, reqConfig)
       
-      console.log(response)
+      console.log(`resposta do servidor do tomodat: ${response}`)
       if(response.ok) {
         res.status(201).send({ ApiTomodatDeleteOk: `deletado com sucesso ${id}` })
       } else {
