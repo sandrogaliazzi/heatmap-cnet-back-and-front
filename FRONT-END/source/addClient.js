@@ -117,6 +117,15 @@ function isFormCompleted(fields) {
   return isComplete;
 }
 
+$("#clientName").addEventListener("invalid", function() {
+  this.setCustomValidity("Não é permitidos acentos ou caracteres especiais no nome!");
+});
+
+$("#clientName").addEventListener("change",function(){
+  this.setCustomValidity("");
+});
+
+
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
