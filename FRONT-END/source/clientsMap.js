@@ -120,29 +120,27 @@ $("#findClientWithLocation").addEventListener("keyup", function (event) {
         listItens += `
         <li class="list-group-item" data-key="${client._id}">
         <div class="d-flex justify-content-between align-items-center">
-          <span>${client.name}</span>
+          <p class="mb-0 small">${client.name}</p>
           <div>
-            <div class="d-flex gap-2 align-items-center">
-              <a class="btn btn-primary" href="${link}" target="_blank" role="button">
-                Maps
+            <div class="btn-group d-flex align-items-center" role="group">
+              <a class="btn btn-primary btn-sm" href="${link}" target="_blank" role="button">
                 <i class="bi bi-google"></i>
               </a>
               <button
-                class="btn btn-success"
+                class="btn btn-success btn-sm"
                 data-lat="${client.lat}"
                 data-lng="${client.lng}"
                 data-action="centerMap"
               >
-                Ver no mapa
-                <i class="bi bi-geo-alt-fill"></i>
+                <i class="bi bi-geo-alt-fill" data-action="centerMap"></i>
               </button>
               <button
-                class="btn btn-secondary"
+                class="btn btn-secondary btn-sm"
                 data-delete-id="${client._id}"
                 data-action="delete"
               >
               
-              <i class="bi bi-trash-fill"></i>
+              <i class="bi bi-trash-fill" data-action="delete"></i>
               </button>
             </div>
           </div>
