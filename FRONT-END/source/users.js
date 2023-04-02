@@ -205,8 +205,9 @@ function mountFilter(query) {
 
     if (key === "date") {
       value = new Date(value)
-        .toLocaleString("pt-bt", { timeZone: "UTC" })
-        .split(" ")[0];
+        .toLocaleString("pt-BR", { timeZone: "UTC" })
+        .split(" ")[0]
+        .replace(",", "");
     }
 
     if (query.length > 1) {
@@ -242,7 +243,7 @@ $("#filterLogForm").addEventListener("submit", async function (event) {
 
   const filterLogs = logs.filter(log => {
     const { name, cto_name, date_time, user } = log;
-    const date = date_time.split(" ")[0];
+    const date = date_time.split(" ")[0].replace(",", "");
 
     return eval(filter);
   });
