@@ -7,6 +7,7 @@ import cto from "./ctoClientRoutes.js"
 import tracking from "./trackingRoutes.js";
 import login from "./loginRoutes.js";
 import instalacoes from "./instalacoesRoutes.js"
+import vlan from "./vlanRoutes.js";
 
 const routes = (app) => {
     app.route('/').get((req, res) => {
@@ -23,7 +24,8 @@ const routes = (app) => {
      cto,
      tracking,
      login,
-     instalacoes
+     instalacoes,
+     vlan
      )
 }
 

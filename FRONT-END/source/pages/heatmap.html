@@ -221,23 +221,15 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-sm-none" type="button" id="btnLogout">
+              <a
+                class="nav-link d-sm-none"
+                type="button"
+                onclick="sessionStorage.clear(); location.href = '/'"
+              >
                 <i class="bi bi-box-arrow-left"></i>
                 <span class="ms-2 text-danger">Sair</span>
               </a>
             </li>
-
-            <!-- <li class="nav-item" id="newClientsMap">
-              <a
-                class="nav-link"
-                href="#"
-                data-bs-toggle="modal"
-                data-bs-target="#clientLocationsModal"
-              >
-                <i class="bi bi-compass-fill"></i>
-                Clientes localizados</a
-              >
-            </li> -->
           </ul>
           <form class="d-flex" onsubmit="return false;" role="search">
             <input
@@ -425,6 +417,7 @@
                   class="form-control"
                   name="clientName"
                   id="clientName"
+                  pattern="^[a-zA-Z()\s]+$"
                   required
                 />
               </div>
