@@ -240,8 +240,8 @@ function initialize() {
   });
 
   document
-    .getElementById("toggle-heatmap")
-    .addEventListener("click", toggleHeatmap);
+    .querySelectorAll(".toggle-heatmap")
+    .forEach(element => element.addEventListener("click", toggleHeatmap));
   document
     .getElementById("change-gradient")
     .addEventListener("click", changeGradient);
