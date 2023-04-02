@@ -99,6 +99,14 @@
       </div>
       <div class="offcanvas-body">
         <div>
+          <button
+            class="btn btn-lg btn-outline-primary w-100 mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#clientLocationsModal"
+          >
+            <i class="bi bi-compass-fill"></i>
+            Clientes Localizados
+          </button>
           <input
             id="clientSearchInput"
             class="form-control form-control-lg mb-3"
@@ -157,7 +165,7 @@
               >
               <ul class="dropdown-menu">
                 <li>
-                  <a href="#" id="toggle-heatmap" class="dropdown-item"
+                  <a href="#" class="dropdown-item toggle-heatmap"
                     >on/off HeatMap</a
                   >
                 </li>
@@ -188,13 +196,30 @@
                 Ir até mim</a
               >
             </li>
-            <li class="nav-item" id="dashboard">
-              <a class="nav-link" href="/static/pages/users.html">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle btn btn-dark btn-lg ms-3"
+                data-bs-toggle="dropdown"
+              >
                 <i class="bi bi-gear-fill"></i>
                 Dashboard</a
               >
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="/static/pages/users.html">
+                    <i class="bi bi-wrench"></i>
+                    Técnico</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/static/pages/notes.html">
+                    <i class="bi bi-coin"></i>
+                    Financeiro</a
+                  >
+                </li>
+              </ul>
             </li>
-            <li class="nav-item" id="newClientsMap">
+            <!-- <li class="nav-item" id="newClientsMap">
               <a
                 class="nav-link"
                 href="#"
@@ -204,7 +229,7 @@
                 <i class="bi bi-compass-fill"></i>
                 Clientes localizados</a
               >
-            </li>
+            </li> -->
           </ul>
           <form class="d-flex" onsubmit="return false;" role="search">
             <input
@@ -216,9 +241,16 @@
             />
           </form>
         </div>
-        <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-dark btn-lg toggle-heatmap">
+            <i class="bi bi-fire"></i>
+          </button>
           <div class="input-group">
-            <button class="btn btn-outline-secondary">
+            <button
+              class="btn btn-outline-secondary"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasScrolling"
+            >
               <i class="bi bi-search"></i>
             </button>
             <input

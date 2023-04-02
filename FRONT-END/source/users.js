@@ -180,7 +180,7 @@ function getTableColumn(type, data, index) {
     <td>
       <button 
         data-log-id="${_id}" 
-        class="btn btn-outline-danger btn-sm"
+        class="btn btn-sm btn-secondary"
       >
         Del
       </button>
