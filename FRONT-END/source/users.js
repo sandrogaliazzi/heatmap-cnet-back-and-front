@@ -18,7 +18,7 @@ function showPopover(id, popoverInfo) {
   if (popovers.length > 0) popovers.forEach(popover => popover.hide());
 
   const popover = new bootstrap.Popover(document.getElementById(id), {
-    title: `Numero de Loigns: ${popoverInfo.userLogin}`,
+    title: `Número de Logins: ${popoverInfo.userLogin}`,
     content: `Data do último Login: ${popoverInfo.userLastLogin}`,
     trigger: "focus",
   });
