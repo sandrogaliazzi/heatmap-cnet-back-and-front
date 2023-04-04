@@ -200,7 +200,7 @@
                 Ir até mim</a
               >
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" id="dashboard">
               <a class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                 <i class="bi bi-gear-fill"></i>
                 Dashboard</a
@@ -610,6 +610,8 @@
     ></script>
     <script>
       const { category } = JSON.parse(sessionStorage.getItem("user"));
+
+      console.log(category)
 
       if (category !== "adm") {
         document.querySelector("#dashboard").classList.add("d-none");
