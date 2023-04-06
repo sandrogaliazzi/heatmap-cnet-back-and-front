@@ -1,7 +1,7 @@
 import { $ } from "./handleForm.js";
 import { sendApiReq } from "./handleApiRequests.js";
 
-const openModal = $("#openModalBtn");
+const openModal = new bootstrap.Modal($("#ctoModal"));
 const clientsList = $("#modalClientsList");
 const modalTitle = $("#ctoModalTitle");
 const selectedClients = [];
@@ -153,7 +153,7 @@ function setModalInfo(info) {
     toggleBtn(false);
   }
 
-  openModal.click();
+  openModal.show();
 }
 
 function hifenName(name) {
