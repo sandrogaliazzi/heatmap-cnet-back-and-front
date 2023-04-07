@@ -40,9 +40,9 @@ class PppoeDataController {
       });
       stream.on('close', () => {
         if (output.includes('PPPoE')) {
-          res(201).send({message:'PPPoE is online.'});
+          res.status(201).send({message:'PPPoE is online.'});
         } else {
-          res(500).send({message: 'PPPoE is offline or not exist.'});
+          res.status(500).send({message: 'PPPoE is offline or not exist.'});
         }
         sshClient.end();
         });
