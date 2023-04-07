@@ -1,4 +1,5 @@
 import PppoeData from "../models/pppoeModel.js";
+import { Client } from 'ssh2';
 
 class PppoeDataController {
 
@@ -21,7 +22,43 @@ class PppoeDataController {
             }
         })
     }
-        
+    static pppoeOnline = (req, res) => {
+     let pppoe = req.body.pppoe;
+     const sshClient = new Client();
+     sshClient.connect({
+      host: '10.211.0.15',
+      username: 'conectnet',
+      password: '#cnt2021RS',
+     });
+
+     sshClient.on('ready', () => {
+     sshClient.exec(`display access-user username ${pppoe}`, (err, stream) => {
+      if (err) throw err;
+      let output = '';
+      stream.on('data', (data) => {
+        output += data.toString();
+      });
+      stream.on('close', () => {
+        if (output.includes('PPPoE')) {
+          console.log('PPPoE is online.');
+        } else {
+          console.log('PPPoE is offline or not exist.');
+        }
+        sshClient.end();
+        });
+       stream.stderr.on('data', (data) => {
+       console.error(data.toString());
+       });
+       });
+       });  
+      sshClient.on('error', (err) => {
+      console.error(err);
+       });
+  
+     sshClient.on('close', () => {
+     console.log('SSH connection closed.');
+     });
+    }
     }
     
     export default PppoeDataController;
