@@ -8,6 +8,7 @@ import tracking from "./trackingRoutes.js";
 import login from "./loginRoutes.js";
 import instalacoes from "./instalacoesRoutes.js"
 import vlan from "./vlanRoutes.js";
+import pppoe from "./pppoeRoutes.js";
 
 const routes = (app) => {
     app.route('/').get((req, res) => {
@@ -25,7 +26,8 @@ const routes = (app) => {
      tracking,
      login,
      instalacoes,
-     vlan
+     vlan,
+     pppoe
      )
 }
 
