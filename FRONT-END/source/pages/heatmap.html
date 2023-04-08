@@ -611,6 +611,8 @@
     <script>
       const { category } = JSON.parse(sessionStorage.getItem("user"));
 
+      console.log(category)
+
       if (category !== "adm") {
         document.querySelector("#dashboard").classList.add("d-none");
         document.querySelector("#deleteClient").classList.add("d-none");
