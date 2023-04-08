@@ -27,6 +27,7 @@ class PppoeDataController {
     static pppoeOnline = (req, res) => {
      let pppoe = req.body.pppoe;
      const sshClient = new Client();
+     console.log(process.env.HUAWEY_USERNAME);
      sshClient.connect({
       host: process.env.HUAWEY_HOST,
       username: process.env.HUAWEY_USERNAME,
