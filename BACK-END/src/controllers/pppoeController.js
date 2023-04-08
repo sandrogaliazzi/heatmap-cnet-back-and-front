@@ -1,5 +1,7 @@
 import PppoeData from "../models/pppoeModel.js";
 import { Client } from 'ssh2';
+import dotenv from 'dotenv';
+dotenv.config()
 
 class PppoeDataController {
 
@@ -26,9 +28,9 @@ class PppoeDataController {
      let pppoe = req.body.pppoe;
      const sshClient = new Client();
      sshClient.connect({
-      host: '10.211.0.15',
-      username: 'conectnet',
-      password: '#cnt2021RS',
+      host: process.env.HUAWEY_HOST,
+      username: process.env.HUAWEY_USERNAME,
+      password: `#${process.env.HUAWEY_PASSWORD}`,
      });
 
      sshClient.on('ready', () => {
