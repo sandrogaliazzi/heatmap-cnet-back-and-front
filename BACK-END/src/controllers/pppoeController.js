@@ -61,6 +61,18 @@ class PppoeDataController {
      console.log('SSH connection closed.');
      });    
     }
+
+    static findAllPppoe = (req, res) =>{
+        try {
+              const docs = PppoeData.find({}, { _id: 0, pppoe: 1 });
+              const pppoeFields = docs.map(doc => doc.pppoe);
+              console.log(pppoeFields);
+            } catch (error) {
+              console.error(error);
+            }
+          }
     }
+
+    
     
     export default PppoeDataController;
