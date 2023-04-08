@@ -126,21 +126,20 @@ $("#findClientWithLocation").addEventListener("keyup", function (event) {
               <a class="btn btn-primary btn-sm" href="${link}" target="_blank" role="button">
                 <i class="bi bi-google"></i>
               </a>
-              <button
-                class="btn btn-success btn-sm"
-                data-lat="${client.lat}"
-                data-lng="${client.lng}"
-                data-action="centerMap"
-              >
-                <i class="bi bi-geo-alt-fill" data-action="centerMap"></i>
+              <button class="btn btn-success btn-sm">
+                <i class="bi bi-geo-alt-fill" 
+                  data-action="centerMap" 
+                  data-lat="${client.lat}"
+                  data-lng="${client.lng}"
+                >
+                </i>
               </button>
-              <button
-                class="btn btn-secondary btn-sm"
-                data-delete-id="${client._id}"
-                data-action="delete"
-              >
-              
-              <i class="bi bi-trash-fill" data-action="delete"></i>
+              <button class="btn btn-secondary btn-sm">
+                <i class="bi bi-trash-fill" 
+                  data-action="delete"
+                  data-delete-id="${client._id}"
+                >
+                </i>
               </button>
             </div>
           </div>
