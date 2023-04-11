@@ -3,11 +3,8 @@ import { $ } from "./handleForm.js";
 const notes = $("#mk-notes");
 const copyNotes = $("#copyNotes");
 const submitBtn = $("#mkNotesSubmitBtn");
-const groupedNotesByClients = [];
 const lineIndexes = [];
 const notesModal = new bootstrap.Modal($("#notesModal"));
-
-let convertedNotes;
 
 window.addEventListener("load", function () {
   notes.focus();
@@ -17,56 +14,86 @@ function splitInLines(text) {
   return text.split("\n");
 }
 
-function filterLines(lines, filter) {
-  return lines.filter(line => line.split(" ").find(word => word === filter));
+function fixSCInotes(notes, SCI_NOTES) {
+  notes.forEach((note, index) => {
+    if (SCI_NOTES.find(sci => sci === note)) {
+      lineIndexes.push({
+        index,
+        type: "SCI",
+      });
+    }
+  });
+}
+
+function fixSCMnotes(notes, SCM_NOTES) {
+  notes.forEach((note, index) => {
+    if (SCM_NOTES.find(sci => sci === note)) {
+      lineIndexes.push({
+        index,
+        type: "SCM",
+      });
+    }
+  });
+}
+
+function groupNotesByType(notes, type) {
+  const filterByType = notes.filter(note =>
+    note.split(" ").find(word => word === type)
+  );
+
+  const clientNotesGroup = filterByType.map(line => {
+    const client = line.split(" ")[0];
+
+    return filterByType.filter(line => line.split(" ")[0] === client);
+  });
+
+  return clientNotesGroup;
+}
+
+function mapIncorrectNotes(group, type) {
+  const incorretLines = [];
+
+  group.forEach(client => {
+    const values = client.map(
+      value => value.split(" ")[value.split(" ").length - 3]
+    );
+    const valuesToInteger = values.map(value => parseInt(value));
+
+    const minValue = Math.min(...valuesToInteger);
+    const maxValue = Math.max(...valuesToInteger);
+
+    client.forEach(line => {
+      let value = 0;
+      value = parseInt(line.split(" ")[line.split(" ").length - 3]);
+
+      if (type === "SCI") {
+        if (value > minValue) {
+          incorretLines.push(line);
+        }
+      } else {
+        if (value < maxValue) {
+          incorretLines.push(line);
+        }
+      }
+    });
+  });
+
+  return incorretLines;
 }
 
 function convertNotes() {
   if (!notes.value) return;
 
-  convertedNotes = [];
-
   try {
     const lines = splitInLines(notes.value);
 
-    const filterdLines = filterLines(lines, "SCI");
+    const SCI_Notes = mapIncorrectNotes(groupNotesByType(lines, "SCI"), "SCI");
 
-    if (!filterdLines.length) throw new Error("formarto inválido");
+    const SCM_Notes = mapIncorrectNotes(groupNotesByType(lines, "SCM"), "SCM");
 
-    filterdLines.forEach(line => {
-      const name = line.split(" ")[0];
+    fixSCInotes(lines, SCI_Notes);
 
-      groupedNotesByClients.push(
-        filterdLines.filter(line => line.split(" ")[0] === name)
-      );
-    });
-
-    groupedNotesByClients.forEach((group, groupIndex) => {
-      const values = group.map(
-        value => value.split(" ")[value.split(" ").length - 3]
-      );
-      const valuesToInteger = values.map(value => parseInt(value));
-      const minValue = Math.min(...valuesToInteger);
-
-      group.forEach((notes, index) => {
-        let value = 0;
-        value = parseInt(notes.split(" ")[notes.split(" ").length - 3]);
-
-        if (value > minValue) {
-          let findIndexLine = lines.indexOf(
-            groupedNotesByClients[groupIndex][index]
-          );
-
-          lineIndexes.push(findIndexLine);
-
-          lines[findIndexLine] = groupedNotesByClients[groupIndex][
-            index
-          ].replace("SCI", "SCM");
-        }
-      });
-    });
-
-    convertedNotes = [...lines];
+    fixSCMnotes(lines, SCM_Notes);
 
     return lines;
   } catch (e) {
@@ -76,13 +103,15 @@ function convertNotes() {
 }
 
 function showConvertedNotes(notes) {
-  const linesToBeMarked = lineIndexes.filter(line => line != -1);
-
   let lines = "";
 
   notes.forEach((note, index) => {
-    if (linesToBeMarked.includes(index)) {
-      lines += `<p class="mark">${note}</p>`;
+    if (lineIndexes.find(line => line.index === index && line.type === "SCI")) {
+      lines += `<p class="text-bg-primary">${note.replace("SCI", "SCM")}</p>`;
+    } else if (
+      lineIndexes.find(line => line.index === index && line.type === "SCM")
+    ) {
+      lines += `<p class="text-bg-success">${note.replace("SCM", "SCI")}</p>`;
     } else {
       lines += `<p>${note}</p>`;
     }
@@ -93,16 +122,8 @@ function showConvertedNotes(notes) {
   notesModal.show();
 }
 
-// form.addEventListener("submit", e => {
-//   e.preventDefault();
-
-//   //console.log(lineIndexes.filter(index => index != -1));
-
-//   //navigator.clipboard.writeText(lines.join("\n"));
-// });
-
 copyNotes.addEventListener("click", function () {
-  navigator.clipboard.writeText(convertedNotes.join("\n"));
+  navigator.clipboard.writeText($("#notesList").innerText);
   alert("texto copiado");
 });
 
@@ -123,6 +144,7 @@ submitBtn.addEventListener("click", function () {
   toggleLoader(true);
   setTimeout(() => {
     const convertedLines = convertNotes();
+
     showConvertedNotes(convertedLines);
     toggleLoader(false);
   }, 500);
