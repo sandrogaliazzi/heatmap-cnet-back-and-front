@@ -79,75 +79,59 @@ class PppoeDataController {
     };
     
     
-    static findAllPppoeOnline = (req, res) => {
-      // Step 1: Get all PPPoE from the DB
-      PppoeData.find({}, { pppoe: 1 })
-        .lean()
-        .then((pppoeDocs) => {
-          const pppoeFields = pppoeDocs.map((doc) => doc.pppoe);
-          const onlinePppoes = [];
-          const offlinePppoes = [];
-    
-          // Step 2: Connect to SSH server and check PPPoE status for each PPPoE
-          const sshClient = new Client();
-          sshClient.on('error', (err) => {
-            console.error(`SSH error: ${err.message}`);
-            res.status(500).send({ message: 'Error checking PPPoE data' });
-          });
-          sshClient.on('close', () => {
-            console.log('SSH connection closed.');
-            res.status(200).json({ onlinePppoes, offlinePppoes });
-          });
-          console.log(`Connecting to SSH server at ${process.env.HUAWEI_HOST}...`);
-          sshClient.connect({
-            host: process.env.HUAWEY_HOST,
-            username: process.env.HUAWEY_USERNAME,
-            password: `#${process.env.HUAWEY_PASSWORD}`,
-           });
-    
-          sshClient.on('ready', () => {
-            let count = 0;
-            pppoeFields.forEach((pppoe) => {
-              sshClient.exec(`display access-user username ${pppoe}`, (err, stream) => {
-                if (err) {
-                  console.error(`Error checking PPPoE ${pppoe}: ${err.message}`);
-                  offlinePppoes.push(pppoe);
-                } else {
-                  let output = '';
-                  stream.on('data', (data) => {
-                    output += data.toString();
-                  });
-                  stream.on('close', () => {
-                    const regex = new RegExp(`PPPoE +${pppoe} +[A-Z]+`, 'i');
-                    const isOnline = regex.test(output);
-                    console.log(`PPPoE ${pppoe} is ${isOnline ? 'online' : 'offline'}`);
-                    if (isOnline) {
-                      onlinePppoes.push(pppoe);
-                    } else {
-                      offlinePppoes.push(pppoe);
-                    }
-                    count++;
-                    if (count === pppoeFields.length) {
-                      sshClient.end();
-                    }
-                  });
-                  stream.on('error', (err) => {
-                    console.error(`Error checking PPPoE ${pppoe}: ${err.message}`);
-                    offlinePppoes.push(pppoe);
-                    count++;
-                    if (count === pppoeFields.length) {
-                      sshClient.end();
-                    }
-                  });
-                }
-              });
-            });
-          });
-        })
-        .catch((error) => {
-          console.error(`Error getting PPPoE data: ${error.message}`);
-          res.status(500).send({ message: 'Error getting PPPoE data' });
+    static findAllPppoeOnline = () => {
+      return new Promise((resolve, reject) => {
+        // Connect to SSH server
+        const sshClient = new Client();
+        sshClient.on('error', (err) => {
+          console.error(`SSH error: ${err.message}`);
+          reject(err);
         });
+        sshClient.on('ready', () => {
+          console.log(`Connected to SSH server at ${process.env.HUAWEI_HOST}`);
+    
+          // Retrieve list of PPPoE sessions that are currently online
+          sshClient.exec('display access-user all', (err, stream) => {
+            if (err) {
+              console.error(`Error retrieving PPPoE data: ${err.message}`);
+              reject(err);
+            } else {
+              let pppoeList = '';
+              stream.on('data', (data) => {
+                pppoeList += data;
+              });
+              stream.on('end', () => {
+                // Parse PPPoE data and filter online sessions
+                const onlinePppoes = pppoeList
+                  .trim()
+                  .split(/\n+/)
+                  .slice(2)
+                  .filter((line) => line.includes('PPPoE'))
+                  .filter((line) => line.includes('online'))
+                  .map((line) => line.split(/\s+/)[2]);
+    
+                // Format online PPPoE sessions as JSON response
+                const responseJson = {
+                  onlinePppoes,
+                  count: onlinePppoes.length,
+                };
+    
+                // Close SSH connection and return response
+                sshClient.end();
+                console.log(`Retrieved online PPPoE sessions: ${onlinePppoes}`);
+                console.log(JSON.stringify(responseJson, null, 2));
+                resolve(responseJson);
+              });
+            }
+          });
+        });
+    
+        sshClient.connect({
+          host: process.env.HUAWEY_HOST,
+          username: process.env.HUAWEY_USERNAME,
+          password: `#${process.env.HUAWEY_PASSWORD}`,
+         });
+      });
     };
     
     

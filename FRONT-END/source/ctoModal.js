@@ -15,6 +15,8 @@ $("#ctoModal").addEventListener(
   () => (selectedClients.length = 0)
 );
 
+
+
 function showCheckBoxes() {
   const checkBoxes = document.querySelectorAll(".form-check-input");
 
@@ -145,14 +147,14 @@ function setModalInfo(info) {
       ${isEmpty ? "Cto vazia" : "Cto Lotada"}
     </strong>`;
 
-    toggleBtn(isEmpty ? false : true);
+    //toggleBtn(isEmpty ? false : true);
   } else {
     $(
       "#percentageFree"
     ).innerHTML = `<strong class="text-success">${freePorts} vagas</strong>`;
-    toggleBtn(false);
   }
-
+  toggleBtn(false);
+  
   openModal.show();
 }
 
