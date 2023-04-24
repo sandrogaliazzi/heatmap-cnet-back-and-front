@@ -79,64 +79,61 @@ class PppoeDataController {
     };
     
     
-    static findAllPppoeOnline = () => {
-      return new Promise((resolve, reject) => {
-        // Connect to SSH server
-        const sshClient = new Client();
-        sshClient.on('error', (err) => {
-          console.error(`SSH error: ${err.message}`);
-          reject(err);
-        });
-        sshClient.on('ready', () => {
-          console.log(`Connected to SSH server at ${process.env.HUAWEI_HOST}`);
+    static findAllPppoeOnline = (req, res) => {
+      const config = {
+        host: process.env.HUAWEY_HOST,
+        username: process.env.HUAWEY_USERNAME,
+        password: `#${process.env.HUAWEY_PASSWORD}`,
+      };
     
-          // Retrieve list of PPPoE sessions that are currently online
-          sshClient.exec('display access-user all', (err, stream) => {
-            if (err) {
-              console.error(`Error retrieving PPPoE data: ${err.message}`);
-              reject(err);
+      const commands = ['screen-length 0 temporary', 'display access-user brief'];
+    
+      const conn = new Client();
+      conn.on('ready', () => {
+        console.log('SSH connection established');
+        conn.shell((err, stream) => {
+          if (err) throw err;
+          let pppoeList = [];
+          stream.on('close', () => {
+            console.log('Stream closed');
+            conn.end();
+            if (pppoeList.length) {
+              res.status(200).json({ pppoes: pppoeList });
             } else {
-              let pppoeList = '';
-              stream.on('data', (data) => {
-                pppoeList += data;
-              });
-              stream.on('end', () => {
-                // Parse PPPoE data and filter online sessions
-                const onlinePppoes = pppoeList
-                  .trim()
-                  .split(/\n+/)
-                  .slice(2)
-                  .filter((line) => line.includes('PPPoE'))
-                  .filter((line) => line.includes('online'))
-                  .map((line) => line.split(/\s+/)[2]);
-    
-                // Format online PPPoE sessions as JSON response
-                const responseJson = {
-                  onlinePppoes,
-                  count: onlinePppoes.length,
-                };
-    
-                // Close SSH connection and return response
-                sshClient.end();
-                console.log(`Retrieved online PPPoE sessions: ${onlinePppoes}`);
-                console.log(JSON.stringify(responseJson, null, 2));
-                resolve(responseJson);
-              });
+              res.status(404).json({ message: 'No PPPoE sessions found' });
+            }
+          }).on('data', (data) => {
+            console.log(`Terminal data: ${data}`);
+            let dataNew = data.toString();
+            let dataLines = dataNew.split('\n');
+            for (let i = 0; i < dataLines.length; i++) {
+              let line = dataLines[i].trim();
+              if (line.startsWith('------')) {
+                continue;
+              } else if (line.startsWith('No.')) {
+                continue;
+              } else if (line.startsWith('Total')) {
+                continue;
+              } else if (line) {
+                let pppoeFields = line.split(/\s+/);
+                let pppoeName = pppoeFields[1];
+                pppoeList.push(pppoeName);
+              }
             }
           });
+          for (const cmd of commands) {
+            stream.write(`${cmd}\n`);
+          }
+          stream.end();
         });
-    
-        sshClient.connect({
-          host: process.env.HUAWEY_HOST,
-          username: process.env.HUAWEY_USERNAME,
-          password: `#${process.env.HUAWEY_PASSWORD}`,
-         });
-      });
+      }).connect(config);
     };
     
+
+}    
     
     
-    }
+    
 
     
     
