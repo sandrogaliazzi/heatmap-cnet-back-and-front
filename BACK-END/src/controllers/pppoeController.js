@@ -1,6 +1,7 @@
 import PppoeData from "../models/pppoeModel.js";
 import { Client } from 'ssh2';
 import dotenv from 'dotenv';
+import fs from "fs";
 dotenv.config()
 
 class PppoeDataController {
@@ -98,7 +99,12 @@ class PppoeDataController {
             console.log('Stream closed');
             conn.end();
             if (pppoeList.length) {
-              res.status(200).json({ pppoes: pppoeList });
+              // save to file
+                fs.writeFile('output.txt', pppoeList.join('\n'), (err) => {
+                if (err) throw err;
+                console.log('Output saved to file');
+                res.status(200).json({ pppoes: pppoeList });
+              });
             } else {
               res.status(404).json({ message: 'No PPPoE sessions found' });
             }

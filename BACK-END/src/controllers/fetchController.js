@@ -80,8 +80,7 @@ static FetchWithCtoCLient = (req, res) => {
     if (err) {
       res.status(500).send(err);
     } else {
-      let retorno = JSON.stringify(result, null, 2)
-      res.status(200).send(result)
+       res.status(200).send(result)
       // do something with the result, such as rendering it in a web page or sending it in a response
     }
   });    
