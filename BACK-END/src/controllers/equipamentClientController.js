@@ -34,6 +34,17 @@ class equipamentController  {
        }})
        }
 
+       static excluirEquipament = (req, res) => {
+        const id = req.params.id;
+        equipament.findByIdAndDelete(id, (err) =>{
+            if(!err){
+                res.status(200).send({message: `Usuario id: ${req.body.id} removido com sucesso`})
+            } else {
+                res.status(500).send({message: err.message})
+            }
+        })
+     }   
+
 }
 
 
