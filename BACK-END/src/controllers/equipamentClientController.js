@@ -3,7 +3,7 @@ import equipament from "../models/equipamentClientModel.js";
 
 class equipamentController  {
     static equipamenteSave = (req, res) => {
-        console.log("chegou aqui")
+        // console.log("chegou aqui")
         let equipamento = new equipament(req.body)
         equipamento.save((err) =>{
             if(err) {

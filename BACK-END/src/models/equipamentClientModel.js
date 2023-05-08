@@ -4,7 +4,8 @@ const equipamentClientSchema = new mongoose.Schema(
      {
        id: {type: String},
        name: {type: String, require: true}, 
-       ip: {type: String, require: true}
+       ip: {type: String, require: true},
+       category: {type: String, require: true}
       }
 );
 
