@@ -19,6 +19,21 @@ class equipamentController  {
             res.status(200).send(instalacoesForm)
         }).sort({_id: -1})
     }
+
+    static atualizarEquipament = (req, res) => {
+        const id = req.params.id;
+        let { name, ip, category } = req.body;
+        let dados = {name, ip, category}
+        
+        equipament.findByIdAndUpdate (id, {$set: dados}, (err) => {
+            if(!err) {
+                res.status(200).send({message: `Alteração realizada com sucesso,`})
+            } else {
+                res.status(500).send({message: err.message})
+      
+       }})
+       }
+
 }
 
 
