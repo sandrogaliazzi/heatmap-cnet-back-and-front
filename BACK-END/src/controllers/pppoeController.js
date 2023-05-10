@@ -134,7 +134,7 @@ class PppoeDataController {
             if (lines[i].includes('fibra')) {
               currentKey = lines[i].split(' ')[0];
               currentData = {
-                pppoe: lines[i].split('      ')[1],
+                pppoe: lines[i].split('      ')[1].trim(),
                 interface: lines[i + 1],
                 ipv4: lines[i + 2],
                 ipv6: lines[i + 3],
