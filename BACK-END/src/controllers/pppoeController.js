@@ -1,5 +1,6 @@
 import PppoeData from "../models/pppoeModel.js";
 import { Client } from 'ssh2';
+import PppoeOnlineData from "../models/pppoeDataModel.js";
 import dotenv from 'dotenv';
 import fs from "fs";
 dotenv.config()
@@ -81,60 +82,90 @@ class PppoeDataController {
     
     
     static findAllPppoeOnline = (req, res) => {
-      const config = {
-        host: process.env.HUAWEY_HOST,
-        username: process.env.HUAWEY_USERNAME,
-        password: `#${process.env.HUAWEY_PASSWORD}`,
-      };
-    
-      const commands = ['screen-length 0 temporary', 'display access-user brief'];
-    
-      const conn = new Client();
-      conn.on('ready', () => {
-        console.log('SSH connection established');
-        conn.shell((err, stream) => {
-          if (err) throw err;
-          let pppoeList = [];
-          stream.on('close', () => {
-            console.log('Stream closed');
-            conn.end();
-            if (pppoeList.length) {
-              // save to file
-                fs.writeFile('output.txt', pppoeList.join('\n'), (err) => {
-                if (err) throw err;
-                console.log('Output saved to file');
-                res.status(200).json({ pppoes: pppoeList });
+      function executeSSHCommands() {
+        return new Promise((resolve, reject) => {
+          const config = {
+            host: process.env.HUAWEY_HOST,
+            username: process.env.HUAWEY_USERNAME,
+            password: `#${process.env.HUAWEY_PASSWORD}`,
+          };
+      
+          const commands = ['screen-length 0 temporary', 'display access-user brief', 'q'];
+          let terminalData = '';
+      
+          const conn = new Client();
+          conn.on('ready', () => {
+            console.log('SSH connection established');
+            conn.shell((err, stream) => {
+              if (err) reject(err);
+              stream.on('close', () => {
+                console.log('Stream closed');
+                conn.end();
+                resolve(terminalData);
+              }).on('data', (data) => {
+                // console.log(`Terminal data: ${data}`);
+                terminalData += data;
               });
-            } else {
-              res.status(404).json({ message: 'No PPPoE sessions found' });
-            }
-          }).on('data', (data) => {
-            console.log(`Terminal data: ${data}`);
-            let dataNew = data.toString();
-            let dataLines = dataNew.split('\n');
-            for (let i = 0; i < dataLines.length; i++) {
-              let line = dataLines[i].trim();
-              if (line.startsWith('------')) {
-                continue;
-              } else if (line.startsWith('No.')) {
-                continue;
-              } else if (line.startsWith('Total')) {
-                continue;
-              } else if (line) {
-                let pppoeFields = line.split(/\s+/);
-                let pppoeName = pppoeFields[1];
-                pppoeList.push(pppoeName);
+              for (const cmd of commands) {
+                stream.write(`${cmd}\n`);
               }
-            }
-          });
-          for (const cmd of commands) {
-            stream.write(`${cmd}\n`);
-          }
-          stream.end();
+              stream.end();
+            });
+          }).on('error', (err) => {
+            console.error('SSH connection error:', err);
+            resolve(terminalData);
+          }).connect(config);
         });
-      }).connect(config);
-    };
+      }
+      
+      (async () => {
+        try {
+          const terminalData = await executeSSHCommands();
+          console.log('Raw data:');
+          // console.log(terminalData);
+      
+          const lines = terminalData.split('\n').map(line => line.trim());
+          const jsonData = {};
+      
+          let currentKey;
+          let currentData = {};
+      
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].includes('fibra')) {
+              currentKey = lines[i].split(' ')[0];
+              currentData = {
+                pppoe: lines[i].split('      ')[1],
+                interface: lines[i + 1],
+                ipv4: lines[i + 2],
+                ipv6: lines[i + 3],
+                mac: lines[i + 4],
+                vlan: lines[i + 5]
+              };
+              jsonData[currentKey] = currentData;
+            }
+          }
+          console.log('JSON data:');
+          // console.log(JSON.stringify(jsonData, null, 2));
+          res.status(201).send(jsonData)
+        } catch (error) {
+          console.error('An error occurred:', error);
+        }
+      })();
+      }
     
+    
+    
+    static SavePppoeOnline = (req, res) => {
+      console.log("os dados chegaram aqui")
+      let pppoeonlinenow = new PppoeOnlineData(req.body)
+      pppoeonlinenow.save((err) =>{
+          if(err) {
+              res.status(500).send({message: `${err.message} - falha ao cadastrar cliente.`})
+          } else{
+              res.status(200).send({message: `tudo certo ao cadastrar cliente.`})
+          }
+      })
+  };
 
 }    
     
