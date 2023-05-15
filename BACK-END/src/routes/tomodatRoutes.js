@@ -8,11 +8,8 @@ import fetTomodatController from "../controllers/fetchController.js";
 const router = express.Router();
 
 router
- .get("/tomodat", TomodatController.ListarClients) // fetch direto do tomodat 30segundos
-//  .get("/ctos", TomodatController.ListarCtos)
+ .get("/tomodat", TomodatController.ListarClients) // fetch direto do tomodat (60 segundos)
  .post("/client", auth, LogClientController.CadastrarLog, CtoClientController.CadastrarCtoClientN, TomodatController.CadastrarClient) // add cliente no db, log e tomodat.
-//  .post("/logctoclient", auth, LogClientController.CadastrarLog)
- .get("/logctoclient", auth, LogClientController.ListarLogCtoClient) // lista os logs
-//  .post("/teste", LogClientController.CadastrarLog, TomodatController.CadastrarClient)
- .delete("/deleteclientfromtomodat/:id", auth, TomodatController.DeleteClient) //deleta client
+ .get("/logctoclient", auth, LogClientController.ListarLogCtoClient) // lista os logs de clientes cadastrados nas ctos.
+ .delete("/deleteclientfromtomodat/:id", auth, TomodatController.DeleteClient) //deleta cliente no servido do tomodat
 export default router;
