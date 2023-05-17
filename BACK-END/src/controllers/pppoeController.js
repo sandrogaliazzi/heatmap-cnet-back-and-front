@@ -165,6 +165,24 @@ class PppoeDataController {
       })
   };
 
+  static atualizarPppoe = (req, res) => {
+     let id = req.params.id;
+    // let { pppoe } = req.body.pppoe;
+    // let id = req.body.id;    
+    console.log(id)
+    let dados = req.body;    
+    PppoeData.findByIdAndUpdate (id, {$set: dados}, (err) => {
+        if(!err) {
+          console.log(dados)
+            res.status(200).send({message: `Alteração realizada com sucesso, pppoe: ${dados}`})
+        } else {
+            res.status(500).send({message: err.message})
+  
+   }})
+   }
+
+
+
 }    
     
     
