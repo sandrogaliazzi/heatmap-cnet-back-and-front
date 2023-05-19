@@ -3,6 +3,7 @@ import {getAllAcessPointsByCity} from "../scripts/fetchApiTomodat.js";
 import {addClient} from "../scripts/fetchApiTomodat.js"
 //import { deleteTomodat } from "../scripts/fetchApiTomodat.js";
 import fetch from "node-fetch";
+import tomodatcompleto16052023 from "../models/tomodatcompleto.js"
 
 const reqConfig = {
     method: "DELETE",
@@ -50,6 +51,12 @@ class TomodatController {
       console.error("erro"+err)
      }
     }
+
+    static ListarCabos = (req, res) => {
+      tomodatcompleto16052023.find((err, tomodatcompleto16052023)=>{
+      res.status(200).json(tomodatcompleto16052023)
+  })
+  }
 }
    
 export default TomodatController

@@ -12,4 +12,5 @@ router
  .post("/client", auth, LogClientController.CadastrarLog, CtoClientController.CadastrarCtoClientN, TomodatController.CadastrarClient) // add cliente no db, log e tomodat.
  .get("/logctoclient", auth, LogClientController.ListarLogCtoClient) // lista os logs de clientes cadastrados nas ctos.
  .delete("/deleteclientfromtomodat/:id", auth, TomodatController.DeleteClient) //deleta cliente no servido do tomodat
-export default router;
+ .get("/getalltomodat", TomodatController.ListarCabos) //lista tomodat completo
+ export default router;
