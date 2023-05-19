@@ -13,4 +13,5 @@ router
  .get("/logctoclient", auth, LogClientController.ListarLogCtoClient) // lista os logs de clientes cadastrados nas ctos.
  .delete("/deleteclientfromtomodat/:id", auth, TomodatController.DeleteClient) //deleta cliente no servido do tomodat
  .get("/getalltomodat", TomodatController.ListarCabos) //lista tomodat completo
+ .post("/rotasave", TomodatController.SalvarRota) // salva rota no banco
  export default router;

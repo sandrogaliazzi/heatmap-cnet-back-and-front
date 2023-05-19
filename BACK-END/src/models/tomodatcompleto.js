@@ -7,8 +7,7 @@ const Tomodatcompleto16052023 =
       name: {type: String, require: true},
       pointA: {type: Object, require: true},
       pointB: {type: Object, require: true},
-      waypoints: {type: Array, require: true},
-     
+      waypoints: {type: Array, require: true},     
      }
 );
 

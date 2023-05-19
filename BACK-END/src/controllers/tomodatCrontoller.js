@@ -57,6 +57,18 @@ class TomodatController {
       res.status(200).json(tomodatcompleto16052023)
   })
   }
+
+   static SalvarRota = (req, res) => {
+    let novaRota = new tomodatcompleto16052023(req.body)
+    novaRota.save((err) =>{
+    if(err) {
+        res.status(500).send({message: `${err.message} - falha ao cadastrar rota.`})
+    } else{
+        res.status(200).send({message: `tudo certo ao cadastrar rota.`})
+    }})
+    };
+      
+  
 }
    
 export default TomodatController
