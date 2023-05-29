@@ -10,6 +10,7 @@ import instalacoes from "./instalacoesRoutes.js"
 import vlan from "./vlanRoutes.js";
 import pppoe from "./pppoeRoutes.js";
 import equipament from "./equipamentRoutes.js"
+import backup from "./backupRoutes.js"
 
 const routes = (app) => {
     app.route('/').get((req, res) => {
@@ -29,7 +30,8 @@ const routes = (app) => {
      instalacoes,
      vlan,
      pppoe,
-     equipament
+     equipament,
+     backup
      )
 }
 

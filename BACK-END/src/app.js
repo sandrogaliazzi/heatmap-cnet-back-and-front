@@ -4,6 +4,7 @@ import routes from "./routes/index.js";
 import db from "./config/dbConnect.js"
 import path from "path";
 import { fileURLToPath } from 'url';
+import ReqMonitor from "./middleware/reqMonitor.js";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -18,10 +19,11 @@ db.once('open', () => {
     console.log(`conexão com o banco em: ${now}`)
 })
 
-app.use(cors({
+app.use(
+  cors({
     credentials: true,
   }));
-// app.use(cors());
+
 app.get('/docapi', (req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));
 });

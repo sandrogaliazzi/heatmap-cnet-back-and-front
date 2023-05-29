@@ -55,7 +55,7 @@ class TomodatController {
     static ListarCabos = (req, res) => {
       tomodatcompleto16052023.find((err, tomodatcompleto16052023)=>{
       res.status(200).json(tomodatcompleto16052023)
-  })
+  }).sort({_id: -1})
   }
 
    static SalvarRota = (req, res) => {
