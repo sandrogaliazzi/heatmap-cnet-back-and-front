@@ -11,6 +11,6 @@ router
  .get("/pppoeget", PppoeDataController.ListarPppoe) // requisita do banco os dados.
  .post("/pppoeonline", auth, PppoeDataController.pppoeOnline) // verifica se esta online o pppoe.
  .get("/getallpppoeonline", auth, PppoeDataController.findAllPppoeOnline) // verifica no concentrador quais estão online e retorna para o front.
- .patch("/pppoealterar", PppoeDataController.atualizarPppoe) // recebe no param o id do item, e no body os items a serem mudados.
+ .patch("/pppoealterar/:id", PppoeDataController.atualizarPppoe) // recebe no param o id do item, e no body os items a serem mudados.
  
  export default router;

@@ -22,9 +22,7 @@ class equipamentController  {
 
     static atualizarEquipament = (req, res) => {
         const id = req.params.id;
-        let { name, ip, category } = req.body;
-        let dados = {name, ip, category}
-        
+        let dados = req.body;        
         equipament.findByIdAndUpdate (id, {$set: dados}, (err) => {
             if(!err) {
                 res.status(200).send({message: `Alteração realizada com sucesso,`})
