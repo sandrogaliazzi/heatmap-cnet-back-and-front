@@ -153,7 +153,7 @@ MercatorProjection.prototype.fromPointToLatLng = function (point) {
 };
 
 var desiredRadiusPerPointInMeters = 200;
-function getNewRadius() {
+export function getNewRadius() {
   var numTiles = 1 << map.getZoom();
   var center = map.getCenter();
   var moved = google.maps.geometry.spherical.computeOffset(

@@ -1,10 +1,10 @@
 import { triggerToast, toast } from "./toast.js";
 
 export const headersConfig = {
-  'Accept': 'application/json',
-  'Content-Type': 'application/json',
-  'x-access-token': sessionStorage.getItem("token")
-}
+  Accept: "application/json",
+  "Content-Type": "application/json",
+  "x-access-token": sessionStorage.getItem("token"),
+};
 
 const baseURL = "https://api.heatmap.conectnet.net";
 
@@ -16,10 +16,10 @@ export default async function sendApiRequest(
   const response = await fetch(url, {
     method: httpMethod,
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    body: bodyRequest ? JSON.stringify(bodyRequest) : null
+    body: bodyRequest ? JSON.stringify(bodyRequest) : null,
   });
 
   const status = response.status;
@@ -29,18 +29,12 @@ export default async function sendApiRequest(
   return { content, status };
 }
 
-export async function sendApiReq({
-  endpoint,
-  httpMethod,
-  body
-}) {
-
+export async function sendApiReq({ endpoint, httpMethod, body }) {
   const response = await fetch(`${baseURL}/${endpoint}`, {
     method: httpMethod,
     headers: headersConfig,
-    body: (JSON.stringify(body) || null)
+    body: JSON.stringify(body) || null,
   });
-
 
   const status = response.status;
 
@@ -60,6 +54,4 @@ export async function sendApiReq({
   const data = await response.json();
 
   return { data, status };
-
-
 }

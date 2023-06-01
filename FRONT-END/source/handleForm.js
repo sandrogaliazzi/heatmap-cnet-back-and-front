@@ -9,3 +9,10 @@ export function get(selector) {
 export function set(selector, value) {
   $(selector).value = value;
 }
+
+export function propCouter(arr) {
+  return arr.reduce((counts, prop) => {
+    counts[num.cto_name] = (counts[prop] || 0) + 1;
+    return counts;
+  }, {});
+}

@@ -38,6 +38,8 @@ export function insertMap(lat, lng, elToInject, markersToInject) {
       title: "novo marcador",
     })
   );
+
+  return embedMap;
 }
 
 export function getCurrentPosition() {
@@ -56,4 +58,19 @@ export function getCurrentPosition() {
 
 export function createCtoLink({ lat, lng }) {
   return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+}
+
+export async function getCityNameFromGeoLoc(lat, lng) {
+  const apiKey = "AIzaSyD_NR_1sb5quUtRBp3nQF1fRhqbGcw-5VY";
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true&key=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+
+    const data = await response.json();
+
+    return data;
+  } catch (e) {
+    console.error(e.message);
+  }
 }
