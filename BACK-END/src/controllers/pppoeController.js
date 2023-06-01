@@ -121,8 +121,7 @@ class PppoeDataController {
       (async () => {
         try {
           const terminalData = await executeSSHCommands();
-          console.log('Raw data:');
-          // console.log(terminalData);
+           // console.log(terminalData);
       
           const lines = terminalData.split('\n').map(line => line.trim());
           const jsonData = {};
@@ -144,11 +143,10 @@ class PppoeDataController {
               jsonData[currentKey] = currentData;
             }
           }
-          console.log('JSON data:');
           // console.log(JSON.stringify(jsonData, null, 2));
           res.status(201).send(jsonData)
         } catch (error) {
-          console.error('An error occurred:', error);
+          res.status(500).send('An error occurred:', error);
         }
       })();
       }
@@ -166,6 +164,22 @@ class PppoeDataController {
           }
       })
   };
+
+  static atualizarPppoe = (req, res) => {
+     let id = req.params.id;
+     console.log(id)
+    let dados = req.body;    
+    PppoeData.findByIdAndUpdate (id, {$set: dados}, (err) => {
+        if(!err) {
+          console.log(dados)
+            res.status(200).send(dados)
+        } else {
+            res.status(500).send({message: err.message})
+  
+   }})
+   }
+
+
 
 }    
     

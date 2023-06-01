@@ -1,15 +1,19 @@
 import mongoose, { Schema } from "mongoose";
 
 const equipamentClientSchema = new mongoose.Schema(
-     {
-       id: {type: String},
-       name: {type: String, require: true}, 
-       ip: {type: String, require: true},
-       category: {type: String, require: true}
-      }
+  {
+    deviceName: {type: String, require: true},
+    deviceIp: {type: String, require: true},
+    deviceMac: {type: String, require: true},
+    deviceType: {type: String, require: true},
+    deviceCategory: {type: String, require: true}
+    }
 );
 
 const equipament= mongoose.model('equipament', equipamentClientSchema);
 
 
 export default equipament;
+
+
+

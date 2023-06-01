@@ -1,11 +1,12 @@
 import express  from "express";
 import VlanController from "../controllers/vlansController.js";
+import ReqMonitor from "../middleware/reqMonitor.js";
 
 
 const router = express.Router();
 
 router
- .post("/vlan", VlanController.vlanSave) // save vlan to mongo db.
- .get("/vlan", VlanController.ListVlans) // list the vlans already in db.
+ .post("/vlan", VlanController.vlanSave) // salva a vlan no banco.
+ .get("/vlan", ReqMonitor.reqMonitor, VlanController.ListVlans) // lista as vlans no banco.
  
 export default router;

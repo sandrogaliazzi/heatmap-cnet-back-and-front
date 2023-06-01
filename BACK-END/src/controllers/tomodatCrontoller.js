@@ -3,6 +3,7 @@ import {getAllAcessPointsByCity} from "../scripts/fetchApiTomodat.js";
 import {addClient} from "../scripts/fetchApiTomodat.js"
 //import { deleteTomodat } from "../scripts/fetchApiTomodat.js";
 import fetch from "node-fetch";
+import tomodatcompleto16052023 from "../models/tomodatcompleto.js"
 
 const reqConfig = {
     method: "DELETE",
@@ -50,6 +51,24 @@ class TomodatController {
       console.error("erro"+err)
      }
     }
+
+    static ListarCabos = (req, res) => {
+      tomodatcompleto16052023.find((err, tomodatcompleto16052023)=>{
+      res.status(200).json(tomodatcompleto16052023)
+  }).sort({_id: -1})
+  }
+
+   static SalvarRota = (req, res) => {
+    let novaRota = new tomodatcompleto16052023(req.body)
+    novaRota.save((err) =>{
+    if(err) {
+        res.status(500).send({message: `${err.message} - falha ao cadastrar rota.`})
+    } else{
+        res.status(200).send({message: `tudo certo ao cadastrar rota.`})
+    }})
+    };
+      
+  
 }
    
 export default TomodatController
