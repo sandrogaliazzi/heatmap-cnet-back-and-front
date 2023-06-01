@@ -9,7 +9,8 @@ const pppoeDataSchema = new mongoose.Schema(
        cto_id: {type: String, require: true},
        cto_name: {type: String, require: true}, 
        pppoe: {type: String, require: true},
-       pppoeVerified: {type: Boolean}, 
+       pppoeVerified: {type: Boolean},
+       city: {type: String, require: true},
      }
 );
 

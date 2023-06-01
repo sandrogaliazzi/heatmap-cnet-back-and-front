@@ -2,7 +2,6 @@ import PppoeData from "../models/pppoeModel.js";
 import { Client } from 'ssh2';
 import PppoeOnlineData from "../models/pppoeDataModel.js";
 import dotenv from 'dotenv';
-import fs from "fs";
 dotenv.config()
 
 class PppoeDataController {
@@ -80,7 +79,6 @@ class PppoeDataController {
       }
     };
     
-    
     static findAllPppoeOnline = (req, res) => {
       function executeSSHCommands() {
         return new Promise((resolve, reject) => {
@@ -120,9 +118,7 @@ class PppoeDataController {
       
       (async () => {
         try {
-          const terminalData = await executeSSHCommands();
-           // console.log(terminalData);
-      
+          const terminalData = await executeSSHCommands();     
           const lines = terminalData.split('\n').map(line => line.trim());
           const jsonData = {};
       
@@ -143,16 +139,13 @@ class PppoeDataController {
               jsonData[currentKey] = currentData;
             }
           }
-          // console.log(JSON.stringify(jsonData, null, 2));
           res.status(201).send(jsonData)
         } catch (error) {
           res.status(500).send('An error occurred:', error);
         }
       })();
       }
-    
-    
-    
+        
     static SavePppoeOnline = (req, res) => {
       console.log("os dados chegaram aqui")
       let pppoeonlinenow = new PppoeOnlineData(req.body)
@@ -178,14 +171,5 @@ class PppoeDataController {
   
    }})
    }
-
-
-
 }    
-    
-    
-    
-
-    
-    
-    export default PppoeDataController;
+export default PppoeDataController;
