@@ -1,0 +1,102 @@
+<div class="w-100">
+  <div class="d-grid">
+    <button
+      class="btn btn-success"
+      data-bs-toggle="modal"
+      data-bs-target="#addUsersModal"
+    >
+      Adicionar Usuário
+      <i class="bi bi-person-fill-add"></i>
+    </button>
+  </div>
+  <table class="table table-dark table-hover text-center">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nome</th>
+        <th scope="col">Categoria</th>
+        <th scope="col">Ações</th>
+      </tr>
+    </thead>
+    <tbody id="usersTableBody"></tbody>
+  </table>
+
+  <!-- add user Modal -->
+  <div class="modal" tabindex="-1" id="addUsersModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Adicionar Usuário</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="addUserForm">
+            <div class="mb-3">
+              <label for="userName" class="form-label">Nome: </label>
+              <input
+                type="text"
+                name="userName"
+                id="userName"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="userPassword" class="form-label">Senha: </label>
+              <input
+                type="text"
+                name="userPassword"
+                id="userPassword"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="userCategory" class="form-label">Categoria: </label>
+              <select class="form-select" id="userCategory">
+                <option selected>Selecionar Categoria</option>
+                <option value="tecnico">Técnico</option>
+                <option value="vendas">Vendas</option>
+                <option value="adm">Admin</option>
+              </select>
+            </div>
+            <input type="hidden" name="userId" id="userId" />
+            <div class="mb-3">
+              <button class="btn btn-success" type="submit">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- toast de confirmação  -->
+
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div
+      id="liveToast"
+      class="toast align-items-center border-0"
+      role="alert"
+      aria-live="assertive"
+      aria-atomic="true"
+    >
+      <div class="d-flex">
+        <div class="toast-body">
+          <!-- mensagem toast -->
+        </div>
+        <button
+          type="button"
+          id="closeToastBtn"
+          class="btn-close btn-close-white me-2 m-auto"
+          data-bs-dismiss="toast"
+          aria-label="Close"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>
