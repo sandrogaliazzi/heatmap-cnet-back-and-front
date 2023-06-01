@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Heatmap</title>
+    <!-- css bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <!-- bootstrap icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="../../style.css" />
+
+    <!-- google api -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_NR_1sb5quUtRBp3nQF1fRhqbGcw-5VY&libraries=visualization,places,geometry&v=weekly"></script>
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Roboto";
+      }
+
+      body {
+        background-color: #ee5522;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2000 1500'%3E%3Cdefs%3E%3CradialGradient id='a' gradientUnits='objectBoundingBox'%3E%3Cstop offset='0' stop-color='%23FB3'/%3E%3Cstop offset='1' stop-color='%23ee5522'/%3E%3C/radialGradient%3E%3ClinearGradient id='b' gradientUnits='userSpaceOnUse' x1='0' y1='750' x2='1550' y2='750'%3E%3Cstop offset='0' stop-color='%23f7882b'/%3E%3Cstop offset='1' stop-color='%23ee5522'/%3E%3C/linearGradient%3E%3Cpath id='s' fill='url(%23b)' d='M1549.2 51.6c-5.4 99.1-20.2 197.6-44.2 293.6c-24.1 96-57.4 189.4-99.3 278.6c-41.9 89.2-92.4 174.1-150.3 253.3c-58 79.2-123.4 152.6-195.1 219c-71.7 66.4-149.6 125.8-232.2 177.2c-82.7 51.4-170.1 94.7-260.7 129.1c-90.6 34.4-184.4 60-279.5 76.3C192.6 1495 96.1 1502 0 1500c96.1-2.1 191.8-13.3 285.4-33.6c93.6-20.2 185-49.5 272.5-87.2c87.6-37.7 171.3-83.8 249.6-137.3c78.4-53.5 151.5-114.5 217.9-181.7c66.5-67.2 126.4-140.7 178.6-218.9c52.3-78.3 96.9-161.4 133-247.9c36.1-86.5 63.8-176.2 82.6-267.6c18.8-91.4 28.6-184.4 29.6-277.4c0.3-27.6 23.2-48.7 50.8-48.4s49.5 21.8 49.2 49.5c0 0.7 0 1.3-0.1 2L1549.2 51.6z'/%3E%3Cg id='g'%3E%3Cuse href='%23s' transform='scale(0.12) rotate(60)'/%3E%3Cuse href='%23s' transform='scale(0.2) rotate(10)'/%3E%3Cuse href='%23s' transform='scale(0.25) rotate(40)'/%3E%3Cuse href='%23s' transform='scale(0.3) rotate(-20)'/%3E%3Cuse href='%23s' transform='scale(0.4) rotate(-30)'/%3E%3Cuse href='%23s' transform='scale(0.5) rotate(20)'/%3E%3Cuse href='%23s' transform='scale(0.6) rotate(60)'/%3E%3Cuse href='%23s' transform='scale(0.7) rotate(10)'/%3E%3Cuse href='%23s' transform='scale(0.835) rotate(-40)'/%3E%3Cuse href='%23s' transform='scale(0.9) rotate(40)'/%3E%3Cuse href='%23s' transform='scale(1.05) rotate(25)'/%3E%3Cuse href='%23s' transform='scale(1.2) rotate(8)'/%3E%3Cuse href='%23s' transform='scale(1.333) rotate(-60)'/%3E%3Cuse href='%23s' transform='scale(1.45) rotate(-30)'/%3E%3Cuse href='%23s' transform='scale(1.6) rotate(10)'/%3E%3C/g%3E%3C/defs%3E%3Cg %3E%3Cg%3E%3Ccircle fill='url(%23a)' r='3000'/%3E%3Cg opacity='0.5'%3E%3Ccircle fill='url(%23a)' r='2000'/%3E%3Ccircle fill='url(%23a)' r='1800'/%3E%3Ccircle fill='url(%23a)' r='1700'/%3E%3Ccircle fill='url(%23a)' r='1651'/%3E%3Ccircle fill='url(%23a)' r='1450'/%3E%3Ccircle fill='url(%23a)' r='1250'/%3E%3Ccircle fill='url(%23a)' r='1175'/%3E%3Ccircle fill='url(%23a)' r='900'/%3E%3Ccircle fill='url(%23a)' r='750'/%3E%3Ccircle fill='url(%23a)' r='500'/%3E%3Ccircle fill='url(%23a)' r='380'/%3E%3Ccircle fill='url(%23a)' r='250'/%3E%3C/g%3E%3Cg%3E%3Cuse href='%23g' transform='rotate(10)'/%3E%3Cuse href='%23g' transform='rotate(120)'/%3E%3Cuse href='%23g' transform='rotate(240)'/%3E%3C/g%3E%3Ccircle fill-opacity='0.8' fill='url(%23a)' r='3000'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        background-attachment: fixed;
+        background-size: cover;
+      }
+    </style>
+
+    <script
+      src="/static/pages/dashboard/dashboard.js"
+      type="module"
+      defer
+    ></script>
+    <script id="injectedScript" defer></script>
+  </head>
+  <body class="bg-dark">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark-subtle fixed-top"
+      id="dashboardNav"
+    >
+      <div class="container-fluid px-4">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="navbar-nav">
+            <div class="nav-item">
+              <a href="/static/pages/HeatMap.html" class="nav-link">
+                <i class="bi bi-fire"></i>
+                Home</a
+              >
+            </div>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-outline-danger" type="button" id="btnLogout">
+            <i class="bi bi-box-arrow-left"></i>
+            Sair
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- SIDEBAR -->
+
+    <div class="d-flex h-100">
+      <div
+        class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark-subtle sticky-top h-100"
+        style="width: 280px"
+      >
+        <a
+          href="#"
+          class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+          style="padding-top: 56px"
+        >
+          <i class="bi bi-speedometer2 fs-4 mx-2"></i>
+          <span class="fs-4">Dashboard</span>
+        </a>
+        <hr />
+        <ul class="nav nav-pills flex-column mb-auto" id="sideBarList">
+          <li class="nav-item">
+            <a href="#" class="nav-link text-white d-flex gap-2">
+              <i class="bi bi-speedometer2"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              data-action="route"
+              data-route="/users"
+              class="nav-link active text-white d-flex gap-2"
+            >
+              <i class="bi bi-people-fill"></i>
+              <span>Usuários</span>
+            </a>
+          </li>
+          <li data-action="route" data-route="/logs">
+            <a
+              href="#"
+              data-action="route"
+              data-route="/logs"
+              class="nav-link text-white d-flex gap-2"
+            >
+              <i class="bi bi-file-text-fill"></i>
+              <span>Logs</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              data-action="route"
+              data-route="/pppoe"
+              class="nav-link text-white d-flex gap-2"
+            >
+              <i class="bi bi-ethernet"></i>
+              <span>PPPoE</span>
+            </a>
+          </li>
+        </ul>
+        <hr />
+      </div>
+
+      <div class="flex-grow-1 min-vh-100 overflow-auto">
+        <div
+          id="root"
+          class="d-flex justify-content-center h-100 w-100 bg-dark"
+          style="padding: 60px 0"
+        >
+          <!-- CONTENT INJECTION HERE -->
+        </div>
+      </div>
+    </div>
+
+    <!-- RODAPÉ -->
+
+    <footer
+      class="text-bg-dark bg-dark-subtle p-2 d-flex flex-column align-items-center flex-md-row justify-content-center gap-4 text-white-50 fixed-bottom"
+    >
+      <span class="text-white-50">Desenvolvido e mantido por:</span>
+      <span class="d-flex gap-3">
+        Sandro Galiazzi
+        <a href="https://github.com/sandrogaliazzi" class="text-white-50">
+          <i class="bi bi-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/sandro-galiazzi-ba382a103/">
+          <i class="bi bi-linkedin"></i>
+        </a>
+      </span>
+      <span class="d-flex gap-3">
+        Guilherme Schmidt
+        <a href="https://github.com/Schmidt4win" class="text-white-50">
+          <i class="bi bi-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/guilherme-schmidt-4413aa201">
+          <i class="bi bi-linkedin"></i>
+        </a>
+      </span>
+    </footer>
+
+    <!-- bootstrap js -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      const anchors = document.querySelectorAll("#sideBarList > li > a");
+
+      anchors.forEach(anchor => {
+        anchor.addEventListener("click", function () {
+          anchors.forEach(anchor => anchor.classList.remove("active"));
+          this.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

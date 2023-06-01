@@ -35,11 +35,11 @@
 
   <script src="/static/fetchOnProgress.js" type="moudule" defer></script>
   <script src="/static/findClients.js" type="module" defer></script>
-  <script src="/static/script.js" type="module" defer></script>
   <script src="/static/ctoModal.js" type="module" defer></script>
   <script src="/static/addClient.js" type="module" defer></script>
   <script src="/static/updateTomodat.js" type="module" defer></script>
   <script src="/static/clientsMap.js" type="module" defer></script>
+  <script src="/static/script.js" type="module" defer></script>
 
   <body onload="initialize()">
     <!-- PROGRESS BAR -->
@@ -207,7 +207,10 @@
               >
               <ul class="dropdown-menu">
                 <li>
-                  <a class="dropdown-item" href="/static/pages/users.html">
+                  <a
+                    class="dropdown-item"
+                    href="/static/pages/dashboard/dashboard.html"
+                  >
                     <i class="bi bi-wrench"></i>
                     Técnico</a
                   >
@@ -610,7 +613,7 @@
     <script>
       const { category } = JSON.parse(sessionStorage.getItem("user"));
 
-      console.log(category)
+      console.log(category);
 
       if (category !== "adm") {
         document.querySelector("#dashboard").classList.add("d-none");

@@ -1,5 +1,6 @@
 import { $ } from "./handleForm.js";
 import { sendApiReq } from "./handleApiRequests.js";
+import { getPppoeStatus, generatePppoe } from "./pppoeUtils.js";
 
 const openModal = new bootstrap.Modal($("#ctoModal"));
 const clientsList = $("#modalClientsList");
@@ -15,8 +16,6 @@ $("#ctoModal").addEventListener(
   () => (selectedClients.length = 0)
 );
 
-
-
 function showCheckBoxes() {
   const checkBoxes = document.querySelectorAll(".form-check-input");
 
@@ -29,17 +28,32 @@ function renderClientsList(clients) {
   let list = "";
 
   clients.forEach(client => {
-    let item = `<li class="list-group-item d-flex justify-content-between align-items-center" data-key="${client.id}">
+    let item = `<li class="list-group-item d-flex justify-content-between align-items-center" data-key="${
+      client.id
+    }">
       <div>
-        <input class="form-check-input me-2 d-none" data-action="selectClient" type="checkbox" value="" id="${client.id}">
+        <input class="form-check-input me-2 d-none" data-action="selectClient" type="checkbox" value="" id="${
+          client.id
+        }">
         <span data-client-id="${client.id}" class="me-3">${client.name}</span>
       </div>
       <div class="btn-group me-1">
+      <button class="btn btn-outline-secondary btn-sm">
+          <i class="bi bi-check-circle-fill" data-id="${
+            client.id
+          }" data-action="pppoeStatus" data-user-pppoe="${generatePppoe(
+      client.name
+    )}"></i>
+        </button>
         <button class="btn btn-outline-secondary btn-sm">
-          <i class="bi bi-clipboard" data-copy-to="unm" data-action="copyName" data-user-name="${client.name}"></i>
+          <i class="bi bi-clipboard" data-copy-to="unm" data-action="copyName" data-user-name="${
+            client.name
+          }"></i>
         </button>
         <button class="btn btn-outline-secondary btn-sm"> 
-          <i class="bi bi-clipboard-minus" data-copy-to="parks" data-action="copyName" data-user-name="${client.name}"></i>
+          <i class="bi bi-clipboard-minus" data-copy-to="parks" data-action="copyName" data-user-name="${
+            client.name
+          }"></i>
         </button>
       </div>
     </li>`;
@@ -107,29 +121,29 @@ export function recalcFreePorts(totalClients, oldPercentage) {
 function setModalInfo(info) {
   const { clients, name, coord, percentage_free, id } = info;
 
-  $("#copyAllNames").addEventListener(
-    "click",
-    function () {
-      let listName = "";
-      clients.forEach(client => {
-        listName += client.name + "\n";
-      });
-      navigator.clipboard.writeText(listName);
-    },
-    { once: true }
-  );
+  // $("#copyAllNames").addEventListener(
+  //   "click",
+  //   function () {
+  //     let listName = "";
+  //     clients.forEach(client => {
+  //       listName += client.name + "\n";
+  //     });
+  //     navigator.clipboard.writeText(listName);
+  //   },
+  //   { once: true }
+  // );
 
-  $("#copyAllNames").addEventListener(
-    "contextmenu",
-    function () {
-      let listName = "";
-      clients.forEach(client => {
-        listName += hifenName(client.name) + "\n";
-      });
-      navigator.clipboard.writeText(listName);
-    },
-    { once: true }
-  );
+  // $("#copyAllNames").addEventListener(
+  //   "contextmenu",
+  //   function () {
+  //     let listName = "";
+  //     clients.forEach(client => {
+  //       listName += hifenName(client.name) + "\n";
+  //     });
+  //     navigator.clipboard.writeText(listName);
+  //   },
+  //   { once: true }
+  // );
 
   setClientsList(clients, id);
   setModalTitle(name, coord);
@@ -154,7 +168,7 @@ function setModalInfo(info) {
     ).innerHTML = `<strong class="text-success">${freePorts} vagas</strong>`;
   }
   toggleBtn(false);
-  
+
   openModal.show();
 }
 
@@ -204,8 +218,22 @@ function markTextAsSelected(el) {
   else $("#deleteClient").setAttribute("disabled", "");
 }
 
+async function highlightPppoeStatus(data) {
+  const { id, userPppoe } = data;
+
+  const isPppoeOnline = await getPppoeStatus(userPppoe);
+
+  $(`[data-key="${id}"]`).classList.add(
+    `${isPppoeOnline ? "text-success" : "text-danger"}`
+  );
+
+  alert("Cliente Online");
+}
+
 $("#modalClientsList").addEventListener("click", function (event) {
   const data = event.target.dataset;
+
+  console.log(data);
 
   if (Object.keys(data).length > 0) {
     switch (data.action) {
@@ -215,6 +243,10 @@ $("#modalClientsList").addEventListener("click", function (event) {
 
       case "selectClient":
         markTextAsSelected($(`[data-client-id="${event.target.id}"]`));
+        break;
+
+      case "pppoeStatus":
+        highlightPppoeStatus(data);
         break;
     }
   }
