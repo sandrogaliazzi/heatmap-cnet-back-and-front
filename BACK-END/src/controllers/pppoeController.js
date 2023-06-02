@@ -171,5 +171,19 @@ class PppoeDataController {
   
    }})
    }
+
+   static deletarPppoe = (req, res) => {
+    let id = req.params.id;
+    console.log(id)
+   let dados = req.body;    
+   PppoeData.findByIdAndDelete (id, {$set: dados}, (err) => {
+       if(!err) {
+         console.log(dados)
+           res.status(200).send({message: "PPPoE deletado com sucesso da CTO"})
+       } else {
+           res.status(500).send({message: err.message})
+ 
+  }})
+  }
 }    
 export default PppoeDataController;
