@@ -117,20 +117,27 @@ function isFormCompleted(fields) {
   return isComplete;
 }
 
-$("#clientName").addEventListener("invalid", function() {
-  this.setCustomValidity("Não é permitidos acentos ou caracteres especiais no nome!");
+$("#clientName").addEventListener("invalid", function () {
+  this.setCustomValidity(
+    "Não é permitidos acentos ou caracteres especiais no nome!"
+  );
 });
 
-$("#clientName").addEventListener("change",function(){
+$("#clientName").addEventListener("change", function () {
   this.setCustomValidity("");
-});
+  const splitName = this.value.split(" ");
 
+  const pppoeSugested =
+    splitName[0] + splitName[splitName.length - 1] + "fibra".toLowerCase();
+  $("#clientPppoe").value = pppoeSugested;
+});
 
 form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const bodyRequest = {
     name: get("#clientName").toUpperCase(),
+    pppoe: get("#clientPppoe"),
     lat: get("#lat"),
     lng: get("#lng"),
     cto_id: get("#ctoId"),
@@ -144,6 +151,8 @@ form.addEventListener("submit", async function (event) {
       toggleBtnLoader(true);
 
       const apiResponse = await sendClient(bodyRequest);
+
+      console.log(bodyRequest);
 
       toggleBtnLoader(false);
 
