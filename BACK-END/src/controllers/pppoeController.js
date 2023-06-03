@@ -20,16 +20,16 @@ class PppoeDataController {
             if(err) {
                 res.status(500).send({message: `${err.message} - falha ao cadastrar pppoe.`})
             } else {
-                res.status(201).send({DbLogPPPoE: `PPPoE ${pppoe} Cadastrado no banco com sucesso.`});
                 return next();
             }
         })
     }
+    
     static pppoeOnline = (req, res) => {
      let pppoe = req.body.pppoe;
-     console.log(req.body)
+     // console.log(req.body)
      const sshClient = new Client();
-     console.log(process.env.HUAWEY_USERNAME);
+     // console.log(process.env.HUAWEY_USERNAME);
      sshClient.connect({
       host: process.env.HUAWEY_HOST,
       username: process.env.HUAWEY_USERNAME,
@@ -45,12 +45,12 @@ class PppoeDataController {
       });
       stream.on('close', () => {
         if (output.includes('PPPoE')) {
-          console.log(output)
-          console.log(`este é o ${pppoe}`)
+          // console.log(output)
+          // console.log(`este é o ${pppoe}`)
           res.status(201).send({message:'PPPoE is online.'});
         } else {
-          console.log(output)
-          console.log(`este é o ${pppoe}`)
+          // console.log(output)
+          // console.log(`este é o ${pppoe}`)
           res.status(500).send({message: 'PPPoE is offline or not exist.'});
         }
         sshClient.end();
