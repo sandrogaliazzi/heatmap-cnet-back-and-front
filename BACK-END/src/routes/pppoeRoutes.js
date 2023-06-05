@@ -13,4 +13,4 @@ router
  .get("/getallpppoeonline", auth, PppoeDataController.findAllPppoeOnline) // verifica no concentrador quais estão online e retorna para o front.
  .patch("/pppoealterar/:id", PppoeDataController.atualizarPppoe) // recebe no param o id do item, e no body os items a serem mudados.
  .delete("/pppoedeletar/:id", PppoeDataController.deletarPppoe) // recebe o id no param e deleta.
- export default router;
+  export default router;

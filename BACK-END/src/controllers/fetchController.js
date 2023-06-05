@@ -2,6 +2,7 @@ import fetTomodat from "../models/fetchModel.js"
 import { fetchTomodat } from "../scripts/fetchApiTomodat.js"
 import mongoose from "mongoose";
 import ctoClient from "../models/ctoClient.js"
+import PppoeData from "../models/pppoeModel.js";
 
 
 class fetTomodatController {
@@ -81,10 +82,43 @@ static FetchWithCtoCLient = (req, res) => {
       res.status(500).send(err);
     } else {
        res.status(200).send(result)
-      // do something with the result, such as rendering it in a web page or sending it in a response
-    }
+      }
   });    
 }
+
+static ListarFetchPppoeAndDelete = async (req, res) => {
+  try {
+    let fetchtomodatsModel = fetTomodat;
+    let pppoeDataModel = PppoeData;
+
+    // Step 1: Fetch all names from the clients field in the fetTomadat collection
+    const fetTomadatClients = await fetchtomodatsModel.distinct('clients.name');
+
+    // Step 2: Fetch all data from the pppoeData collection where the name does not exist in fetTomadatClients
+    const pppoeData = await pppoeDataModel.find({ name: { $nin: fetTomadatClients } });
+
+    // Step 3: Log the excluded pppoe data
+    pppoeData.forEach(pppoe => {
+      console.log(pppoe);
+    });
+
+    // Step 4: Remove the excluded documents from the pppoeData collection
+    await pppoeDataModel.deleteMany({ name: { $nin: fetTomadatClients } });
+
+    // Step 5: Send a success response
+    res.status(200).json({ message: 'Data filtered and deleted successfully' });
+  } catch (error) {
+    // Step 6: Log the error
+    console.error('An error occurred:', error);
+
+    // Step 7: Send an error response
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+
+
+
 }
 
 export default fetTomodatController;
