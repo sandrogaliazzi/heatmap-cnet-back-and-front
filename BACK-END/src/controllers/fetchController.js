@@ -102,19 +102,32 @@ static ListarFetchPppoeAndDelete = async (req, res) => {
       console.log(pppoe);
     });
 
-    // Step 4: Remove the excluded documents from the pppoeData collection
-    await pppoeDataModel.deleteMany({ name: { $nin: fetTomadatClients } });
+    // Step 4: Filter the names using strict comparison
+    const escapedNames = fetTomadatClients.map(name => escapeRegExp(name));
+    const namesToDelete = escapedNames.map(escapedName => new RegExp(`^${escapedName}$`, 'i'));
 
-    // Step 5: Send a success response
+    // Step 5: Remove the excluded documents from the pppoeData collection
+    await pppoeDataModel.deleteMany({ name: { $nin: namesToDelete } });
+
+    // Function to escape special characters in a string
+    function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // Step 6: Send a success response
     res.status(200).json({ message: 'Data filtered and deleted successfully' });
   } catch (error) {
-    // Step 6: Log the error
+    // Step 7: Log the error
     console.error('An error occurred:', error);
 
-    // Step 7: Send an error response
+    // Step 8: Send an error response
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+
+
 
 
 

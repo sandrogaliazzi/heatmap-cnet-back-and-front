@@ -164,7 +164,8 @@ class PppoeDataController {
     let dados = req.body;    
     PppoeData.findByIdAndUpdate (id, {$set: dados}, (err) => {
         if(!err) {
-          console.log(dados)
+          let now = new Date().toLocaleString("PT-br");
+          console.log(dados, now)
             res.status(200).send(dados)
         } else {
             res.status(500).send({message: err.message})
