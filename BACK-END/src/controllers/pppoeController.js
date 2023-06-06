@@ -160,8 +160,7 @@ class PppoeDataController {
 
   static atualizarPppoe = (req, res) => {
      let id = req.params.id;
-     console.log(id)
-    let dados = req.body;    
+     let dados = req.body;    
     PppoeData.findByIdAndUpdate (id, {$set: dados}, (err) => {
         if(!err) {
           let now = new Date().toLocaleString("PT-br");
