@@ -52,8 +52,7 @@ class fetTomodatController {
 
 static FetchWithCtoCLient = (req, res) => {
   let fetchtomodatsModel = fetTomodat;  
-  let ctoclients = ctoClient;
-  const pipeline = [
+    const pipeline = [
     {
       $lookup: {
         from: "ctoclients",
@@ -86,52 +85,80 @@ static FetchWithCtoCLient = (req, res) => {
   });    
 }
 
-static ListarFetchPppoeAndDelete = async (req, res) => {
-  try {
-    let fetchtomodatsModel = fetTomodat;
-    let pppoeDataModel = PppoeData;
-
-    // Step 1: Fetch all names from the clients field in the fetTomadat collection
-    const fetTomadatClients = await fetchtomodatsModel.distinct('clients.name');
-
-    // Step 2: Fetch all data from the pppoeData collection where the name does not exist in fetTomadatClients
-    const pppoeData = await pppoeDataModel.find({ name: { $nin: fetTomadatClients } });
-
-    // Step 3: Log the excluded pppoe data
-    pppoeData.forEach(pppoe => {
-      console.log(pppoe);
-    });
-
-    // Step 4: Filter the names using strict comparison
-    const escapedNames = fetTomadatClients.map(name => escapeRegExp(name));
-    const namesToDelete = escapedNames.map(escapedName => new RegExp(`^${escapedName}$`, 'i'));
-
-    // Step 5: Remove the excluded documents from the pppoeData collection
-    await pppoeDataModel.deleteMany({ name: { $nin: namesToDelete } });
-
-    // Function to escape special characters in a string
-    function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+static FetchWithCtoClientsPppoe = (req, res) => {
+  let fetchtomodatsModel = fetTomodat;  
+    const pipeline = [
+    {
+      $lookup: {
+        from: "pppoedatas",
+        let: { cto_id: "$id" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$cto_id", "$$cto_id"] } } },
+          {
+            $project: {
+              id: 1,
+              name: 1,
+              lat: 1,
+              lng: 1,
+              cto_id: 1,
+              cto_name: 1,
+              pppoe: 1,
+              pppoeVerified: 1
+            }
+          }
+        ],
+        as: "pppoe_clients"
+      }
     }
+  ];
+    
+  fetchtomodatsModel.aggregate(pipeline).exec((err, result) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+       res.status(200).send(result)
+      }
+  });    
+}
 
-    // Step 6: Send a success response
-    res.status(200).json({ message: 'Data filtered and deleted successfully' });
-  } catch (error) {
-    // Step 7: Log the error
-    console.error('An error occurred:', error);
+static ListarFetchPppoeAndDelete = async (req, res) => {
 
-    // Step 8: Send an error response
-    res.status(500).json({ error: 'Internal server error' });
+    try {
+      let fetchTomodatsModel = fetTomodat;
+      let pppoeDataModel = PppoeData;
+  
+      // Step 1: Fetch all names from the pppoeData collection
+      const pppoeDataNames = await pppoeDataModel.distinct('name');
+  
+      // Step 2: Fetch all names from the clients field in the fetTomadat collection
+      const fetTomadatClients = await fetchTomodatsModel.distinct('clients.name');
+  
+      // Step 3: Find the names in pppoeDataNames that don't exist in fetTomadatClients
+      const namesToDelete = pppoeDataNames.filter(name => {
+        const isNotIncluded = !fetTomadatClients.includes(name);
+        if (isNotIncluded) {
+          const objectToDelete = { name };
+          console.log(objectToDelete); // Log the object
+        }
+        return isNotIncluded;
+      });
+  
+      // Step 4: Delete the objects from the pppoeData collection
+      await pppoeDataModel.deleteMany({ name: { $in: namesToDelete } });
+  
+      // Step 5: Send a success response
+      res.status(201).send(namesToDelete);
+    } catch (error) {
+      // Step 6: Log the error
+      console.error('An error occurred:', error);
+  
+      // Step 7: Send an error response
+      res.status(500).send(error);
+    }
   }
+  
 };
 
 
-
-
-
-
-
-
-}
 
 export default fetTomodatController;
