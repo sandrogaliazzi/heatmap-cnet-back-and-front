@@ -121,6 +121,82 @@ static FetchWithCtoClientsPppoe = (req, res) => {
   });    
 }
 
+static FetchWithCtoClientsPppoeInsideClients = (req, res) => {
+  let fetchtomodatsModel = fetTomodat;  
+  const pipeline = [
+    {
+      $lookup: {
+        from: "pppoedatas",
+        let: { clients: "$clients.name" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $in: ["$name", "$$clients"] }
+            }
+          },
+          {
+            $project: {
+              name: 1,
+              pppoe: 1,
+              pppoe_name: "$name",
+              verified: { $ifNull: ["$pppoeVerified", false] }
+            }
+          }
+        ],
+        as: "pppoe_clients"
+      }
+    },
+    {
+      $addFields: {
+        clients: {
+          $map: {
+            input: "$clients",
+            as: "client",
+            in: {
+              $mergeObjects: [
+                "$$client",
+                {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$pppoe_clients",
+                        cond: {
+                          $eq: ["$$this.name", "$$client.name"]
+                        }
+                      }
+                    },
+                    0
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        pppoe_clients: 0
+      }
+    }
+  ];
+  
+  
+  
+  
+  
+  
+    
+  fetchtomodatsModel.aggregate(pipeline).exec((err, result) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send(result);
+    }
+  });    
+}
+
+
 static ListarFetchPppoeAndDelete = async (req, res) => {
 
     try {
