@@ -3,6 +3,7 @@ import { fetchTomodat } from "../scripts/fetchApiTomodat.js"
 import mongoose from "mongoose";
 import ctoClient from "../models/ctoClient.js"
 import PppoeData from "../models/pppoeModel.js";
+import newFetch from "../models/newetchWithPppoe.js";
 
 
 class fetTomodatController {
@@ -23,7 +24,7 @@ class fetTomodatController {
             res.send({message: "fetch cadastrado com sucesso"});
           });
           
-    };
+};
 
     static UpdateFetch = (req, res)=> {
       let now = new Date()  
@@ -41,9 +42,8 @@ class fetTomodatController {
             });
             res.send({message: "fetch atualizado com sucesso"});
           });
-    }
-            
-
+};
+ 
     static ListarFetch = (req, res) => {
       fetTomodat.find((err, fetTomodats)=>{
     res.status(200).json(fetTomodats)
@@ -83,7 +83,7 @@ static FetchWithCtoCLient = (req, res) => {
        res.status(200).send(result)
       }
   });    
-}
+};
 
 static FetchWithCtoClientsPppoe = (req, res) => {
   let fetchtomodatsModel = fetTomodat;  
@@ -119,7 +119,7 @@ static FetchWithCtoClientsPppoe = (req, res) => {
        res.status(200).send(result)
       }
   });    
-}
+};
 
 static FetchWithCtoClientsPppoeInsideClients = (req, res) => {
   let fetchtomodatsModel = fetTomodat;  
@@ -179,13 +179,7 @@ static FetchWithCtoClientsPppoeInsideClients = (req, res) => {
         pppoe_clients: 0
       }
     }
-  ];
-  
-  
-  
-  
-  
-  
+  ]; 
     
   fetchtomodatsModel.aggregate(pipeline).exec((err, result) => {
     if (err) {
@@ -194,8 +188,183 @@ static FetchWithCtoClientsPppoeInsideClients = (req, res) => {
       res.status(200).send(result);
     }
   });    
-}
+};
 
+static FetchWithCtoClientsPppoeInsideClientsNewCollection = (req, res) => {
+  let fetchtomodatsModel = fetTomodat;  
+  const pipeline = [
+    {
+      $lookup: {
+        from: "pppoedatas",
+        let: { clients: "$clients.name" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $in: ["$name", "$$clients"] }
+            }
+          },
+          {
+            $project: {
+              name: 1,
+              pppoe: 1,
+              pppoe_name: "$name",
+              verified: { $ifNull: ["$pppoeVerified", false] }
+            }
+          }
+        ],
+        as: "pppoe_clients"
+      }
+    },
+    {
+      $addFields: {
+        clients: {
+          $map: {
+            input: "$clients",
+            as: "client",
+            in: {
+              $mergeObjects: [
+                "$$client",
+                {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$pppoe_clients",
+                        cond: {
+                          $eq: ["$$this.name", "$$client.name"]
+                        }
+                      }
+                    },
+                    0
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        pppoe_clients: 0
+      }
+    }
+  ];  
+  
+  fetchtomodatsModel.aggregate(pipeline).exec((err, result) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      // Check the presence of the city field and provide a default value if missing
+      const documentsToSave = result.map(doc => {
+        if (!doc.city) {
+          doc.city = 'Default City'; // Provide a default value for the city field
+        }
+        return doc;
+      });
+  
+      // Save the modified documents as a new collection
+      newFetch.insertMany(documentsToSave, (err, savedResult) => {
+        if (err) {
+          res.status(500).send(err);
+        } else {
+          res.status(200).send(savedResult);
+        }
+      });
+    }
+  });
+  
+};
+
+static newfetchupdate = (req, res) => {
+  let fetchtomodatsModel = fetTomodat;  
+  const pipeline = [
+    {
+      $lookup: {
+        from: "pppoedatas",
+        let: { clients: "$clients.name" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $in: ["$name", "$$clients"] }
+            }
+          },
+          {
+            $project: {
+              name: 1,
+              pppoe: 1,
+              pppoe_name: "$name",
+              verified: { $ifNull: ["$pppoeVerified", false] }
+            }
+          }
+        ],
+        as: "pppoe_clients"
+      }
+    },
+    {
+      $addFields: {
+        clients: {
+          $map: {
+            input: "$clients",
+            as: "client",
+            in: {
+              $mergeObjects: [
+                "$$client",
+                {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$pppoe_clients",
+                        cond: {
+                          $eq: ["$$this.name", "$$client.name"]
+                        }
+                      }
+                    },
+                    0
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        pppoe_clients: 0
+      }
+    }
+  ];  
+  
+  fetchtomodatsModel.aggregate(pipeline).exec((err, result) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      // Iterate through each document in the result array
+      result.forEach(doc => {
+        const { _id, clients } = doc;
+        const clientUpdates = clients.map(client => ({
+          updateOne: {
+            filter: { _id: client._id },
+            update: { $set: client },
+            upsert: true // Create new document if not found
+          }
+        }));
+  
+        // Update the corresponding document in the newFetch collection
+        newFetch.bulkWrite(clientUpdates, (err, updateResult) => {
+          if (err) {
+            console.error(err);
+          } else {
+            console.log(updateResult);
+          }
+        });
+      });
+  
+      res.status(200).send("Update operation completed");
+    }
+  });
+  
+};
 
 static ListarFetchPppoeAndDelete = async (req, res) => {
 
@@ -231,7 +400,13 @@ static ListarFetchPppoeAndDelete = async (req, res) => {
       // Step 7: Send an error response
       res.status(500).send(error);
     }
-  }
+};
+
+  static ListarFetchNew = (req, res) => {
+    newFetch.find((err, fetTomodats)=>{
+  res.status(200).json(fetTomodats)
+})
+};
   
 };
 

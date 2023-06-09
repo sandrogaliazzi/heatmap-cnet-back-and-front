@@ -11,5 +11,8 @@ router
  .get("/fetchwithctoclient", fetchController.FetchWithCtoCLient) // pega o fetch no banco e agrega com as localizações já cadastradas dos clientes
  .get("/fetchwithctoclientpppoe", fetchController.FetchWithCtoClientsPppoe)
  .get("/fetchwithpppoeinsideclients", fetchController.FetchWithCtoClientsPppoeInsideClients) // 
+ .get("/newfetch", fetchController.FetchWithCtoClientsPppoeInsideClientsNewCollection)
+ .get("/fetchnew", fetchController.ListarFetchNew)
+ .get("/updatefetchnew", fetchController.newfetchupdate)
  .get("/comparefetchtopppoeanddelete", fetchController.ListarFetchPppoeAndDelete) // compara duas tabelas e exclui da tabela pppoe o que não existe na fetch.
  export default router;
