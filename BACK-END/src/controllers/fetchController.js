@@ -276,95 +276,90 @@ static FetchWithCtoClientsPppoeInsideClientsNewCollection = (req, res) => {
 };
 
 static newfetchupdate = (req, res) => {
-  let fetchtomodatsModel = fetTomodat;  
-  const pipeline = [
-    {
-      $lookup: {
-        from: "pppoedatas",
-        let: { clients: "$clients.name" },
-        pipeline: [
-          {
-            $match: {
-              $expr: { $in: ["$name", "$$clients"] }
+   let fetchtomodatsModel = fetTomodat;
+    
+    const pipeline = [
+      {
+        $lookup: {
+          from: "pppoedatas",
+          let: { clients: "$clients.name" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $in: ["$name", "$$clients"] }
+              }
+            },
+            {
+              $project: {
+                name: 1,
+                pppoe: 1,
+                pppoe_name: "$name",
+                verified: { $ifNull: ["$pppoeVerified", false] }
+              }
             }
-          },
-          {
-            $project: {
-              name: 1,
-              pppoe: 1,
-              pppoe_name: "$name",
-              verified: { $ifNull: ["$pppoeVerified", false] }
-            }
-          }
-        ],
-        as: "pppoe_clients"
-      }
-    },
-    {
-      $addFields: {
-        clients: {
-          $map: {
-            input: "$clients",
-            as: "client",
-            in: {
-              $mergeObjects: [
-                "$$client",
-                {
-                  $arrayElemAt: [
-                    {
-                      $filter: {
-                        input: "$pppoe_clients",
-                        cond: {
-                          $eq: ["$$this.name", "$$client.name"]
+          ],
+          as: "pppoe_clients"
+        }
+      },
+      {
+        $addFields: {
+          clients: {
+            $map: {
+              input: "$clients",
+              as: "client",
+              in: {
+                $mergeObjects: [
+                  "$$client",
+                  {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$pppoe_clients",
+                          cond: {
+                            $eq: ["$$this.name", "$$client.name"]
+                          }
                         }
-                      }
-                    },
-                    0
-                  ]
-                }
-              ]
+                      },
+                      0
+                    ]
+                  }
+                ]
+              }
             }
           }
         }
+      },
+      {
+        $project: {
+          pppoe_clients: 0
+        }
       }
-    },
-    {
-      $project: {
-        pppoe_clients: 0
-      }
-    }
-  ];  
+    ];
   
-  fetchtomodatsModel.aggregate(pipeline).exec((err, result) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      // Iterate through each document in the result array
-      result.forEach(doc => {
-        const { _id, clients } = doc;
-        const clientUpdates = clients.map(client => ({
+    fetchtomodatsModel.aggregate(pipeline).exec((err, result) => {
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        const bulkOperations = result.map(doc => ({
           updateOne: {
-            filter: { _id: client._id },
-            update: { $set: client },
-            upsert: true // Create new document if not found
+            filter: { _id: doc._id },
+            update: doc,
+            upsert: true
           }
         }));
   
-        // Update the corresponding document in the newFetch collection
-        newFetch.bulkWrite(clientUpdates, (err, updateResult) => {
+        // Update the new collection with the modified documents
+        newFetch.bulkWrite(bulkOperations, (err, updateResult) => {
           if (err) {
-            console.error(err);
+            res.status(500).send(err);
           } else {
-            console.log(updateResult);
+            res.status(200).send(updateResult);
           }
         });
-      });
+      }
+    });
+  };
   
-      res.status(200).send("Update operation completed");
-    }
-  });
-  
-};
 
 static ListarFetchPppoeAndDelete = async (req, res) => {
 
