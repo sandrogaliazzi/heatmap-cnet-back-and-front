@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from "path";
 import cameraClient from '../models/cameraModel.js';
 
 class UploadController {
@@ -7,7 +8,7 @@ class UploadController {
     const { originalname, path } = req.file;
     const fileExtension = originalname.split('.').pop();
     const newFileName = `${clientName}-${serialNumber}.${fileExtension}`;
-    const newPath = `./uploads/${newFileName}`;
+    const newPath = `/./CAMERAS/uploads/${newFileName}`;
     let now = new Date().toLocaleString("PT-br");
     let registerDate = now;
     let filePath = newPath;
@@ -33,6 +34,31 @@ class UploadController {
       res.status(500).send('Failed to rename the file.');
     }
   };
+
+  
+
+static sendImg = (req, res) => {
+    const id = req.params.id;
+    console.log("chegou na função de enviar");
+    cameraClient.findById(id, (err, camera) => {
+        if (!err && camera) {
+            const filePath = camera.filePath;
+            const absolutePath = path.resolve(filePath);
+            res.sendFile(absolutePath);
+        } else {
+            console.error(err);
+            res.status(500).send('Failed to retrieve the image.');
+        }
+    });
+}
+
+static getCamerasimgs = (req, res) => {
+    cameraClient.find((err, cameraClient)=>{
+        res.status(200).send(cameraClient)
+    }).sort({_id: -1})
+}
+
+
 }
 
 export default UploadController;
