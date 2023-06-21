@@ -4,15 +4,15 @@ import cameraClient from '../models/cameraModel.js';
 
 class UploadController {
   static uploadImg = async (req, res) => {
-    const { clientName, serialNumber } = req.body;
+    const { clientCameraName, serialNumber } = req.body;
     const { originalname, path } = req.file;
     const fileExtension = originalname.split('.').pop();
-    const newFileName = `${clientName}-${serialNumber}.${fileExtension}`;
+    const newFileName = `${clientCameraName}-${serialNumber}.${fileExtension}`;
     const newPath = `/./CAMERAS/uploads/${newFileName}`;
     let now = new Date().toLocaleString("PT-br");
     let registerDate = now;
     let filePath = newPath;
-    let cameraData = {clientName, serialNumber, registerDate, filePath}
+    let cameraData = {clientCameraName, serialNumber, registerDate, filePath}
 
     
     
@@ -27,11 +27,11 @@ class UploadController {
         }
     }) 
 
-      console.log(`CAMERA DO CLIENTE: ${clientName} cadastrada com sucesso.`)
-      res.status(200).send('Upload completed');
+      console.log(`CAMERA DO CLIENTE: ${clientCameraName} cadastrada com sucesso.`)
+      res.status(200).send({message: 'Upload completed'});
     } catch (err) {
       console.error(err);
-      res.status(500).send('Failed to rename the file.');
+      res.status(500).send({message:'Failed to rename the file.'});
     }
   };
 
