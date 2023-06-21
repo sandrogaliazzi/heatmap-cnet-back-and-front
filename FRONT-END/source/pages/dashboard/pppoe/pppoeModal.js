@@ -130,7 +130,7 @@ export async function generateCtoClientList(cto) {
 
     htmlText += `
     <li class="list-group-item d-flex justify-content-between align-items-start ${
-      pppoeOfflineCtoIdList.includes(_id) ? "" : "d-none"
+      pppoeOfflineCtoIdList.includes(_id) ? "" : "list-group-item-success"
     }" >
         <div class="ms-2 me-auto">
         <div class="fw-bold">${name}</div>

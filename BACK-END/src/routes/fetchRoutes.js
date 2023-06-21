@@ -9,4 +9,10 @@ router
  //.get("/cadastrofetch", fetchController.CadastrarFetch) // executa o fetch no tomodat e cadastra no banco
  //.get("/updatefetch1", fetchController.UpdateFetch) // executa o fetch no tomodat e atualiza as info no banco
  .get("/fetchwithctoclient", fetchController.FetchWithCtoCLient) // pega o fetch no banco e agrega com as localizações já cadastradas dos clientes
-export default router;
+ .get("/fetchwithctoclientpppoe", fetchController.FetchWithCtoClientsPppoe)
+ .get("/fetchwithpppoeinsideclients", fetchController.FetchWithCtoClientsPppoeInsideClients) // 
+ // .get("/newfetch", fetchController.FetchWithCtoClientsPppoeInsideClientsNewCollection) // popula a nova coleção
+ .get("/newfetch", fetchController.ListarFetchNew) // new fetch with pppoe
+ .get("/updatefetchnew", fetchController.newfetchupdate) // update the coletion, agregate fetch + pppoe and populate new fetch.
+ .get("/comparefetchtopppoeanddelete", fetchController.ListarFetchPppoeAndDelete) // compara duas tabelas e exclui da tabela pppoe o que não existe na fetch.
+ export default router;

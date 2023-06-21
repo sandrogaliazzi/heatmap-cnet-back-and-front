@@ -8,7 +8,8 @@ class BackupController {
       let clienteName = req.body.clienteName;
       let clienteIp = req.body.clienteIp;
       let clienteUsername = req.body.clienteUsername;
-      let clientePassword = req.body.clientePassword;     
+      let clientePassword = req.body.clientePassword;
+      let clientePort = req.body.clientePort;     
 
       conn.on('ready', () => {
         console.log('Client :: ready');
@@ -47,7 +48,7 @@ class BackupController {
 
       conn.connect({
         host: clienteIp,
-        port: 22,
+        port: clientePort,
         username: clienteUsername,
         password: clientePassword
       });
