@@ -2,9 +2,12 @@ import express  from "express";
 import InstalacoesController from "../controllers/instalacoesController.js";
 import UploadController from "../controllers/uploadController.js";
 import multer from "multer";
-const upload = multer({ dest: '/./CAMERAS/uploads/' });
-
-
+const upload = multer({
+    dest: './CAMERAS/uploads/',
+    limits: {
+      fileSize: 30 * 1024 * 1024, // 30MB limit (adjust as needed)
+    },
+  });
 
 const router = express.Router();
 
