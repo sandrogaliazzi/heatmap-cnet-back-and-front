@@ -1,0 +1,56 @@
+<div class="w-100">
+  <table class="table table-dark table-hover text-center">
+    <thead class="position-sticky">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">
+          <input
+            type="text"
+            class="form-control"
+            id="searchCameraClientInput"
+            placeholder="Nome do cliente"
+          />
+        </th>
+        <th scope="col">Serial</th>
+        <th scope="col">QR CODE</th>
+      </tr>
+    </thead>
+    <tbody id="cameraTableBody"></tbody>
+  </table>
+
+  <div
+    class="modal fade"
+    id="showCameraImgModal"
+    tabindex="-1"
+    aria-labelledby="showCameraImgModal"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="d-flex align-items-center gap-2">
+            <h5>QR CODE</h5>
+            <button class="btn btn-link" id="openImgBtn" data-img-id="">
+              <span class="small">Abrir em nova guia</span>
+            </button>
+          </div>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div
+          class="modal-body"
+          style="
+            background-repeat: no-repeat;
+            background-size: contain;
+            min-height: 400px;
+          "
+          id="cameraImgContainer"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

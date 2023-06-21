@@ -6,6 +6,11 @@ export const headersConfig = {
   "x-access-token": sessionStorage.getItem("token"),
 };
 
+export const headersConfigWithFileSuport = {
+  //"Content-Type": "multipart/form-data",
+  "x-access-token": sessionStorage.getItem("token"),
+};
+
 const baseURL = "https://api.heatmap.conectnet.net";
 
 export default async function sendApiRequest(
@@ -29,11 +34,16 @@ export default async function sendApiRequest(
   return { content, status };
 }
 
-export async function sendApiReq({ endpoint, httpMethod, body }) {
+export async function sendApiReq({
+  endpoint,
+  httpMethod,
+  body,
+  withFile = false,
+}) {
   const response = await fetch(`${baseURL}/${endpoint}`, {
     method: httpMethod,
-    headers: headersConfig,
-    body: JSON.stringify(body) || null,
+    headers: withFile ? headersConfigWithFileSuport : headersConfig,
+    body: withFile ? body : JSON.stringify(body) || null,
   });
 
   const status = response.status;
@@ -48,6 +58,8 @@ export async function sendApiReq({ endpoint, httpMethod, body }) {
       toast.addEventListener("hidden.bs.toast", function () {
         location.href = "/";
       });
+    } else {
+      console.log(response);
     }
   }
 
