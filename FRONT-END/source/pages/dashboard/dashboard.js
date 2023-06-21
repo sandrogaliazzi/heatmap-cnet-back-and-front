@@ -6,6 +6,7 @@ const routes = {
   "/users": location + "users/users",
   "/logs": location + "logs/logs",
   "/pppoe": location + "pppoe/pppoe",
+  "/camera": location + "camera/camera",
 };
 
 async function loadHtml(path) {
