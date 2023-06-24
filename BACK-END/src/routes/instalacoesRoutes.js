@@ -14,8 +14,8 @@ const router = express.Router();
 router
  .post("/instalacoes", InstalacoesController.SaveInstalacao) // salva no banco os dados da instalação.
  .get("/instalacoesget", InstalacoesController.FetchInstalacao)// requisita do banco os dados
- .post("/uploadimg", upload.single('image'), UploadController.uploadImg)
- .get("/getcameraimg/:id", UploadController.sendImg)
+ .post("/uploadimg", upload.array('image', 2), UploadController.uploadImg)
+ .post("/getcameraimg", UploadController.sendImg)
  .get("/getallcameras", UploadController.getCamerasimgs)
  
  export default router;
