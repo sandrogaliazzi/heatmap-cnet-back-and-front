@@ -68,7 +68,7 @@ form.addEventListener("submit", async function (event) {
 
   const reqBody = {
     name: get("#userName"),
-    password: get("#userPassword"),
+    password: get("#userPassword").trim(),
     category: get("#userCategory"),
   };
 
